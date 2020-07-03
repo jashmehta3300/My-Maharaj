@@ -22,25 +22,32 @@ const UserSchema = new mongoose.Schema({
         enum: ['user', 'maharaj' , "admin"],
         default: 'user'
     },
+    mobile:{
+        type:String,
+        required:[true,"Plase add your number"]
+    },
+    city:{
+        type:String
+    },
     password: {
         type: String,
         required: [true, 'Please add a password'],
-        minlength: 6,
+        minlength: 4,
         select: false
     },
     profileImage:{
-        name:String,
-        data:Buffer
-    },
-    document:{
-        name:String,
-        data:Buffer
+        contentType:String,
+        imageData:Buffer
     },
     confirmedOTP:{
         type:Number
     },
     newOTP:{
         type:Number
+    },
+    isVerfied:{
+        type:Boolean,
+        default:false
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
