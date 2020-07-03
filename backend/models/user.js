@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'Please add a name']
     },
     email: {
+        unique:true,
         type: String,
         required: [true, 'Please add an email'],
         match: [
@@ -23,6 +24,7 @@ const UserSchema = new mongoose.Schema({
     },
     mobile:{
         type:String,
+        unique:true,
         required:[true,"Plase add your number"]
     },
     city:{
@@ -43,6 +45,7 @@ const UserSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    signalId:String,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     createdAt: {
