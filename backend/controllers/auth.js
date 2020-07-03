@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const Client = require("authy-client").Client;
-const authy = new Client({ key: "dbptWFfK9z9ZSaXfXZHdeQZcyNzWRm0Z" });
+const authy = new Client({ key: process.env.AUTHY });
 // @desc      Register User
 // @route     POST /api/v1/auth/register
 // @access    public
