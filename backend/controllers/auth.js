@@ -1,14 +1,14 @@
 const User = require('../models/user');
-
+const Client = require("authy-client").Client;
+const authy = new Client({ key: "dbptWFfK9z9ZSaXfXZHdeQZcyNzWRm0Z" });
 // @desc      Register User
 // @route     POST /api/v1/auth/register
 // @access    public
 exports.register = async(req, res, next) => {
-    const { name, email, mobile ,password, role , city } = req.body;
+    const { name, email, mobile ,password, role , city  } = req.body;
     const file = req.file;
-    console.log(file)
     //Create user
-    const user = await User.create({
+    let user = new User({
         name: name,
         email: email,
         mobile:mobile,
@@ -19,18 +19,15 @@ exports.register = async(req, res, next) => {
             imageData:file.buffer
         }
     });
-
-    sendTokenResponse(user, 200, res)
-
-    // //Create token
-    // const token = user.getSignedJwtToken();
-
-    // //So now we are encrypting the password and instead of returning the data, we are sending a JWT token back
-
-    // res.status(200).json({
-    //     success: true,
-    //     token: token
-    // });
+    await user.save();
+    const regRes = await authy.registerUser({
+            countryCode: req.body.countryCode,
+            email: email,
+            phone: mobile
+        })
+        user.authyId=regRes.user.id
+        await user.save()
+        sendTokenResponse(user, 200, res)
 };
 
 // @desc      Login user
@@ -38,20 +35,14 @@ exports.register = async(req, res, next) => {
 // @access    Public
 exports.login = async(req, res, next) => {
     const { email, password } = req.body;
-
+    console.log(req.body)
     // Validate emil & password
     if (!email || !password) {
         return next(
-            res.status(400).json({
-                success: false,
-                error: 'Please provide email and password'
-            })
-        );
-    }
-
+            res.status(400).json({success: false,error: 'Please provide email and password'}));
+        }
     // Check for user
     const user = await User.findOne({ email }).select('+password');
-
     if (!user) {
         return next(
             res.status(401).json({
@@ -60,43 +51,50 @@ exports.login = async(req, res, next) => {
             })
         );
     }
-
     // Check if password matches
     const isMatch = await user.matchPassword(password);
-
     if (!isMatch) {
-        return next(
-            res.status(401).json({
-                success: false,
-                error: 'Invalid Credentials'
-            })
-        );
+        return next(res.status(401).json({success: false,error: 'Invalid Credentials'}));
     }
-
     sendTokenResponse(user,200,res)
-    // const token = user.getSignedJwtToken();
-
-    // res.send(200).json({
-    //     success: true,
-    //     token
-    // });
 };
 
 //Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken();
-
     const options = {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
         httpOnly: true
     }
-
-    res
-        .status(statusCode)
-        .cookie('token', token, options)
-        .json({
-            success: true,
-            token,
-            user
-        })
+    res.status(statusCode).cookie('token', token, options).json({success: true,token,user})
 }
+
+exports.sms =async(req, res)=>{
+    const {id} = req.body
+    console.log(id)
+    const user = await User.findById(req.body.id)
+    if(!user) return res.status(404).json("USer not found")
+    const smsRes = await authy.requestSms({authyId: user.authyId}, {force: true})
+    res.status(200).json(smsRes)
+
+};
+
+
+exports.verify = async function (req, res , next) {
+    const user = await User.findById(req.body.id)
+    if (!user) {
+        res.status(404).json("No User");
+    }
+    const tokenRes= await authy.verifyToken({authyId: user.authyId, token: req.body.token})   
+    console.log("success")
+    user.isVerfied=true;
+    await user.save()
+    res.status(200).json({message:tokenRes.message});
+}
+
+    
+
+
+
+
+
