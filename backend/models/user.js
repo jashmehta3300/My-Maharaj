@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'publisher'],
+        enum: ['user', 'maharaj' , "admin"],
         default: 'user'
     },
     password: {
@@ -27,6 +27,20 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'Please add a password'],
         minlength: 6,
         select: false
+    },
+    profileImage:{
+        name:String,
+        data:Buffer
+    },
+    document:{
+        name:String,
+        data:Buffer
+    },
+    confirmedOTP:{
+        type:Number
+    },
+    newOTP:{
+        type:Number
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
