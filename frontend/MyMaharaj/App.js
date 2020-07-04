@@ -1,6 +1,7 @@
 import {createSwitchNavigator, createAppContainer } from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import React from 'react'
 
 import CreateRequest from './src/screen/CreateRequest'
@@ -33,23 +34,59 @@ const CurrentNav = createStackNavigator(
   CreateRequest : CreateRequest,
   Details:Details,
   TrackOrder : TrackOrder,
-  CreateOrder : CurrentOrder,
-},
+  CurrentOrder : CurrentOrder,
+},{
+  initialRouteName : 'CurrentOrder',
+  headerMode:'none'
+}
 
 )
 
 const SettingsNav = createStackNavigator({
   FAQ:FAQ,
   Settings:Settings
+},
+{
+  initialRouteName : 'Settings',
+  headerMode:'none'
 })
 
 const Main = createMaterialTopTabNavigator({
-  SettingsNav : SettingsNav,
-  CurrentNav : CurrentNav,
-  Profile:Profile,
-  PastOrders :PastOrders,
+  SettingsNav :{
+    screen:SettingsNav ,
+    navigationOptions: {title: 'Settings', tabBarIcon: ({ tintColor }) => (
+      <Icon name="gear" size={25} color={tintColor} />
+      )}
+  },
+  CurrentNav : {
+    screen:CurrentNav ,
+    navigationOptions: {title: 'Home', tabBarIcon: ({ tintColor }) => (
+      <Icon name="home" size={25} color={tintColor} />
+      )}
+  },
+  Profile:{
+    screen:Profile ,
+    navigationOptions: {title: 'Profile', tabBarIcon: ({ tintColor }) => (
+      <Icon name="user" size={25} color={tintColor} />
+      )}
+  },
+  PastOrders :{
+    screen:PastOrders ,
+    navigationOptions: {title: 'Past Orders', tabBarIcon: ({ tintColor }) => (
+      <Icon name="book" size={25} color={tintColor} />
+      )}
+  },
 },{
-  tabBarPosition:'bottom'
+  tabBarPosition: 'bottom',
+    tabBarOptions: {activeTintColor: 'white',
+    inactiveColor: 'grey', showIcon: 'true',
+    style: { backgroundColor: '#212121', },
+    labelStyle: {fontSize:12,textTransform:'capitalize'},
+    tabStyle:{height:60},
+    iconStyle: {inactiveColor:'grey', paddingTop:3, activeColor: 'white'},
+    indicatorStyle: { backgroundColor: 'white', height: 4}
+  },
+  order : ['CurrentNav','PastOrders','Profile','SettingsNav'],
 })
 
 
@@ -63,7 +100,7 @@ const Base = createSwitchNavigator({
   Main : Main,
 },
 {
-  initialRouteName : 'Main' ,
+  initialRouteName : 'LoginScreen' ,
   
 })
 
