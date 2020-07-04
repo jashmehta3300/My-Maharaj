@@ -109,5 +109,14 @@ exports.getMe = async (req,res)=>{
     res.status(200).json(user)
 }
 
+/**
+ * @ROUTE : api/v1/auth/users
+ * @DESC  : Get all users
+ */
+exports.getUsers = async (req, res) => {
+    const users = await User.find();
+    res.json(users);
+};
+
 
 
