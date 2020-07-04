@@ -1,5 +1,7 @@
 const User = require('../models/user');
 const OTPService = require("../services/otp");
+
+
 // @desc      Register User
 // @route     POST /api/v1/auth/register
 // @access    public
@@ -98,8 +100,14 @@ exports.verify = async function (req, res , next) {
 }
 
 
-
-
+/**
+ * @ROUTE : api/v1/auth/me
+ * @DESC  : Get Current User
+ */
+exports.getMe = async (req,res)=>{
+    const user = await User.findById(req.user.id);
+    res.status(200).json(user)
+}
 
 
 
