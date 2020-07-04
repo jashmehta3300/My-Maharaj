@@ -1,6 +1,5 @@
 const User = require('../models/user');
-const Client = require("authy-client").Client;
-const authy = new Client({ key: process.env.AUTHY });
+const OTPService = require("../services/otp");
 // @desc      Register User
 // @route     POST /api/v1/auth/register
 // @access    public
@@ -20,11 +19,16 @@ exports.register = async(req, res, next) => {
         }
     });
     await user.save();
-    const regRes = await authy.registerUser({
-            countryCode: req.body.countryCode,
-            email: email,
-            phone: mobile
-        })
+    // const regRes = await authy.registerUser({
+    //         countryCode: req.body.countryCode,
+    //         email: email,
+    //         phone: mobile
+    //     })
+    const regRes = await OTPService.registerNewUser({
+        countryCode: req.body.countryCode,
+        email: email,
+        phone: mobile
+    })
         user.authyId=regRes.user.id
         await user.save()
         sendTokenResponse(user, 200, res)
@@ -34,32 +38,28 @@ exports.register = async(req, res, next) => {
 // @route     POST /api/v1/auth/login
 // @access    Public
 exports.login = async(req, res, next) => {
-    const { email, password } = req.body;
-    console.log(req.body)
+    const { mobile, token } = req.body;
     // Validate emil & password
-    if (!email || !password) {
-        return next(
-            res.status(400).json({success: false,error: 'Please provide email and password'}));
-        }
+    if (!mobile || !token) return res.status(400).json({success: false,error: 'Please provide number and otp'})
     // Check for user
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-        return next(
-            res.status(401).json({
-                success: false,
-                error: 'Invalid Credentials'
-            })
-        );
-    }
+    const user = await User.findOne({ mobile })
+    if (!user) return res.status(401).json({ success: false, error: 'Invalid Credentials'})
+    if(!user.isVerified) return res.status(401).json("Number Not Verified")
+    const tokenRes = await OTPService.verifyOTP(user.authyId,token)
     // Check if password matches
-    const isMatch = await user.matchPassword(password);
-    if (!isMatch) {
-        return next(res.status(401).json({success: false,error: 'Invalid Credentials'}));
-    }
+    // const isMatch = await user.matchPassword(password);
+    // if (!isMatch) {
+    //     return next(res.status(401).json({success: false,error: 'Invalid Credentials'}));
+    // }
     sendTokenResponse(user,200,res)
 };
 
-//Get token from model, create cookie and send response
+
+/**
+ * @DESC Get token from model, 
+ * create cookie and 
+ * send response
+ */
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken();
     const options = {
@@ -69,30 +69,35 @@ const sendTokenResponse = (user, statusCode, res) => {
     res.status(statusCode).cookie('token', token, options).json({success: true,token,user})
 }
 
+/**
+ * @ROUTE : /api/v1/auth/sms
+ * @DESC  : Send OTP sms
+ */
 exports.sms =async(req, res)=>{
-    const {id} = req.body
-    console.log(id)
     const user = await User.findById(req.body.id)
-    if(!user) return res.status(404).json("USer not found")
-    const smsRes = await authy.requestSms({authyId: user.authyId}, {force: true})
+    if(!user) return res.status(404).json("User not found")
+    const smsRes = await OTPService.sendOTP(user.authyId)
     res.status(200).json(smsRes)
 
 };
 
-
+/**
+ * @ROUTE : /api/v1/auth/verify
+ * @DESC :  Verify otp
+ */
 exports.verify = async function (req, res , next) {
-    const user = await User.findById(req.body.id)
-    if (!user) {
-        res.status(404).json("No User");
-    }
-    const tokenRes= await authy.verifyToken({authyId: user.authyId, token: req.body.token})   
-    console.log("success")
-    user.isVerfied=true;
+    const {id,token} = req.body;
+    if(!id || !token ) res.status(400).json("No id or token found")
+    const user = await User.findById(id)
+    if (!user) res.status(404).json("No User");
+    const tokenRes= await OTPService.verifyOTP(user.authyId,token)   
+    user.isVerified=true;
     await user.save()
-    res.status(200).json({message:tokenRes.message});
+    console.log(user)
+    res.status(200).json({message:tokenRes});
 }
 
-    
+
 
 
 

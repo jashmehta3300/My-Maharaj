@@ -41,7 +41,7 @@ const UserSchema = new mongoose.Schema({
         imageData:Buffer
     },
     authyId:String,
-    isVerfied:{
+    isVerified:{
         type:Boolean,
         default:false
     },
