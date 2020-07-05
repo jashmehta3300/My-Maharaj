@@ -1,5 +1,6 @@
 const Maharaj = require("../models/maharaj");
 const OTPService = require("../services/otp");
+const maharaj = require("../models/maharaj");
 
 
 exports.register = async(req,res)=>{
@@ -43,8 +44,6 @@ exports.register = async(req,res)=>{
     })
     maharajDoc.authyId = regRes.user.id
     await maharajDoc.save()
-    const token = await maharajDoc.getSignedJwtToken()
-    const sendMaharaj =  maharajDoc.getPublicProfile()
     sendTokenResponse(maharaj, 200, res)
     //res.status(200).json({success:true , sendMaharaj ,token})
     
@@ -64,7 +63,6 @@ exports.login = async (req,res)=>{
     // if (!isMatch) {
     //     return next(res.status(401).json({success: false,error: 'Invalid Credentials'}));
     // }
-    
     sendTokenResponse(maharaj,200,res)
 }
 
@@ -135,3 +133,27 @@ exports.getMaharajs = async(req,res)=>{
 }
 
 
+/**
+ * @ROUTE : /api/v1/maharajAuth/:id/profileimage
+ * @DESC  : Get profile Pic
+ */
+exports.getProfileImage = async (req,res)=>{
+    const maharaj = await Maharaj.findById(req.params.id).select({password:0,document:0});
+    if(!maharaj || !maharaj.profileImage){
+        return res.status(404).json()
+    }
+    res.set('Content-Type', maharaj.profileImage.contentType);
+    res.send(maharaj.profileImage.imageData);
+}
+/**
+ * @ROUTE : /api/v1/:id/doc
+ * @DESC  : Get document Pic
+ */
+exports.getDocument = async (req,res)=>{
+    const maharaj = await Maharaj.findById(req.params.id).select({password:0,profileImage:0});
+    if(!maharaj || !maharaj.document){
+        return res.status(404).json()
+    }
+    res.set('Content-Type', maharaj.document.contentType);
+    res.send(maharaj.document.imageData);
+}

@@ -110,7 +110,6 @@ MaharajSchema.methods.getPublicProfile = function(){
     delete maharaj.document;
     delete maharaj.password;
     return maharaj;
-    
 }
 
 module.exports = mongoose.model("Maharaj" , MaharajSchema)
