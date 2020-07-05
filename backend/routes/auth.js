@@ -9,4 +9,4 @@ router.post("/login",asyncHandler(login))
 router.post("/sms",asyncHandler(sms))
 router.post("/verify",asyncHandler(verify))
 
-module.exports = router;
+module.exports = router; 

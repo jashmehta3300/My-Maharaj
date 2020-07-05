@@ -1,5 +1,7 @@
-const User = require('../models/user');
+const User = require('../models/User');
 const OTPService = require("../services/otp");
+
+
 // @desc      Register User
 // @route     POST /api/v1/auth/register
 // @access    public
@@ -34,6 +36,7 @@ exports.register = async(req, res, next) => {
         sendTokenResponse(user, 200, res)
 };
 
+
 // @desc      Login user
 // @route     POST /api/v1/auth/login
 // @access    Public
@@ -54,12 +57,7 @@ exports.login = async(req, res, next) => {
     sendTokenResponse(user,200,res)
 };
 
-
-/**
- * @DESC Get token from model, 
- * create cookie and 
- * send response
- */
+// @desc      Get token, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken();
     const options = {
@@ -69,10 +67,9 @@ const sendTokenResponse = (user, statusCode, res) => {
     res.status(statusCode).cookie('token', token, options).json({success: true,token,user})
 }
 
-/**
- * @ROUTE : /api/v1/auth/sms
- * @DESC  : Send OTP sms
- */
+// @desc      Send sms with OTP
+// @route     POST /api/v1/auth/sms
+// @access    private
 exports.sms =async(req, res)=>{
     const user = await User.findById(req.body.id)
     if(!user) return res.status(404).json("User not found")
@@ -81,10 +78,9 @@ exports.sms =async(req, res)=>{
 
 };
 
-/**
- * @ROUTE : /api/v1/auth/verify
- * @DESC :  Verify otp
- */
+// @desc      Verify OTP
+// @route     POST /api/v1/auth/verify
+// @access    private
 exports.verify = async function (req, res , next) {
     const {id,token} = req.body;
     if(!id || !token ) res.status(400).json("No id or token found")
