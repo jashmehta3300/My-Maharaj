@@ -27,7 +27,7 @@ exports.register = async(req, res, next) => {
     //         phone: mobile
     //     })
     const regRes = await OTPService.registerNewUser({
-        countryCode: req.body.countryCode,
+        countryCode: req.body.countryCode || '91',
         email: email,
         phone: mobile
     })
@@ -53,6 +53,7 @@ exports.login = async(req, res, next) => {
     // if (!isMatch) {
     //     return next(res.status(401).json({success: false,error: 'Invalid Credentials'}));
     // }
+    
     sendTokenResponse(user,200,res)
 };
 

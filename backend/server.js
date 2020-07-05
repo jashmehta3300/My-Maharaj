@@ -23,8 +23,8 @@ app.use(bodyParser.json())
 app.use(cookie())
 
 //Route files
-const hackathons = require('./routes/hackathons');
 const auth = require('./routes/auth');
+const maharajAuth = require("./routes/authMaharaj");
 
 //Dev middleware Morgan
 if (process.env.NODE_ENV === 'development') {
@@ -34,8 +34,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 //Mount routers
-app.use('/api/v1/hackathons', hackathons);
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/maharajAuth', maharajAuth);
 
 //access env vars
 const PORT = process.env.PORT || 5000;
@@ -61,7 +61,7 @@ app.use((err, req, res, next) => {
     if (err.name === 'ValidationError') {
       return res.status(400).json(err.errors);
     }
-  
+    
     return res.status(500).json(err);
   });
   

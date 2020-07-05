@@ -4,7 +4,7 @@ const {upload} = require("../middleware/multer")
 const { register, login , sms , verify , getMe , getUsers} = require('../controllers/auth');
 const asyncHandler = require("express-async-handler")
 
-router.post("/register",upload,asyncHandler(register));
+router.post("/register",upload.single('file'),asyncHandler(register));
 router.post("/login",asyncHandler(login))
 router.post("/sms",asyncHandler(sms))
 router.post("/verify",asyncHandler(verify))
