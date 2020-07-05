@@ -1,6 +1,6 @@
-const Maharaj = require("../models/maharaj");
+const Maharaj = require("../models/Maharaj");
 const OTPService = require("../services/otp");
-const maharaj = require("../models/maharaj");
+
 
 
 exports.register = async(req,res)=>{

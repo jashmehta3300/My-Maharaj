@@ -1,5 +1,5 @@
-const User = require("../models/user");
-const Maharaj = require("../models/maharaj")
+const User = require("../models/User");
+const Maharaj = require("../models/Maharaj")
 const jwt = require("jsonwebtoken");
 
 /**
