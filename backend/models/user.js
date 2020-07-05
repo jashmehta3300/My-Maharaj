@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'maharaj' , "admin"],
+        enum: ['user',"admin"],
         default: 'user'
     },
     mobile:{
@@ -51,7 +51,8 @@ const UserSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    
 });
 
 // Encrypt password using bcrypt
