@@ -27,7 +27,7 @@ exports.register = async(req, res, next) => {
     //         phone: mobile
     //     })
     const regRes = await OTPService.registerNewUser({
-        countryCode: req.body.countryCode,
+        countryCode: req.body.countryCode || '91',
         email: email,
         phone: mobile
     })
@@ -45,7 +45,7 @@ exports.login = async(req, res, next) => {
     // Validate emil & password
     if (!mobile || !token) return res.status(400).json({success: false,error: 'Please provide number and otp'})
     // Check for user
-    const user = await User.findOne({ mobile })
+    const user = await  User.findOne({ mobile }).select({profileImage:0})
     if (!user) return res.status(401).json({ success: false, error: 'Invalid Credentials'})
     if(!user.isVerified) return res.status(401).json("Number Not Verified")
     const tokenRes = await OTPService.verifyOTP(user.authyId,token)
@@ -54,24 +54,27 @@ exports.login = async(req, res, next) => {
     // if (!isMatch) {
     //     return next(res.status(401).json({success: false,error: 'Invalid Credentials'}));
     // }
+    
     sendTokenResponse(user,200,res)
 };
 
 // @desc      Get token, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken();
+    const sendUser =  user.getPublicProfile()
     const options = {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
         httpOnly: true
     }
-    res.status(statusCode).cookie('token', token, options).json({success: true,token,user})
+    res.status(statusCode).cookie('token', token, options).json({success: true,token,sendUser})
 }
 
 // @desc      Send sms with OTP
 // @route     POST /api/v1/auth/sms
 // @access    private
 exports.sms =async(req, res)=>{
-    const user = await User.findById(req.body.id)
+    const {mobile} = req.body
+    const user = await User.findOne({mobile})
     if(!user) return res.status(404).json("User not found")
     const smsRes = await OTPService.sendOTP(user.authyId)
     res.status(200).json(smsRes)
@@ -82,20 +85,45 @@ exports.sms =async(req, res)=>{
 // @route     POST /api/v1/auth/verify
 // @access    private
 exports.verify = async function (req, res , next) {
-    const {id,token} = req.body;
-    if(!id || !token ) res.status(400).json("No id or token found")
-    const user = await User.findById(id)
+    const {mobile,token} = req.body;
+    if(!mobile || !token ) res.status(400).json("No mobile or token found")
+    const user = await User.findOne({mobile})
     if (!user) res.status(404).json("No User");
     const tokenRes= await OTPService.verifyOTP(user.authyId,token)   
     user.isVerified=true;
     await user.save()
-    console.log(user)
     res.status(200).json({message:tokenRes});
 }
 
 
+/**
+ * @ROUTE : api/v1/auth/me
+ * @DESC  : Get Current User
+ */
+exports.getMe = async (req,res)=>{
+    const user = await User.findById(req.user.id);
+    res.status(200).json(user)
+}
+
+/**
+ * @ROUTE : api/v1/auth/users
+ * @DESC  : Get all users
+ */
+exports.getUsers = async (req, res) => {
+    const users = await User.find();
+    res.json(users);
+};
 
 
-
+/**
+ * @ROUTE : /api/v1/auth/:id/profileimage
+ * @DESC  : Get profile Pic
+ */
+exports.getProfileImage = async (req,res)=>{
+    const user = await User.findById(req.params.id).select({password:0});
+    if(!user || !user.profileImage) return res.status(404).json()
+    res.set('Content-Type', user.profileImage.contentType);
+    res.send(user.profileImage.imageData);
+}
 
 
