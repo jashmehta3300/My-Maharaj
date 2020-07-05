@@ -10,7 +10,7 @@ export default class SplashScreen extends React.Component{
 render(){
     return(
         <View style = {style.container}>
-            <Text>SplashScreen</Text>
+            <Text style = {style.text}>Welcome to        MY MAHARAJA</Text>
         </View>
 )}
 }
@@ -21,7 +21,6 @@ const style = StyleSheet.create({
     },
 
     text:{
-        color:'white',
         fontSize:50,
         textAlign:'center'
     }
