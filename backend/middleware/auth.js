@@ -23,7 +23,7 @@ const authRequired =(role)=>async (req, res, next) => {
                 msg: 'Invalid token',
             });
         }
-        const user = role=='user'?await User.findOne({ _id: decoded.id }):await Maharaj.findOne({ _id: decoded.id })
+        const user = role=='user'?await User.findOne({ _id: decoded.id }).select({password:0}):await Maharaj.findOne({ _id: decoded.id }).select({password:0})
         req.token = token;
         req.user = user;
         next();
