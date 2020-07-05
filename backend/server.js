@@ -24,7 +24,7 @@ app.use(cookie())
 
 //Route files
 const auth = require('./routes/auth');
-const maharajAuth = require("./routes/authMaharaj");
+const maharajAuth = require("./routes/maharajAuth");
 
 //Dev middleware Morgan
 if (process.env.NODE_ENV === 'development') {

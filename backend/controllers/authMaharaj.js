@@ -41,30 +41,97 @@ exports.register = async(req,res)=>{
         email: email,
         phone: mobile
     })
-    maharajDoc.authyID = regRes.user.id
+    maharajDoc.authyId = regRes.user.id
     await maharajDoc.save()
     const token = await maharajDoc.getSignedJwtToken()
     const sendMaharaj =  maharajDoc.getPublicProfile()
-    //sendTokenResponse(maharaj, 200, res)
-    res.status(200).json({success:true , sendMaharaj ,token})
+    sendTokenResponse(maharaj, 200, res)
+    //res.status(200).json({success:true , sendMaharaj ,token})
     
 }
 
 exports.login = async (req,res)=>{
-
+    const { mobile, token } = req.body;
+    // Validate emil & password
+    if (!mobile || !token) return res.status(400).json({success: false,error: 'Please provide number and otp'})
+    // Check for user
+    const maharaj = await Maharaj.findOne({ mobile })
+    if (!maharaj) return res.status(401).json({ success: false, error: 'Invalid Credentials'})
+    if(!maharaj.isVerified) return res.status(401).json("Number Not Verified")
+    const tokenRes = await OTPService.verifyOTP(maharaj.authyId,token)
+    // Check if password matches
+    // const isMatch = await user.matchPassword(password);
+    // if (!isMatch) {
+    //     return next(res.status(401).json({success: false,error: 'Invalid Credentials'}));
+    // }
+    
+    sendTokenResponse(maharaj,200,res)
 }
+
+
 
 /**
  * @DESC Get token from model, 
  * create cookie and 
  * send response
  */
-
-const sendTokenResponse = (user, statusCode, res) => {
-    const token = user.getSignedJwtToken();
+const sendTokenResponse = (maharaj, statusCode, res) => {
+    const token = maharaj.getSignedJwtToken();
+    const sendMaharaj =  maharaj.getPublicProfile()
     const options = {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
         httpOnly: true
     }
-    res.status(statusCode).cookie('token', token, options).json({success: true,token,user})
+    res.status(statusCode).cookie('token', token, options).json({success: true,token,sendMaharaj})
 }
+
+
+
+/**
+ * @ROUTE : /api/v1/authMaharaj/sms
+ * @DESC :  Verify otp
+ */
+exports.sms =async(req, res)=>{
+    const {mobile} = req.body
+    const user = await Maharaj.findOne({mobile})
+    if(!user) return res.status(404).json("User not found")
+    const smsRes = await OTPService.sendOTP(user.authyId)
+    res.status(200).json(smsRes)
+
+};
+
+/**
+ * @ROUTE : /api/v1/authMaharaj/verify
+ * @DESC :  Verify otp
+ */
+exports.verify = async function (req, res , next) {
+    const {mobile,token} = req.body;
+    if(!mobile || !token ) res.status(400).json("No mobile or token found")
+    const user = await Maharaj.findOne({mobile})
+    if (!user) res.status(404).json("No User");
+    const tokenRes= await OTPService.verifyOTP(user.authyId,token)   
+    user.isVerified=true;
+    await user.save()
+    res.status(200).json({message:tokenRes.message});
+}
+
+/**
+ * @ROUTE : /api/v1/authMaharaj/me
+ * @DESC  : Get current mahharaj
+ */
+exports.getMe =async (req,res)=>{
+    const maharaj = await Maharaj.findById(req.user.id);
+    res.status(200).json(maharaj.getPublicProfile())
+}
+
+
+/**
+ * @ROUTE : /api/v1/authMaharaj/me
+ * @DESC  : Get current mahharaj
+ */
+exports.getMaharajs = async(req,res)=>{
+    const maharaj = await Maharaj.find();
+    res.status(200).json(maharaj)
+}
+
+

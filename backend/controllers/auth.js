@@ -77,7 +77,8 @@ const sendTokenResponse = (user, statusCode, res) => {
  * @DESC  : Send OTP sms
  */
 exports.sms =async(req, res)=>{
-    const user = await User.findById(req.body.id)
+    const {mobile} = req.body
+    const user = await User.findOne({mobile})
     if(!user) return res.status(404).json("User not found")
     const smsRes = await OTPService.sendOTP(user.authyId)
     res.status(200).json(smsRes)
@@ -89,14 +90,13 @@ exports.sms =async(req, res)=>{
  * @DESC :  Verify otp
  */
 exports.verify = async function (req, res , next) {
-    const {id,token} = req.body;
-    if(!id || !token ) res.status(400).json("No id or token found")
-    const user = await User.findById(id)
+    const {mobile,token} = req.body;
+    if(!mobile || !token ) res.status(400).json("No mobile or token found")
+    const user = await User.findOne({mobile})
     if (!user) res.status(404).json("No User");
     const tokenRes= await OTPService.verifyOTP(user.authyId,token)   
     user.isVerified=true;
     await user.save()
-    console.log(user)
     res.status(200).json({message:tokenRes});
 }
 
