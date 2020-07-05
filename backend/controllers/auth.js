@@ -44,7 +44,7 @@ exports.login = async(req, res, next) => {
     // Validate emil & password
     if (!mobile || !token) return res.status(400).json({success: false,error: 'Please provide number and otp'})
     // Check for user
-    const user = await User.findOne({ mobile })
+    const user = await  User.findOne({ mobile }).select({profileImage:0})
     if (!user) return res.status(401).json({ success: false, error: 'Invalid Credentials'})
     if(!user.isVerified) return res.status(401).json("Number Not Verified")
     const tokenRes = await OTPService.verifyOTP(user.authyId,token)
@@ -65,11 +65,12 @@ exports.login = async(req, res, next) => {
  */
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken();
+    const sendUser =  user.getPublicProfile()
     const options = {
         expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
         httpOnly: true
     }
-    res.status(statusCode).cookie('token', token, options).json({success: true,token,user})
+    res.status(statusCode).cookie('token', token, options).json({success: true,token,sendUser})
 }
 
 /**
@@ -119,5 +120,16 @@ exports.getUsers = async (req, res) => {
     res.json(users);
 };
 
+
+/**
+ * @ROUTE : /api/v1/auth/:id/profileimage
+ * @DESC  : Get profile Pic
+ */
+exports.getProfileImage = async (req,res)=>{
+    const user = await User.findById(req.params.id).select({password:0});
+    if(!user || !user.profileImage) return res.status(404).json()
+    res.set('Content-Type', user.profileImage.contentType);
+    res.send(user.profileImage.imageData);
+}
 
 

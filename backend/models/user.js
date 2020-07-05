@@ -77,4 +77,16 @@ UserSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Get only public profile
+UserSchema.methods.getPublicProfile = function(){
+    const userObj=this;
+    const user = userObj.toObject()
+    const userImageURL = `/api/v1/auth/${user._id}/profileimage`;
+    user.imageURL=userImageURL;
+    delete user.profileImage;
+    delete user.password;
+    return user;
+}
+
+
 module.exports = mongoose.model('User', UserSchema);
