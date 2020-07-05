@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { register, login } = require('../controllers/auth');
+const {upload} = require("../middleware/multer")
+const { register, login , sms , verify} = require('../controllers/auth');
+const asyncHandler = require("express-async-handler")
 
-router.route('/register').post(register);
-router.route('/login').post(login);
+router.post("/register",upload,asyncHandler(register));
+router.post("/login",asyncHandler(login))
+router.post("/sms",asyncHandler(sms))
+router.post("/verify",asyncHandler(verify))
 
 module.exports = router;
