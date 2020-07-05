@@ -2,9 +2,9 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
-const cookie = require('cookie-parser')
+const cookie = require('cookie-parser');
 const connectDB = require('./config/db');
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
 
 //load env vars
 dotenv.config({ path: './config/config.env' });
@@ -25,6 +25,7 @@ app.use(cookie())
 //Route files
 const hackathons = require('./routes/hackathons');
 const auth = require('./routes/auth');
+const req = require('./routes/req');
 
 //Dev middleware Morgan
 if (process.env.NODE_ENV === 'development') {
@@ -36,6 +37,7 @@ if (process.env.NODE_ENV === 'development') {
 //Mount routers
 app.use('/api/v1/hackathons', hackathons);
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/req', req);
 
 //access env vars
 const PORT = process.env.PORT || 5000;

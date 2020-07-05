@@ -1,3 +1,5 @@
+const User = require('./User');
+
 const mongoose = require('mongoose');
 
 const RequestSchema = new mongoose.Schema({
@@ -8,7 +10,7 @@ const RequestSchema = new mongoose.Schema({
     required: true
   },
   bookingQuantity: {
-    type: Int16Array,
+    type: Number,
     required: true
   },
   foodType: {
@@ -18,11 +20,11 @@ const RequestSchema = new mongoose.Schema({
   },
   cuisine: String,
   priceLow: {
-    type: Int32Array,
+    type: Number,
     required: true
   },
   priceMax: {
-    type: Int32Array,
+    type: Number,
     required: true
   },
   address: {
@@ -31,21 +33,30 @@ const RequestSchema = new mongoose.Schema({
   },
   authyId: String,
   createdBy: {
-    type: mongoose.Types.ObjectId,
-    ref: "User"
+    type: mongoose.Schema.Types.ObjectId,
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
   acceptedBy: {
-    type: mongoose.Types.ObjectId,
-    ref: "User",
+    type: mongoose.Schema.Types.ObjectId,
     default: null,
   },
   acceptedAt: {
     type: Date,
     default: null,
+  },
+  accepted: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  status: {
+    type:String,
+    enum: ['unaccepted','ongoing', 'completed'],
+    required: true,
+    default: 'unaccepted' 
   }
 });
 
