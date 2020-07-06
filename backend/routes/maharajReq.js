@@ -22,7 +22,11 @@ router.get(
     asyncHandler(getAllAccepted)
 );
 
-router.put('/:request_id', asyncHandler(acceptReq));
+router.put(
+    '/:request_id', 
+    authRequired('maharaj'), 
+    asyncHandler(acceptReq)
+);
 
 router.get('/admin', asyncHandler(adminGetAll));
 

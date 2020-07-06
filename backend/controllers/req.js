@@ -15,10 +15,21 @@ exports.createReq = async(req, res, next) => {
         createdBy: req.user._id
       } 
       const request = await Request.create(newBody);
+
+      await User.findByIdAndUpdate(
+        { _id: req.user._id },
+        req.user.orders.push(request._id),
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+
       res.status(200).json({
         success: true,
         data: request,
       });
+
     } catch (err) {
       console.log(err.message.red.underline);
       res.status(400).json({
