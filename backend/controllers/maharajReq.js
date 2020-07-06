@@ -56,7 +56,7 @@ exports.acceptReq = async(req, res, next) => {
 
     const fieldsToUpdate = {
         accepted: true,
-        acceptedBy: user._id
+        acceptedBy: req.user._id
     }
 
     const request = await Request.findByIdAndUpdate(request_id, fieldsToUpdate, {

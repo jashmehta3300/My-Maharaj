@@ -44,7 +44,7 @@ exports.register = async(req,res)=>{
     })
     maharajDoc.authyId = regRes.user.id
     await maharajDoc.save()
-    sendTokenResponse(maharaj, 200, res)
+    sendTokenResponse(maharajDoc, 200, res)
     // res.status(200).json({success:true , sendMaharaj ,token})
     
 }
