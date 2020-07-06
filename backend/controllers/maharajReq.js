@@ -26,6 +26,7 @@ exports.getAllUnaccepted = async(req, res, next) => {
 // @route     GET /api/v1/maharajReq/myreq
 // @access    private
 exports.getAllAccepted = async(req, res, next) => {
+
     await Request.find({ acceptedBy: req.user._id }, (err, result) => {
       if (err) {
         console.log(err);
@@ -43,7 +44,15 @@ exports.getAllAccepted = async(req, res, next) => {
 // @access    private
 exports.acceptReq = async(req, res, next) => {
     const request_id = req.params.request_id;
-    const user = await User.findOne({ name: req.body.acceptedBy});
+
+    await User.findByIdAndUpdate(
+      { _id: req.user._id },
+      req.user.orders.push(request_id),
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     const fieldsToUpdate = {
         accepted: true,
