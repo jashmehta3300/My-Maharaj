@@ -1,5 +1,5 @@
 const User = require('./User');
-
+const geocoder = require('../utils/geocoder');
 const mongoose = require('mongoose');
 
 const RequestSchema = new mongoose.Schema({
@@ -7,34 +7,51 @@ const RequestSchema = new mongoose.Schema({
     type: String,
     enum: ['Hourly', 'Number of meals', 'Number of days'],
     default: 'Hourly',
-    required: true
+    required: true,
   },
   bookingQuantity: {
     type: Number,
-    required: true
+    required: true,
   },
   foodType: {
     type: String,
     enum: ['Veg', 'Non-Veg', 'Jain'],
-    required: true
+    required: true,
   },
   cuisine: String,
   priceLow: {
     type: Number,
-    required: true
+    required: true,
   },
   priceMax: {
     type: Number,
-    required: true
+    required: true,
   },
   address: {
     type: String,
-    required: true
+    required: true,
+  },
+  location: {
+    // GeoJSON Point
+    type: {
+      type: String,
+      enum: ['Point'],
+    },
+    coordinates: {
+      type: [Number],
+      index: '2dsphere',
+    },
+    formattedAddress: String,
+    street: String,
+    city: String,
+    state: String,
+    zipcode: String,
+    country: String,
   },
   authyId: String,
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
   },
   createdAt: {
     type: Date,
@@ -51,14 +68,30 @@ const RequestSchema = new mongoose.Schema({
   accepted: {
     type: Boolean,
     required: true,
-    default: false
+    default: false,
   },
   status: {
-    type:String,
-    enum: ['unaccepted','ongoing', 'completed'],
+    type: String,
+    enum: ['unaccepted', 'ongoing', 'completed'],
     required: true,
-    default: 'unaccepted' 
-  }
+    default: 'unaccepted',
+  },
+});
+
+RequestSchema.pre('save', async function(next) {
+    const loc = await geocoder.geocode(this.address);
+    this.location = {
+        type: 'Point',
+        coordinates: [loc[0].longitude, loc[0].latitude],
+        formattedAddress: loc[0].formattedAddress,
+        street: loc[0].streetName,
+        city: loc[0].city,
+        state: loc[0].stateCode,
+        zipcode: loc[0].zipcode,
+        country: loc[0].countryCode
+    };
+    
+    next();
 });
 
 module.exports = mongoose.model('Request', RequestSchema);
