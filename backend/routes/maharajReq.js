@@ -10,11 +10,18 @@ const {
   adminGetAll,
 } = require('../controllers/maharajReq');
 
+const { authRequired } = require('../middleware/auth');
+
 // @@@ ALL ROUTES FOR MAHARAJ APP @@@ //
 
-router.get('/', asyncHandler(getAllUnaccepted));
+router.get('/allreq', asyncHandler(getAllUnaccepted));
 
-router.get('/:maharaj_id', asyncHandler(getAllAccepted));
+router.get(
+    '/myreq', 
+    authRequired('maharaj'), 
+    asyncHandler(getAllAccepted)
+);
+
 router.put('/:request_id', asyncHandler(acceptReq));
 
 router.get('/admin', asyncHandler(adminGetAll));

@@ -11,6 +11,7 @@ const {
   completeReq,
   getPastReq,
 } = require('../controllers/req');
+
 const { authRequired } = require('../middleware/auth');
 
 // @@@ ALL ROUTES FOR USER APP @@@ //

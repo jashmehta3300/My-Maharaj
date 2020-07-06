@@ -6,7 +6,7 @@ const User = require('../models/User');
 
 
 // @desc      Show all unaccepted requests to all Maharaj
-// @route     GET /api/v1/maharajReq/
+// @route     GET /api/v1/maharajReq/allreq
 // @access    public
 exports.getAllUnaccepted = async(req, res, next) => {
     await Request.find({accepted: false}, (err,result) => {
@@ -23,12 +23,10 @@ exports.getAllUnaccepted = async(req, res, next) => {
 };
 
 // @desc      All requests accepted by Maharaj
-// @route     GET /api/v1/maharajReq/:maharaj_id
+// @route     GET /api/v1/maharajReq/myreq
 // @access    private
 exports.getAllAccepted = async(req, res, next) => {
-    const maharajId = req.params.maharaj_id;
-
-    await Request.find({ acceptedBy: maharajId }, (err, result) => {
+    await Request.find({ acceptedBy: req.user._id }, (err, result) => {
       if (err) {
         console.log(err);
       } else {
