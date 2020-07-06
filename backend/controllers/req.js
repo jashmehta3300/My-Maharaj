@@ -10,7 +10,11 @@ const User = require("../models/User");
 // @access    private
 exports.createReq = async(req, res, next) => {
     try {
-      const request = await Request.create(req.body);
+      const newBody = {
+        ...req.body,
+        createdBy: req.user._id
+      } 
+      const request = await Request.create(newBody);
       res.status(200).json({
         success: true,
         data: request,
@@ -74,11 +78,10 @@ exports.startReq = async(req, res, next) => {
 
 
 // @desc      Get ongoing user request
-// @route     POST /api/v1/req/ongoing
+// @route     GET /api/v1/req/ongoing
 // @access    private
 exports.getOngoingReq = async(req, res, next) => {
-    const user = await User.find({name: req.body.name});
-    const request = await Request.find({createdBy: user._id, status: 'ongoing'});
+    const request = await Request.find({createdBy: req.user._id, status: 'ongoing'});
 
     res.status(200).json({
       success: true,
@@ -115,9 +118,8 @@ exports.completeReq = async(req, res, next) => {
 // @access    private
 exports.getPastReq = async(req, res, next) => {
 
-    const user = await User.find({ name: req.body.name });
     const request = await Request.find({
-      createdBy: user._id,
+      createdBy: req.user._id,
       status: 'completed',
     });
 

@@ -17,7 +17,6 @@ const authRequired =(role)=>async (req, res, next) => {
     const token = header.replace('Bearer', '').trim();
     try {
         const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-        console.log(decoded)
         if (!decoded) {
             return res.status(401).json({
                 msg: 'Invalid token',
