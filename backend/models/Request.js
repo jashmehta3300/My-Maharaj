@@ -34,6 +34,7 @@ const RequestSchema = new mongoose.Schema({
   authyId: String,
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
+    required: true
   },
   createdAt: {
     type: Date,

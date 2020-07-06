@@ -1,19 +1,27 @@
 const express = require('express');
-const router = express.Router();
-const { getAllUnaccepted, userPostReq, getAllAccepted, acceptReq, startUserReq, getOngoingUserReq, completeUserReq, getPastUserReq, adminGetAll} = require('../controllers/req');
 const asyncHandler = require('express-async-handler');
 
-router.get('/maharaj', asyncHandler(getAllUnaccepted));
-router.post('/maharaj', asyncHandler(userPostReq));
+const router = express.Router();
 
-router.get('/maharaj/:maharaj_id', asyncHandler(getAllAccepted));
-router.put('/maharaj/:request_id', asyncHandler(acceptReq));
+const {
+  createReq,
+  getStatus,
+  startReq,
+  getOngoingReq,
+  completeReq,
+  getPastReq,
+} = require('../controllers/req');
 
-router.put('/user/:request_id/ongoing', asyncHandler(startUserReq));
-router.get('/user/:request_id/ongoing', asyncHandler(getOngoingUserReq));
+// @@@ ALL ROUTES FOR USER APP @@@ //
 
-router.put('/user/:request_id/past', asyncHandler(completeUserReq));
-router.get('/user/:request_id/past', asyncHandler(getPastUserReq));
-router.get('/admin', asyncHandler(adminGetAll));
+router.post('/create', asyncHandler(createReq));
+
+router.get('/status/:request_id', asyncHandler(getStatus))
+
+router.put('/start/:request_id', asyncHandler(startReq));
+router.post('/ongoing', asyncHandler(getOngoingReq));
+
+router.put('/complete/:request_id', asyncHandler(completeReq));
+router.get('/past', asyncHandler(getPastReq));
 
 module.exports = router;

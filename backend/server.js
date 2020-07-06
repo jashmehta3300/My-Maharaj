@@ -24,8 +24,9 @@ app.use(cookie())
 
 //Route files
 const auth = require('./routes/auth');
-const req = require('./routes/req');
 const maharajAuth = require("./routes/maharajAuth");
+const req = require('./routes/req');
+const maharajReq = require('./routes/maharajReq');
 
 //Dev middleware Morgan
 if (process.env.NODE_ENV === 'development') {
@@ -36,8 +37,9 @@ if (process.env.NODE_ENV === 'development') {
 
 //Mount routers
 app.use('/api/v1/auth', auth);
-app.use('/api/v1/req', req);
 app.use('/api/v1/maharajAuth', maharajAuth);
+app.use('/api/v1/req', req);
+app.use('/api/v1/maharajReq',maharajReq);
 
 //access env vars
 const PORT = process.env.PORT || 5000;
