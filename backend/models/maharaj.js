@@ -64,10 +64,8 @@ const MaharajSchema = new mongoose.Schema({
     resetPasswordExpire: Date,
     orders:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref : "Order"
-    }],
-    imageURL:String,
-    docURL:String
+        ref : "Request"
+    }]
 
 }, {timestamps:true})
 
