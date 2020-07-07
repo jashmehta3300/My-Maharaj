@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
  * Header format is
  * Authorization: Bearer token
  */
-const authRequired =(role)=>async (req, res, next) => {
+const authRequired =(role="user")=>async (req, res, next) => {
     const header = req.header('Authorization');
     if (!header) {
         return res.status(401).json({

@@ -4,12 +4,7 @@ const OTPService = require("../services/otp");
 
 
 exports.register = async(req,res)=>{
-    const {name, email, mobile ,password, role ,address , city , zipcode , documentName , kin ,yearsOfExp ,cuisine} =req.body
-    const profileImage = req.files['image'][0]
-    const document = req.files['doc'][0]
-    if(!document || !profileImage){
-        return res.status(400).json("Plase upload image and doc")
-    }
+    const {name, email, mobile ,password, role ,address , city , zipcode  , kin ,yearsOfExp ,cuisine} =req.body
     let maharajDoc = new Maharaj({
         name:name,
         email:email,
@@ -20,15 +15,6 @@ exports.register = async(req,res)=>{
             address: address,
             city: city,
             zipcode: zipcode
-        },
-        profileImage:{
-            contentType:profileImage.mimetype,
-            imageData:profileImage.buffer
-        },
-        document:{
-            name:documentName,
-            imageData: document.buffer , 
-            contentType :document.mimetype
         },
         kin:kin,
         cooking:{
@@ -48,6 +34,40 @@ exports.register = async(req,res)=>{
     // res.status(200).json({success:true , sendMaharaj ,token})
     
 }
+
+/**
+ * @ROUTE : /api/v1/authMaharaj/upload/profile
+ * @DESC  : Upload profile image
+ */
+exports.uploadProfileImage = async (req,res)=>{
+    const file = req.file;
+    let profileImage={
+        contentType:file.mimetype,
+        imageData:file.buffer
+    }
+    req.user.profileImage = profileImage;
+    await req.user.save();
+    res.status(200).json("Profile image uploaded successfully.")
+}
+/**
+ * @ROUTE : /api/v1/auth/upload/doc
+ * @DESC  : Upload profile image
+ */
+exports.uploadDoc = async (req,res)=>{
+    const file = req.file;
+    let document={
+        name:"aadhar",
+        imageData: file.buffer , 
+        contentType :file.mimetype
+    }
+    req.user.document = document;
+    await req.user.save();
+    res.status(200).json("Document  uploaded successfully.")
+}
+
+
+
+
 
 exports.login = async (req,res)=>{
     const { mobile, token } = req.body;
@@ -157,3 +177,4 @@ exports.getDocument = async (req,res)=>{
     res.set('Content-Type', maharaj.document.contentType);
     res.send(maharaj.document.imageData);
 }
+

@@ -1,13 +1,14 @@
 const express  = require("express");
 const asyncHandler = require("express-async-handler");
 const router = express.Router();
-const  { register  ,login , sms , verify , getMaharajs , getMe , getDocument , getProfileImage} = require("../controllers/authMaharaj");
+const  { register  ,login , sms , verify , getMaharajs , getMe , getDocument , getProfileImage ,uploadProfileImage , uploadDoc} = require("../controllers/authMaharaj");
 const  {upload} = require("../middleware/multer")
 const {authRequired} = require("../middleware/auth")
 
-// const newUp = upload.array[{fieldName:'image',maxCount:1},{fieldName:'aadhar',maxCount:1}]
-// router.post("/register",newUp,asyncHandler(register));
-router.post("/register",upload.fields([{name:'image' , maxCount:1},{name:'doc',maxCount:1}]),asyncHandler(register));
+
+router.post("/register",asyncHandler(register));
+router.post("/upload/profile", authRequired("maharaj") , upload.single("image") , asyncHandler(uploadProfileImage) )
+router.post("/upload/doc", authRequired("maharaj") , upload.single("doc") , asyncHandler(uploadDoc) )
 router.post("/login",asyncHandler(login))
 router.post("/sms",asyncHandler(sms))
 router.post("/verify",asyncHandler(verify))

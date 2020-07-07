@@ -15,17 +15,7 @@ exports.register = async(req, res, next) => {
         mobile:mobile,
         password: password,
         role: role,
-        profileImage:{
-            contentType:file.mimetype,
-            imageData:file.buffer
-        }
     });
-    await user.save();
-    // const regRes = await authy.registerUser({
-    //         countryCode: req.body.countryCode,
-    //         email: email,
-    //         phone: mobile
-    //     })
     const regRes = await OTPService.registerNewUser({
         countryCode: req.body.countryCode || '91',
         email: email,
@@ -49,12 +39,6 @@ exports.login = async(req, res, next) => {
     if (!user) return res.status(401).json({ success: false, error: 'Invalid Credentials'})
     if(!user.isVerified) return res.status(401).json("Number Not Verified")
     const tokenRes = await OTPService.verifyOTP(user.authyId,token)
-    // Check if password matches
-    // const isMatch = await user.matchPassword(password);
-    // if (!isMatch) {
-    //     return next(res.status(401).json({success: false,error: 'Invalid Credentials'}));
-    // }
-    
     sendTokenResponse(user,200,res)
 };
 
@@ -124,6 +108,22 @@ exports.getProfileImage = async (req,res)=>{
     if(!user || !user.profileImage) return res.status(404).json()
     res.set('Content-Type', user.profileImage.contentType);
     res.send(user.profileImage.imageData);
+}
+
+
+/**
+ * @ROUTE : /api/v1/auth/upload
+ * @DESC  : Upload profile image
+ */
+exports.uploadProfileImage = async (req,res)=>{
+    const file = req.file;
+    let profileImage={
+        contentType:file.mimetype,
+        imageData:file.buffer
+    }
+    req.user.profileImage = profileImage;
+    await req.user.save();
+    res.status(200).json("Profile image updated successfully.")
 }
 
 
