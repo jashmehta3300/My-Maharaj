@@ -111,10 +111,6 @@ exports.getUserById= async (req,res)=>{
 }
 
 
-
-
-
-
 /**
  * @ROUTE : /api/v1/auth/:id/profileimage
  * @DESC  : Get profile Pic
@@ -142,4 +138,14 @@ exports.uploadProfileImage = async (req,res)=>{
     res.status(200).json("Profile image updated successfully.")
 }
 
-
+/**
+ * @ROUTE : /api/v1/auth/update
+ * @DESC  : Update user Profile
+ */
+exports.updateProfile = async (req, res) => {
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+    });
+    return res.status(200).json(user.getPublicProfile());
+  };
+  

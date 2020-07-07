@@ -176,7 +176,7 @@ exports.getProfileImage = async (req,res)=>{
     res.send(maharaj.profileImage.imageData);
 }
 /**
- * @ROUTE : /api/v1/:id/doc
+ * @ROUTE : /api/v1/maharajAuth/:id/doc
  * @DESC  : Get document Pic
  */
 exports.getDocument = async (req,res)=>{
@@ -188,3 +188,15 @@ exports.getDocument = async (req,res)=>{
     res.send(maharaj.document.imageData);
 }
 
+/**
+ * @ROUTE : PUT /api/v1/maharajAuth/me
+ * @DESC  : Update Maharaj Profile
+ */
+exports.updateProfile = async (req, res) => {
+    const maharaj = await Maharaj.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+    });
+    const maharajSend = maharaj.getPublicProfile();
+    return res.status(200).json(maharajSend);
+  };
+  
