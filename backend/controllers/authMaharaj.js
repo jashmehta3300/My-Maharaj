@@ -144,14 +144,24 @@ exports.getMe =async (req,res)=>{
 
 
 /**
- * @ROUTE : /api/v1/authMaharaj/me
- * @DESC  : Get current mahharaj
+ * @ROUTE : /api/v1/authMaharaj/maharajs
+ * @DESC  : Get all maharajs
  */
 exports.getMaharajs = async(req,res)=>{
     const maharaj = await Maharaj.find();
     res.status(200).json(maharaj)
 }
 
+/**
+ * @ROUTE : /api/v1/authMaharaj/maharajs/:id
+ * @DESC  : Get  mahharaj by id
+ */
+exports.getMaharajById= async (req,res)=>{
+    const maharaj = await Maharaj.findById(req.params.id);
+    if(!maharaj)return res.status(404).json("No maharaj found");
+    const maharajSend = maharaj.getPublicProfile();
+    res.status(200).json(maharajSend);
+}
 
 /**
  * @ROUTE : /api/v1/maharajAuth/:id/profileimage

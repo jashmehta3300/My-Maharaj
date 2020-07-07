@@ -1,7 +1,7 @@
 const express  = require("express");
 const asyncHandler = require("express-async-handler");
 const router = express.Router();
-const  { register  ,login , sms , verify , getMaharajs , getMe , getDocument , getProfileImage ,uploadProfileImage , uploadDoc} = require("../controllers/authMaharaj");
+const  { register  ,login , sms , verify , getMaharajs , getMe , getDocument , getProfileImage ,uploadProfileImage , uploadDoc , getMaharajById} = require("../controllers/authMaharaj");
 const  {upload} = require("../middleware/multer")
 const {authRequired} = require("../middleware/auth")
 
@@ -14,8 +14,10 @@ router.post("/sms",asyncHandler(sms))
 router.post("/verify",asyncHandler(verify))
 router.get("/me",authRequired("maharaj"),asyncHandler(getMe))
 router.get("/maharajs",asyncHandler(getMaharajs))
+router.get("/maharajs/:id",asyncHandler(getMaharajById))
 router.get("/:id/profileimage",asyncHandler(getProfileImage));
 router.get("/:id/doc",asyncHandler(getDocument));
+
 
 module.exports = router
 

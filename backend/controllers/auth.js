@@ -95,8 +95,24 @@ exports.getMe = async (req,res)=>{
  */
 exports.getUsers = async (req, res) => {
     const users = await User.find();
-    res.json(users);
+    res.status(200).json(users);
 };
+
+
+/**
+ * @ROUTE : /api/v1/auth/users/:id
+ * @DESC  : Get  user by id
+ */
+exports.getUserById= async (req,res)=>{
+    const user = await User.findById(req.params.id);
+    if(!user)return res.status(404).json("No user found");
+    const userSend = user.getPublicProfile();
+    res.status(200).json(userSend);
+}
+
+
+
+
 
 
 /**
