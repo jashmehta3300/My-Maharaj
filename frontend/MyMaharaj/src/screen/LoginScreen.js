@@ -41,7 +41,7 @@ render(){
             >
             </TextInput> 
             </View>
-            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.props.navigation.navigate('Main')}>
+            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.props.navigation.navigate('Registration')}>
             <Text style = {style.button}>Confirm OTP</Text>
             </TouchableOpacity>
             </View>

@@ -15,6 +15,7 @@ import Registration from './src/screen/Registration'
 import Settings from './src/screen/Settings'
 import SplashScreen from './src/screen/SplashScreen'
 import TrackOrder from './src/screen/TrackOrder'
+import Location from './src/screen/Location'
 
 
 export default class App extends React.Component {
@@ -22,7 +23,7 @@ export default class App extends React.Component {
   render() {
     return (
       
-          <AppContainer/> 
+          <AppContainer />
      
     );
   }
@@ -35,6 +36,7 @@ const CurrentNav = createStackNavigator(
   Details:Details,
   TrackOrder : TrackOrder,
   CurrentOrder : CurrentOrder,
+  Location : Location
 },{
   initialRouteName : 'CurrentOrder',
   headerMode:'none'
