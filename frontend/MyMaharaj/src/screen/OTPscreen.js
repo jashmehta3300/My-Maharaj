@@ -1,45 +1,15 @@
 import React from 'react';
-import { Text, StyleSheet, ImageBackground , Image, View , TextInput , TouchableOpacity,LayoutAnimation,UIManager,AsyncStorage} from 'react-native';
+import { Text, StyleSheet, ImageBackground , Image, View , TextInput , TouchableOpacity} from 'react-native';
 
-
-if (Platform.OS === 'android') {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-  }
 
 export default class LoginScreen extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            OTP : true,
-            is_authenticated:false,
-            token:''
+            OTP : true
         }
     }
-    componentDidMount(){
-        this.state.token=AsyncStorage.getItem('token')
-        if(this.state.token){
-            this.setState({is_authenticated:true})
-        }
-        
-    }
-    sendotp =async ()=>{
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        this.setState({OTP:false})
-        x=await fetch('http://localhost:5000/api/v1/auth/sms',{
-            method :'POST',
-            body:{
-                mobile:"9082024100"
-            }
-        })
-        console.log(x)
 
-    }
-    verifyotp= () =>{
-        
-    }
- 
 render(){
     return(
         <View style = {style.container}>
@@ -57,7 +27,7 @@ render(){
             </TextInput>
             </View>
         { this.state.OTP ? 
-            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.sendotp()}>
+            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.setState({OTP : false})}>
                 <Text style = {style.button}>Send OTP</Text>
             </TouchableOpacity>
             :
@@ -71,14 +41,11 @@ render(){
             >
             </TextInput> 
             </View>
-            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.verifyotp}>
+            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.props.navigation.navigate('Main')}>
             <Text style = {style.button}>Confirm OTP</Text>
             </TouchableOpacity>
             </View>
         }
-        <TouchableOpacity onPress={() => {this.props.navigation.navigate('Registration')}}>
-            <Text>SIGN UP</Text>
-        </TouchableOpacity>
         </View>
 )}
 }

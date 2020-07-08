@@ -11,9 +11,7 @@ export default class CurrentOrder extends React.Component{
 render(){
     return(
         <View style = {style.container}>
-            <Text style = {{margin:20,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Current Orders</Text>
-            
-            
+            <Text style = {{margin:20 , fontWeight:'bold',marginBottom:10,fontSize:30}}>Current Orders</Text>
             <View style={style.box}>
 
 

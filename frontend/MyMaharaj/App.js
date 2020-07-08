@@ -8,6 +8,7 @@ import CreateRequest from './src/screen/CreateRequest'
 import CurrentOrder from './src/screen/CurrentOrder'
 import Details from './src/screen/Details'
 import FAQ from './src/screen/FAQ'
+import OTPscreen from './src/screen/OTPscreen'
 import LoginScreen from './src/screen/LoginScreen'
 import PastOrders from './src/screen/PastOrders'
 import Profile from './src/screen/Profile'
@@ -22,7 +23,7 @@ export default class App extends React.Component {
   render() {
     return (
       
-          <TrackOrder /> 
+          <AppContainer /> 
      
     );
   }
@@ -44,11 +45,24 @@ const CurrentNav = createStackNavigator(
 
 const SettingsNav = createStackNavigator({
   FAQ:FAQ,
-  Settings:Settings
+  Settings:{screen:Settings,
+  navigationOptions:{
+    headerMode:"on",
+    title:'Settings',
+    headerTintColor:'white',
+    tabBarIcon:() => (
+      <Icon name="gear" size={25} color='white' />
+      ),
+    height:40,
+    headerStyle:{
+      backgroundColor:'black',
+    },
+    fontSize:20
+  }
+  }
 },
 {
-  initialRouteName : 'Settings',
-  headerMode:'none'
+  initialRouteName : 'Settings'
 })
 
 const Main = createMaterialTopTabNavigator({
@@ -95,7 +109,8 @@ const Main = createMaterialTopTabNavigator({
 
 const Base = createSwitchNavigator({
   SplashScreen : SplashScreen,
-  LoginScreen : LoginScreen,
+  OTPscreen: OTPscreen,
+  LoginScreen:LoginScreen,
   Registration : Registration,
   Main : Main,
 },

@@ -1,28 +1,76 @@
 import React from 'react';
-import { Text, StyleSheet, ImageBackground , Image, View} from 'react-native';
-
+import { Text, StyleSheet, ImageBackground , Image, View,TouchableOpacity} from 'react-native';
+import Icon from "react-native-vector-icons/FontAwesome5"
 
 export default class Settings extends React.Component{
+
     constructor(props){
         super(props)
     }
-
 render(){
     return(
         <View style = {style.container}>
-            <Text>Settings</Text>
+            <View > 
+                <TouchableOpacity style={style.tab} onPress={() =>{this.props.navigation.navigate('FAQ')}} >
+                    <Text style={style.text}>FAQS</Text>
+                    <Icon name="chevron-right" size={30}  color='#3e4547'/>
+                </TouchableOpacity>
+               
+            </View>
+            <View>
+                <TouchableOpacity style={style.tab}>  
+                        <Text style={style.text}>ContactUs</Text>
+                        <Icon name="phone" size={30} color='#3e4547' onPress={() => {this.props.navigation.navigate('FAQ')}} />
+                
+                </TouchableOpacity>
+            </View>
+            <View>
+                <TouchableOpacity style={style.tab}>  
+                        <Text style={style.text}>Share MyMaharaj</Text>
+                        <Icon name="share" size={30} color="#3e4547" onPress={() => {this.props.navigation.navigate('FAQ')}} />
+                
+                </TouchableOpacity>
+            </View>
+            <View>
+                <TouchableOpacity style={style.tab}>  
+                        <Text style={style.text}>Logout</Text>
+                        <Icon name="sign-out-alt" size={30} color='#3e4547' onPress={() => {this.props.navigation.navigate('FAQ')}} />
+                
+                </TouchableOpacity>
+            </View>
+            <Text style={style.Company}>
+                MyMaharaj Inc.
+            </Text>
         </View>
 )}
 }
 const style = StyleSheet.create({
     container: {
+        marginTop:10,
         flex:1,
-        justifyContent:'center',
     },
 
     text:{
-        color:'white',
-        fontSize:50,
-        textAlign:'center'
+        color:'black',
+        fontSize:20,
+        fontWeight:"400"
+    
+
+    },
+    tab : {
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+        flexDirection: "row",
+        justifyContent:"space-between",
+        alignItems:'center',
+        borderBottomWidth:2,
+        borderBottomColor:"#ababab"
+    },
+    Company :{
+        alignSelf:'center',
+        marginTop:300,
+        marginBottom:20,
+        fontWeight:"400",
+        fontSize:25,
     }
 })
