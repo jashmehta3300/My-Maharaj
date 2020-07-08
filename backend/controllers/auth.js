@@ -15,17 +15,7 @@ exports.register = async(req, res, next) => {
         mobile:mobile,
         password: password,
         role: role,
-        profileImage:{
-            contentType:file.mimetype,
-            imageData:file.buffer
-        }
     });
-    await user.save();
-    // const regRes = await authy.registerUser({
-    //         countryCode: req.body.countryCode,
-    //         email: email,
-    //         phone: mobile
-    //     })
     const regRes = await OTPService.registerNewUser({
         countryCode: req.body.countryCode || '91',
         email: email,
@@ -49,12 +39,6 @@ exports.login = async(req, res, next) => {
     if (!user) return res.status(401).json({ success: false, error: 'Invalid Credentials'})
     if(!user.isVerified) return res.status(401).json("Number Not Verified")
     const tokenRes = await OTPService.verifyOTP(user.authyId,token)
-    // Check if password matches
-    // const isMatch = await user.matchPassword(password);
-    // if (!isMatch) {
-    //     return next(res.status(401).json({success: false,error: 'Invalid Credentials'}));
-    // }
-    
     sendTokenResponse(user,200,res)
 };
 
@@ -111,8 +95,20 @@ exports.getMe = async (req,res)=>{
  */
 exports.getUsers = async (req, res) => {
     const users = await User.find();
-    res.json(users);
+    res.status(200).json(users);
 };
+
+
+/**
+ * @ROUTE : /api/v1/auth/users/:id
+ * @DESC  : Get  user by id
+ */
+exports.getUserById= async (req,res)=>{
+    const user = await User.findById(req.params.id);
+    if(!user)return res.status(404).json("No user found");
+    const userSend = user.getPublicProfile();
+    res.status(200).json(userSend);
+}
 
 
 /**
@@ -127,3 +123,29 @@ exports.getProfileImage = async (req,res)=>{
 }
 
 
+/**
+ * @ROUTE : /api/v1/auth/upload
+ * @DESC  : Upload profile image
+ */
+exports.uploadProfileImage = async (req,res)=>{
+    const file = req.file;
+    let profileImage={
+        contentType:file.mimetype,
+        imageData:file.buffer
+    }
+    req.user.profileImage = profileImage;
+    await req.user.save();
+    res.status(200).json("Profile image updated successfully.")
+}
+
+/**
+ * @ROUTE : /api/v1/auth/update
+ * @DESC  : Update user Profile
+ */
+exports.updateProfile = async (req, res) => {
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+    });
+    return res.status(200).json(user.getPublicProfile());
+  };
+  

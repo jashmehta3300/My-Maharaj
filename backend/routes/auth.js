@@ -1,16 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const {upload} = require("../middleware/multer")
-const { register, login , sms , verify , getMe , getUsers , getProfileImage} = require('../controllers/auth');
+const { register, login , sms , verify , getMe , getUsers , getProfileImage , uploadProfileImage, getUserById, updateProfile} = require('../controllers/auth');
 const asyncHandler = require("express-async-handler")
-const {authRequired} =require("../middleware/auth")
+const {authRequired} =require("../middleware/auth");
 
-router.post("/register",upload.single('file'),asyncHandler(register));
+
+router.post("/register",asyncHandler(register));
+router.post("/upload", authRequired("user") , upload.single('file') , asyncHandler(uploadProfileImage))
 router.post("/login",asyncHandler(login))
 router.post("/sms",asyncHandler(sms))
 router.post("/verify",asyncHandler(verify))
+router.put("/me",authRequired("user"),asyncHandler(updateProfile))
 router.get("/me",authRequired("user"),asyncHandler(getMe))
 router.get("/users",asyncHandler(getUsers))
+router.get("/users/:id",asyncHandler(getUserById))
 router.get("/:id/profileimage",asyncHandler(getProfileImage))
 
 module.exports = router; 
