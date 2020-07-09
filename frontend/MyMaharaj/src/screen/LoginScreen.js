@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, StyleSheet, ImageBackground , Image, View , TextInput , TouchableOpacity,LayoutAnimation,UIManager,AsyncStorage} from 'react-native';
-
+import { Text, StyleSheet, ImageBackground , Image, View , TextInput , TouchableOpacity,LayoutAnimation,UIManager, Alert} from 'react-native';
+import AsyncStorage from "@react-native-community/async-storage"
+import axios from "axios"
 
 if (Platform.OS === 'android') {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -13,31 +14,54 @@ export default class LoginScreen extends React.Component{
         super(props)
         this.state = {
             OTP : true,
-            is_authenticated:false,
-            token:''
+            token:'',
+            mobile:'',
+            OTP_value:''
+
+
         }
     }
-    componentDidMount(){
-        this.state.token=AsyncStorage.getItem('token')
-        if(this.state.token){
-            this.setState({is_authenticated:true})
+    sendotp =async ()=>{                                                                //fetching the send sms api and handling with errors 
+        if(this.state.mobile){
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            this.setState({OTP:false})
+             await axios.post('http://localhost:5000/api/v1/auth/sms',{
+                    mobile:this.state.mobile,
+            })
+            .catch((error) => console.log(error))
         }
-        
-    }
-    sendotp =async ()=>{
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        this.setState({OTP:false})
-        x=await fetch('http://localhost:5000/api/v1/auth/sms',{
-            method :'POST',
-            body:{
-                mobile:"9082024100"
-            }
-        })
-        console.log(x)
+        else{
+            Alert.alert("Please enter your mobile no")
+        }
 
     }
-    verifyotp= () =>{
-        
+    verifyotp= async () =>{                         //verifying your otp and handling errors 
+        if(this.state.OTP_value){
+         await fetch("http://localhost:5000/api/v1/auth/verify",{
+                method:"POST",
+                body:{
+                    mobile:this.state.mobile,
+                    token:this.state.OTP_value
+                },
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            }).then((response) =>response.json())
+            .then((resposne) =>{
+                this.setState({token:resposne.token})
+                AsyncStorage.setItem('token',this.state.token)
+                this.props.navigation.navigate('Main')
+            })
+            .catch((error) =>{
+                console.log(error)
+                Alert.alert('Login Failed')
+            });
+
+        }
+        else{
+            Alert.alert("Please enter the OTP")
+
+        }
     }
  
 render(){
@@ -50,35 +74,37 @@ render(){
             <TextInput
               keyboardType = {'numeric'}
               placeholder = 'Phone Number'
-              onChangeText={(text) => console.log(text)}
+              onChangeText={(text) => this.setState({mobile:text})}
               style={style.textinput}
 
             >
             </TextInput>
             </View>
         { this.state.OTP ? 
+        <View>
             <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.sendotp()}>
                 <Text style = {style.button}>Send OTP</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => {this.props.navigation.navigate('Registration')}}>
+            <Text style = {style.button}>Create an Account</Text>
+            </TouchableOpacity>
+        </View>
             :
             <View>
             <View style = {{  borderWidth:1 , marginLeft:50, marginRight:50 , borderColor:'grey' , borderRadius:10 , marginTop:40}}>
             <TextInput
               keyboardType = {'numeric'}
               placeholder = 'OTP'
-              onChangeText={(text) => console.log(text)}
+              onChangeText={(text) => {this.setState({OTP_value:text})}}
               style={style.textinput}
             >
             </TextInput> 
             </View>
-            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.verifyotp}>
+            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => {this.verifyotp}}>
             <Text style = {style.button}>Confirm OTP</Text>
             </TouchableOpacity>
             </View>
         }
-        <TouchableOpacity onPress={() => {this.props.navigation.navigate('Registration')}}>
-            <Text>SIGN UP</Text>
-        </TouchableOpacity>
         </View>
 )}
 }

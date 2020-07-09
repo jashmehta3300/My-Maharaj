@@ -11,12 +11,12 @@ import {
     ScrollView,
     StatusBar,
     Alert,
-    AsyncStorage
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import  AsyncStorage from "@react-native-community/async-storage"
 
 export default class Registration extends Component {
 
@@ -53,26 +53,33 @@ constructor(props){
         });
     }
       signup = async () => {
-          let form = new FormData();
-          form.append( 'name', this.state.name);
-          form.append('email',this.state.email);
-          form.append('city',this.state.city);
-          form.append('role','user')
-          form.append('password',this.state.password);
-          form.append('countryCode',this.state.country_code);
-          form.append('mobile',this.state.mobile_no);
-
           if(this.state.username && this.state.email){
              if(this.state.password==this.state.confirm_password){
                 resposne= await fetch('http://localhost:5000/api/v1/auth/register',{
                     method:"POST",
-                    body:form,
+                    body:{
+                        name:this.state.name,
+                        email:this.state.email,
+                        city:this.state.city,
+                        role:'user',
+                        password:this.state.password,
+                        countryCode:this.state.country_code,
+                        mobile:this.state.mobile_no
+                        
+                    },
                 })
-                this.state.token=response.token
-                AsyncStorage.setItem('token',this.state.token)
-                AsyncStorage.getItem('token')
-                .then((value) => {console.log(value)})
-                console.log(resposne)
+                .then((resposne) => {
+                    this.state.token=response.json().token
+                    console.log(this.state.token)
+                    AsyncStorage.setItem('token',this.state.token)
+                    AsyncStorage.getItem('token')
+                    .then((value) => {console.log(value)})
+                    this.props.navigation.navigate('LoginScreen')
+                    console.log(resposne)
+            })
+            .catch((error) =>{
+                console.log(error)
+            })
             }
         }
         else{
@@ -246,12 +253,12 @@ constructor(props){
                 >
                     <Text style={[styles.textSign, {
                         color:'white'
-                    }]}>Sign Up</Text>
+                    }]}>Register</Text>
                 </LinearGradient>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => navigation.goBack()}
+                    onPress={() => this.props.navigation.navigate('LoginScreen')}
                     style={[styles.signIn, {
                         borderColor: 'black',
                         borderWidth: 1,
@@ -260,7 +267,7 @@ constructor(props){
                 >
                     <Text style={[styles.textSign, {
                         color: 'black'
-                    }]}>Sign In</Text>
+                    }]}>Already have an account?</Text>
                 </TouchableOpacity>
             </View>
             </ScrollView>

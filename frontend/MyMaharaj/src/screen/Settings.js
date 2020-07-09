@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, StyleSheet, ImageBackground , Image, View,TouchableOpacity} from 'react-native';
+import { Text, StyleSheet, ImageBackground , Image, View,TouchableOpacity,Share} from 'react-native';
+import AsyncStorage from "@react-native-community/async-storage"
 import Icon from "react-native-vector-icons/FontAwesome5"
 
 export default class Settings extends React.Component{
@@ -7,6 +8,22 @@ export default class Settings extends React.Component{
     constructor(props){
         super(props)
     }
+    logout = async () =>{
+       await  AsyncStorage.removeItem('token')
+        this.props.navigation.navigate('SplashScreen')
+    }
+
+    shareapp = () => {
+        Share.share({
+            message:'my maharaj app',
+            url:'https://www.google.com/',
+            title:'wow did you see that'
+        },{
+            dialogTitle:'share our app'
+        }
+        )
+    }
+
 render(){
     return(
         <View style = {style.container}>
@@ -27,14 +44,14 @@ render(){
             <View>
                 <TouchableOpacity style={style.tab}>  
                         <Text style={style.text}>Share MyMaharaj</Text>
-                        <Icon name="share" size={30} color="#3e4547" onPress={() => {this.props.navigation.navigate('FAQ')}} />
+                        <Icon name="share" size={30} color="#3e4547" onPress={() => {this.shareapp()}} />
                 
                 </TouchableOpacity>
             </View>
             <View>
                 <TouchableOpacity style={style.tab}>  
                         <Text style={style.text}>Logout</Text>
-                        <Icon name="sign-out-alt" size={30} color='#3e4547' onPress={() => {this.props.navigation.navigate('FAQ')}} />
+                        <Icon name="sign-out-alt" size={30} color='#3e4547' onPress={() => {this.logout()}} />
                 
                 </TouchableOpacity>
             </View>

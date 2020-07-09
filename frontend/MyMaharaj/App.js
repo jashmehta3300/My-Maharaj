@@ -8,7 +8,6 @@ import CreateRequest from './src/screen/CreateRequest'
 import CurrentOrder from './src/screen/CurrentOrder'
 import Details from './src/screen/Details'
 import FAQ from './src/screen/FAQ'
-import OTPscreen from './src/screen/OTPscreen'
 import LoginScreen from './src/screen/LoginScreen'
 import PastOrders from './src/screen/PastOrders'
 import Profile from './src/screen/Profile'
@@ -109,13 +108,12 @@ const Main = createMaterialTopTabNavigator({
 
 const Base = createSwitchNavigator({
   SplashScreen : SplashScreen,
-  OTPscreen: OTPscreen,
   LoginScreen:LoginScreen,
   Registration : Registration,
   Main : Main,
 },
 {
-  initialRouteName : 'LoginScreen' ,
+  initialRouteName : 'SplashScreen' ,
   
 })
 
