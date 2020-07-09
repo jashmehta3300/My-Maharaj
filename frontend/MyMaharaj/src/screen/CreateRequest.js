@@ -14,6 +14,7 @@ export default class CreateRequest extends React.Component {
             isVisible : false,
             date : null ,
             location:'',
+            longLat:{}
         }
     }
     componentDidMount = async() => {
@@ -22,7 +23,8 @@ export default class CreateRequest extends React.Component {
         console.log(loc)
         location !== null ? 
             this.setState({
-                location : loc.completeAddress
+                location : loc.completeAddress,
+                longLat : loc.long_lat
             }) :
             this.setState({
                 location : 'Please add your location'
@@ -193,9 +195,10 @@ export default class CreateRequest extends React.Component {
                         style={style.textinput2}
                 ></TextInput>
                 </View>
-                <TouchableOpacity onPress ={() => alert('Please change location from home')}>
+                <TouchableOpacity onPress ={() => this.props.navigation.navigate('TrackOrder' , { longlat : this.state.longLat} )}>
                 <Text style={style.textinput3}>{this.state.location}</Text>
                 </TouchableOpacity>
+                <Text style={{marginLeft:20,color:'red' , fontSize:15}}>*To change address please go to home screen</Text>
                 <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginVertical:30 , borderRadius:10}} >
                     <Text style = {style.button}>Confirm Request</Text>
                 </TouchableOpacity>

@@ -34,7 +34,12 @@ const CurrentNav = createStackNavigator(
   {
   CreateRequest : CreateRequest,
   Details:Details,
-  TrackOrder : TrackOrder,
+  TrackOrder : {
+    screen : TrackOrder,
+    navigationOptions :{
+      tabBarVisible : false
+    }
+  },
   CurrentOrder : CurrentOrder,
   Location : Location
 },{
