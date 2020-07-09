@@ -16,6 +16,7 @@ import Settings from './src/screen/Settings'
 import SplashScreen from './src/screen/SplashScreen'
 import TrackOrder from './src/screen/TrackOrder'
 import Location from './src/screen/Location'
+import Verify from './src/screen/Verify'
 
 
 export default class App extends React.Component {
@@ -51,11 +52,24 @@ const CurrentNav = createStackNavigator(
 
 const SettingsNav = createStackNavigator({
   FAQ:FAQ,
-  Settings:Settings
+  Settings:{screen:Settings,
+  navigationOptions:{
+    headerMode:"on",
+    title:'Settings',
+    headerTintColor:'white',
+    tabBarIcon:() => (
+      <Icon name="gear" size={25} color='white' />
+      ),
+    height:40,
+    headerStyle:{
+      backgroundColor:'black',
+    },
+    fontSize:20
+  }
+  }
 },
 {
-  initialRouteName : 'Settings',
-  headerMode:'none'
+  initialRouteName : 'Settings'
 })
 
 const Main = createMaterialTopTabNavigator({
@@ -102,12 +116,13 @@ const Main = createMaterialTopTabNavigator({
 
 const Base = createSwitchNavigator({
   SplashScreen : SplashScreen,
-  LoginScreen : LoginScreen,
+  LoginScreen:LoginScreen,
   Registration : Registration,
+  Verify:Verify,
   Main : Main,
 },
 {
-  initialRouteName : 'LoginScreen' ,
+  initialRouteName : 'SplashScreen' ,
   
 })
 
