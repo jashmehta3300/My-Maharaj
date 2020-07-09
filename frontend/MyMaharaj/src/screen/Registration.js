@@ -23,17 +23,17 @@ export default class Registration extends Component {
 constructor(props){
     super(props)
         this.state={
-            username: '',
-            email:'',
-            password: '',
-            confirm_password: '',
+            username: "",
+            email:"",
+            password: "",
+            confirm_password: "",
             secureTextEntry: true,
             confirm_secureTextEntry: true,
-            mobile_no:'',
-            city:'',
-            country_code:'',
+            mobile_no:"",
+            city:"",
+            country_code:"",
             role:'user',
-            token:''
+            token:""
         }
     }
 
@@ -55,27 +55,41 @@ constructor(props){
       signup = async () => {
           if(this.state.username && this.state.email){
              if(this.state.password==this.state.confirm_password){
-                resposne= await fetch('http://localhost:5000/api/v1/auth/register',{
+                 console.warn(this.state)
+                 console.warn('authentication underway')
+                    fetch('http://localhost:5000/api/v1/auth/register',{
                     method:"POST",
                     body:{
-                        name:this.state.name,
+                        name:this.state.username,
                         email:this.state.email,
-                        city:this.state.city,
-                        role:'user',
                         password:this.state.password,
-                        countryCode:this.state.country_code,
-                        mobile:this.state.mobile_no
+                        mobile:this.state.mobile_no,
+                        countryCode:(this.state.country_code),
+                        city:this.state.city,
+                        role:"user"
+
                         
                     },
+                    headers:{
+                        "Content-Type":"application/json"
+                    }
                 })
-                .then((resposne) => {
-                    this.state.token=response.json().token
-                    console.log(this.state.token)
-                    AsyncStorage.setItem('token',this.state.token)
-                    AsyncStorage.getItem('token')
-                    .then((value) => {console.log(value)})
-                    this.props.navigation.navigate('LoginScreen')
-                    console.log(resposne)
+                .then((response) => {
+                    console.warn('wait')
+                    response=response.json()
+                    console.warn(response)
+                    if(response.message.success){
+                        this.state.token=response.token
+                        console.warn(this.state.token)
+                        AsyncStorage.setItem('token',this.state.token)
+                        AsyncStorage.getItem('token')
+                        .then((value) => {console.log(value)})
+                        this.props.navigation.navigate('Verify')
+                        console.log(resposne)
+                    }
+                    else{
+                        Alert.alert('Login fail',response.message.success)
+                    }
             })
             .catch((error) =>{
                 console.log(error)
@@ -120,7 +134,7 @@ constructor(props){
                     size={20}
                 />
                 <TextInput 
-                    placeholder="Your Username"
+                    placeholder="Your email"
                     style={styles.textInput}
                     autoCapitalize="none"
                     onChangeText={(val) => {this.setState({email:val})}}
@@ -150,7 +164,6 @@ constructor(props){
                 <TextInput 
                     placeholder="Your Mobile_No"
                     style={styles.textInput}
-                    keyboardType='numeric'
                     autoCapitalize="none"
                     onChangeText={(val) => {this.setState({mobile_no:val})}}
                 />

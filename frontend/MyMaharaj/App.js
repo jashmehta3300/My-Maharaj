@@ -15,6 +15,7 @@ import Registration from './src/screen/Registration'
 import Settings from './src/screen/Settings'
 import SplashScreen from './src/screen/SplashScreen'
 import TrackOrder from './src/screen/TrackOrder'
+import Verify from './src/screen/Verify'
 
 
 export default class App extends React.Component {
@@ -110,6 +111,7 @@ const Base = createSwitchNavigator({
   SplashScreen : SplashScreen,
   LoginScreen:LoginScreen,
   Registration : Registration,
+  Verify:Verify,
   Main : Main,
 },
 {
