@@ -53,32 +53,33 @@ constructor(props){
         });
     }
       signup = async () => {
-          if(this.state.username && this.state.email){
-             if(this.state.password==this.state.confirm_password){
+        //   if(this.state.username && this.state.email){
+            //  if(this.state.password==this.state.confirm_password){
                  console.warn(this.state)
                  console.warn('authentication underway')
                     fetch('http://localhost:5000/api/v1/auth/register',{
                     method:"POST",
-                    body:{
-                        name:this.state.username,
-                        email:this.state.email,
-                        password:this.state.password,
-                        mobile:this.state.mobile_no,
-                        countryCode:(this.state.country_code),
-                        city:this.state.city,
-                        role:"user"
-
+                    body: JSON.stringify({
+                        name:("Manav"),
+                        email:("ranasdarsadkaoswqd@gmail.com"),
+                        password:("password"),
+                        mobile:("7619223320"),
+                        countryCode:("91"),
+                        city:("Mumbai"),
+                        role:("user")
                         
-                    },
+                    }),
                     headers:{
                         "Content-Type":"application/json"
                     }
                 })
-                .then((response) => {
-                    console.warn('wait')
-                    response=response.json()
-                    console.warn(response)
-                    if(response.message.success){
+                .then((response) => 
+                    // console.warn('wait')
+                    // response=response.json()
+                    response.json()
+                ).then(data =>{
+                        console.log(data)
+                    if(data.message.success){
                         this.state.token=response.token
                         console.warn(this.state.token)
                         AsyncStorage.setItem('token',this.state.token)
@@ -94,11 +95,11 @@ constructor(props){
             .catch((error) =>{
                 console.log(error)
             })
-            }
-        }
-        else{
-            Alert.alert('Username or Email missing')
-        }
+            // }
+        // }
+        // else{
+        //     Alert.alert('Username or Email missing')
+        // }
     }
     render(){
     return (
