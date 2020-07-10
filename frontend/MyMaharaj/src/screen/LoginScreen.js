@@ -14,9 +14,9 @@ export default class LoginScreen extends React.Component{
         super(props)
         this.state = {
             OTP : true,
-            token:'',
-            mobile:'',
-            OTP_value:''
+            tokens:"",
+            mobile:"",
+            OTP_value:""
 
 
         }
@@ -25,10 +25,10 @@ export default class LoginScreen extends React.Component{
         if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             this.setState({OTP:false})
-             await axios.post('http://localhost:5000/api/v1/auth/sms',{
+           await axios.post('http://localhost:5000/api/v1/auth/sms',{
                     mobile:this.state.mobile,
             })
-            .catch((error) => console.log(error))
+            .catch((error) => console.log(error)) 
         }
         else{
             Alert.alert("Please enter your mobile no")
@@ -37,23 +37,23 @@ export default class LoginScreen extends React.Component{
     }
     loginotp= async () =>{                         //verifying your otp and handling errors 
         if(this.state.OTP_value){
-            console.warn('hi')
          await fetch("http://localhost:5000/api/v1/auth/login",{
                 method:"POST",
-                body:{
+                body:JSON.stringify({
+                    mobile:this.state.mobile,
                     token:this.state.OTP_value,
-                    mobile:this.state.mobile
-                },
+                }),
                 headers:{
                     "Content-Type":"application/json"
                 }
-            }).then((response) =>response.json())
-            .then((response) =>{
-                console.warn(response)
-                if(response.message.success){
-                    this.setState({token:response.token})
-                    AsyncStorage.setItem('token',this.state.token)
-                    console.warn(this.state.token)
+            })
+            .then((response) =>response.json())
+            .then((data) =>{
+                console.warn(data)
+                if(data.success){
+                    this.setState({tokens:data.token})
+                    AsyncStorage.setItem('token',this.state.tokens)
+                    console.warn(this.state.tokens)
                     this.props.navigation.navigate('Main')
                 }
                 else{
@@ -61,7 +61,7 @@ export default class LoginScreen extends React.Component{
                 }
             })
             .catch((error) =>{
-                console.warn(error)
+            
                 Alert.alert('Login Failed')
             });
 
@@ -75,7 +75,7 @@ export default class LoginScreen extends React.Component{
 render(){
     return(
         <View style = {style.container}>
-            <Text style = {{fontSize:40 , alignItems:'center' , alignSelf:'center' , fontWeight:'bold' , marginTop:100 , marginBottom:100}}>Login/Sign Up</Text>
+            <Text style = {{fontSize:40 , alignItems:'center' , alignSelf:'center' , fontWeight:'bold' , marginTop:100 , marginBottom:100}}>User Login</Text>
             
             <View style = {{flexDirection:'row' ,  borderWidth:1 , marginLeft:50, marginRight:50 , borderColor:'grey' , borderRadius:10}}>
             <Text style={style.text}>+91</Text>
@@ -90,7 +90,7 @@ render(){
             </View>
         { this.state.OTP ? 
         <View>
-            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.sendotp()}>
+           <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.sendotp()}>
                 <Text style = {style.button}>Send OTP</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => {this.props.navigation.navigate('Registration')}}>
@@ -108,6 +108,9 @@ render(){
             >
             </TextInput> 
             </View>
+            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => {this.sendotp()}}>
+            <Text style = {style.button}>Resend OTP</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => {this.loginotp()}}>
             <Text style = {style.button}>Confirm OTP</Text>
             </TouchableOpacity>
