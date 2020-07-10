@@ -35,7 +35,6 @@ export default class CurrentOrder extends React.Component{
 render(){
     return(
         <View style = {style.container}>
-<<<<<<< HEAD
             <TouchableOpacity style = {{ backgroundColor:'#000'  , justifyContent:'center' ,paddingTop:20}} onPress={() => this.props.navigation.navigate('Location')}>
                 <Text style ={{fontSize:15 , color:'#fff' , paddingLeft:10 ,}}>Deliver to </Text>
                 <View style ={{flexDirection:'row' , }}>
@@ -46,9 +45,6 @@ render(){
             <Text style = {{margin:20,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Current Orders</Text>
             
             
-=======
-            <Text style = {{margin:20 , fontWeight:'bold',marginBottom:10,fontSize:30}}>Current Orders</Text>
->>>>>>> b7bb1a1f8b64c5b36d644afa2c1b3f5809b13944
             <View style={style.box}>
                 <View style={{ flexDirection: 'column' }}>
                     <Text style={style.boxText2 }>REQUEST ID: 123456 </Text>
