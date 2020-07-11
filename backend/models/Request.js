@@ -13,7 +13,7 @@ const RequestSchema = new mongoose.Schema({
     required: true,
   },
   bookingDate: {
-    type: String, 
+    type: Date, 
     required: true
   },
   bookingTime: {
