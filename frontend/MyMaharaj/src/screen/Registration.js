@@ -20,16 +20,16 @@ import  AsyncStorage from "@react-native-community/async-storage"
 
 export default class Registration extends Component {
 
-constructor(props){
-    super(props)
+constructor(){
+    super();
         this.state={
             username: "",
-            email:"",
-            password: "",
+            email:" ",
+            password: " ",
             confirm_password: "",
             secureTextEntry: true,
             confirm_secureTextEntry: true,
-            mobile_no:"",
+            mobile:"",
             city:"",
             country_code:"",
             role:'user',
@@ -53,40 +53,31 @@ constructor(props){
         });
     }
       signup = async () => {
-        //   if(this.state.username && this.state.email){
-            //  if(this.state.password==this.state.confirm_password){
-                 console.warn(this.state)
+          if(this.state.username && this.state.email){
+             if(this.state.password==this.state.confirm_password){
+
                  console.warn('authentication underway')
-                    fetch('http://localhost:5000/api/v1/auth/register',{
+                   await  fetch('http://localhost:5000/api/v1/auth/register',{
                     method:"POST",
-                    body: JSON.stringify({
-                        name:("Manav"),
-                        email:("ranasdarsadkaoswqd@gmail.com"),
-                        password:("password"),
-                        mobile:("7619223320"),
-                        countryCode:("91"),
-                        city:("Mumbai"),
-                        role:("user")
-                        
+                    body:JSON.stringify({
+                        name:this.state.username,
+                        email:this.state.email,
+                        password:this.state.password,
+                        mobile:this.state.mobile,
+                        countryCode:(this.state.country_code),
+                        city:this.state.city,
+                        role:"user"                       
                     }),
                     headers:{
                         "Content-Type":"application/json"
                     }
                 })
-                .then((response) => 
-                    // console.warn('wait')
-                    // response=response.json()
-                    response.json()
-                ).then(data =>{
-                        console.log(data)
-                    if(data.message.success){
-                        this.state.token=response.token
-                        console.warn(this.state.token)
-                        AsyncStorage.setItem('token',this.state.token)
-                        AsyncStorage.getItem('token')
-                        .then((value) => {console.log(value)})
+                .then((response) => response.json())
+                .then((data) =>{
+                    if(data.success){
+                        console.warn(data.token)
+
                         this.props.navigation.navigate('Verify')
-                        console.log(resposne)
                     }
                     else{
                         Alert.alert('Login fail',response.message.success)
@@ -95,11 +86,15 @@ constructor(props){
             .catch((error) =>{
                 console.log(error)
             })
-            // }
-        // }
-        // else{
-        //     Alert.alert('Username or Email missing')
-        // }
+            }
+            else{
+                Alert.alert("Passwords dont match")
+            }
+        }
+        else{
+            Alert.alert('Username or Email missing')
+        }
+
     }
     render(){
     return (
@@ -166,7 +161,7 @@ constructor(props){
                     placeholder="Your Mobile_No"
                     style={styles.textInput}
                     autoCapitalize="none"
-                    onChangeText={(val) => {this.setState({mobile_no:val})}}
+                    onChangeText={(val) => {this.setState({mobile:val})}}
                 />
             </View>
             <Text style={[styles.text_footer,{marginTop:35}]}>City</Text>
@@ -282,6 +277,18 @@ constructor(props){
                     <Text style={[styles.textSign, {
                         color: 'black'
                     }]}>Already have an account?</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('Verify')}
+                    style={[styles.signIn, {
+                        borderColor: 'black',
+                        borderWidth: 1,
+                        marginTop: 15
+                    }]}
+                >
+                    <Text style={[styles.textSign, {
+                        color: 'black'
+                    }]}>Verify if already Registered</Text>
                 </TouchableOpacity>
             </View>
             </ScrollView>

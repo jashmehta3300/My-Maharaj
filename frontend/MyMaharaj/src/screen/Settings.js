@@ -6,11 +6,12 @@ import Icon from "react-native-vector-icons/FontAwesome5"
 export default class Settings extends React.Component{
 
     constructor(props){
-        super(props)
+        super(props);
     }
-    logout = async () =>{
-       await  AsyncStorage.removeItem('token')
-        this.props.navigation.navigate('SplashScreen')
+     logout = async () => {
+        console.log(AsyncStorage.getItem('token'))
+        await AsyncStorage.removeItem('token').then((data) =>{console.log(data)})
+        this.props.navigation.navigate('LoginScreen')
     }
 
     shareapp = () => {
@@ -51,7 +52,7 @@ render(){
             <View>
                 <TouchableOpacity style={style.tab}>  
                         <Text style={style.text}>Logout</Text>
-                        <Icon name="sign-out-alt" size={30} color='#3e4547' onPress={() => {this.logout()}} />
+                        <Icon name="sign-out-alt" size={30} color='#3e4547' onPress={() =>{this.logout()}} />
                 
                 </TouchableOpacity>
             </View>
