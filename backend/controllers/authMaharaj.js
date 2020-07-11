@@ -4,12 +4,7 @@ const OTPService = require("../services/otp");
 
 
 exports.register = async(req,res)=>{
-    const {name, email, mobile ,password, role ,address , city , zipcode , documentName , kin ,yearsOfExp ,cuisine} =req.body
-    const profileImage = req.files['image'][0]
-    const document = req.files['doc'][0]
-    if(!document || !profileImage){
-        return res.status(400).json("Plase upload image and doc")
-    }
+    const {name, email, mobile ,password, role ,address , city , zipcode  , kin ,yearsOfExp ,cuisine} =req.body
     let maharajDoc = new Maharaj({
         name:name,
         email:email,
@@ -20,15 +15,6 @@ exports.register = async(req,res)=>{
             address: address,
             city: city,
             zipcode: zipcode
-        },
-        profileImage:{
-            contentType:profileImage.mimetype,
-            imageData:profileImage.buffer
-        },
-        document:{
-            name:documentName,
-            imageData: document.buffer , 
-            contentType :document.mimetype
         },
         kin:kin,
         cooking:{
@@ -48,6 +34,40 @@ exports.register = async(req,res)=>{
     // res.status(200).json({success:true , sendMaharaj ,token})
     
 }
+
+/**
+ * @ROUTE : /api/v1/authMaharaj/upload/profile
+ * @DESC  : Upload profile image
+ */
+exports.uploadProfileImage = async (req,res)=>{
+    const file = req.file;
+    let profileImage={
+        contentType:file.mimetype,
+        imageData:file.buffer
+    }
+    req.user.profileImage = profileImage;
+    await req.user.save();
+    res.status(200).json("Profile image uploaded successfully.")
+}
+/**
+ * @ROUTE : /api/v1/auth/upload/doc
+ * @DESC  : Upload profile image
+ */
+exports.uploadDoc = async (req,res)=>{
+    const file = req.file;
+    let document={
+        name:"aadhar",
+        imageData: file.buffer , 
+        contentType :file.mimetype
+    }
+    req.user.document = document;
+    await req.user.save();
+    res.status(200).json("Document  uploaded successfully.")
+}
+
+
+
+
 
 exports.login = async (req,res)=>{
     const { mobile, token } = req.body;
@@ -124,14 +144,24 @@ exports.getMe =async (req,res)=>{
 
 
 /**
- * @ROUTE : /api/v1/authMaharaj/me
- * @DESC  : Get current mahharaj
+ * @ROUTE : /api/v1/authMaharaj/maharajs
+ * @DESC  : Get all maharajs
  */
 exports.getMaharajs = async(req,res)=>{
     const maharaj = await Maharaj.find();
     res.status(200).json(maharaj)
 }
 
+/**
+ * @ROUTE : /api/v1/authMaharaj/maharajs/:id
+ * @DESC  : Get  mahharaj by id
+ */
+exports.getMaharajById= async (req,res)=>{
+    const maharaj = await Maharaj.findById(req.params.id);
+    if(!maharaj)return res.status(404).json("No maharaj found");
+    const maharajSend = maharaj.getPublicProfile();
+    res.status(200).json(maharajSend);
+}
 
 /**
  * @ROUTE : /api/v1/maharajAuth/:id/profileimage
@@ -146,7 +176,7 @@ exports.getProfileImage = async (req,res)=>{
     res.send(maharaj.profileImage.imageData);
 }
 /**
- * @ROUTE : /api/v1/:id/doc
+ * @ROUTE : /api/v1/maharajAuth/:id/doc
  * @DESC  : Get document Pic
  */
 exports.getDocument = async (req,res)=>{
@@ -157,3 +187,16 @@ exports.getDocument = async (req,res)=>{
     res.set('Content-Type', maharaj.document.contentType);
     res.send(maharaj.document.imageData);
 }
+
+/**
+ * @ROUTE : PUT /api/v1/maharajAuth/me
+ * @DESC  : Update Maharaj Profile
+ */
+exports.updateProfile = async (req, res) => {
+    const maharaj = await Maharaj.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+    });
+    const maharajSend = maharaj.getPublicProfile();
+    return res.status(200).json(maharajSend);
+  };
+  
