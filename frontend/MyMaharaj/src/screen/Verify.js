@@ -22,17 +22,25 @@ export default class LoginScreen extends React.Component{
         }
     }
     sendotp =async ()=>{                                                                //fetching the send sms api and handling with errors 
-        if(this.state.mobile){
+        // if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             this.setState({OTP:false})
-             await axios.post('http://localhost:5000/api/v1/auth/sms',{
-                    mobile:this.state.mobile,
+             await fetch('http://localhost:5000/api/v1/auth/sms',
+             {
+                 method:"POST",
+                 headers:{
+                    'Content-Type': 'application/json'
+                 },
+                 body : JSON.stringify({
+                     mobile : "9833320648"
+                 })
+                    
             })
             .catch((error) => console.log(error))
-        }
-        else{
-            Alert.alert("Please enter your mobile no")
-        }
+        // }
+        // else{
+            // Alert.alert("Please enter your mobile no")
+        // }
 
     }
     verifyotp = async () =>{                         //verifying your otp and handling errors 

@@ -15,6 +15,7 @@ import Registration from './src/screen/Registration'
 import Settings from './src/screen/Settings'
 import SplashScreen from './src/screen/SplashScreen'
 import TrackOrder from './src/screen/TrackOrder'
+import Location from './src/screen/Location'
 import Verify from './src/screen/Verify'
 
 
@@ -23,7 +24,7 @@ export default class App extends React.Component {
   render() {
     return (
       
-          <AppContainer /> 
+          <Registration />
      
     );
   }
@@ -34,8 +35,14 @@ const CurrentNav = createStackNavigator(
   {
   CreateRequest : CreateRequest,
   Details:Details,
-  TrackOrder : TrackOrder,
+  TrackOrder : {
+    screen : TrackOrder,
+    navigationOptions :{
+      tabBarVisible : false
+    }
+  },
   CurrentOrder : CurrentOrder,
+  Location : Location
 },{
   initialRouteName : 'CurrentOrder',
   headerMode:'none'

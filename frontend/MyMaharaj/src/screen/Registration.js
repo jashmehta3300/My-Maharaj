@@ -55,6 +55,7 @@ constructor(){
       signup = async () => {
           if(this.state.username && this.state.email){
              if(this.state.password==this.state.confirm_password){
+
                  console.warn('authentication underway')
                    await  fetch('http://localhost:5000/api/v1/auth/register',{
                     method:"POST",
@@ -75,6 +76,7 @@ constructor(){
                 .then((data) =>{
                     if(data.success){
                         console.warn(data.token)
+
                         this.props.navigation.navigate('Verify')
                     }
                     else{
@@ -92,6 +94,7 @@ constructor(){
         else{
             Alert.alert('Username or Email missing')
         }
+
     }
     render(){
     return (

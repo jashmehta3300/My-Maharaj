@@ -6,6 +6,10 @@ import Geolocation from "@react-native-community/geolocation"
 import {request,PERMISSIONS} from "react-native-permissions"
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 export default class TrackOrder extends React.Component{
+   static navigationOptions = {
+    //To hide the NavigationBar from current Screen
+    tabBarVisible : false
+  };
     constructor(props){
         super(props);
         this.state = {
@@ -16,15 +20,20 @@ export default class TrackOrder extends React.Component{
         }
       }
       async componentDidMount(){
-       await RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000}) //pop up if the mobiles location is not on
-       .then(data =>{
-           this.setState({isloading:0})
-           this.requestLocation()
-       })
-       .catch(err =>{
-           this.setState({isloading:0})
-       })
-
+    //    await RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000}) //pop up if the mobiles location is not on
+    //    .then(data =>{
+    //        this.setState({isloading:0})
+    //        this.requestLocation()
+    //    })
+    //    .catch(err =>{
+    //        this.setState({isloading:0})
+    //    })
+        const longlat = this.props.navigation.getParam('longlat')
+        console.log(longlat)
+        this.setState({
+            longitude : longlat.lng,
+            latitude : longlat.lat
+        }) 
 
       }
 
@@ -32,45 +41,38 @@ export default class TrackOrder extends React.Component{
 
 
 
-       requestLocation = async() => {
-          if(Platform.OS === 'android'){
-           var response= await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION); //to check whether the app has been given the permision to use mobiles location
-           if(response === 'granted'){
-            this.locationCurrentPosition()
-           }
-           else{
+    //    requestLocation = async() => {
+    //       if(Platform.OS === 'android'){
+    //        var response= await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION); //to check whether the app has been given the permision to use mobiles location
+    //        if(response === 'granted'){
+    //         this.locationCurrentPosition()
+    //        }
+    //        else{
                
-           }
-          }
-      }
+    //        }
+    //       }
+    //   }
     
-         locationCurrentPosition = () =>{
-            Geolocation.getCurrentPosition(         //get users current location
-                position => {
-                    console.log(position)
-                  var latitude = Number(JSON.stringify(position.coords.latitude));
-                  var longitude = Number(JSON.stringify(position.coords.longitude))
+    //      locationCurrentPosition = () =>{
+    //         Geolocation.getCurrentPosition(         //get users current location
+    //             position => {
+    //                 console.log(position)
+    //               var latitude = Number(JSON.stringify(position.coords.latitude));
+    //               var longitude = Number(JSON.stringify(position.coords.longitude))
                     
-                  this.setState({
-                      latitude,
-                      longitude
-                  });
-                },
-                error => Alert.alert(error.message),
-                { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000 }
-              );
+    //               this.setState({
+    //                   latitude,
+    //                   longitude
+    //               });
+    //             },
+    //             error => Alert.alert(error.message),
+    //             { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000 }
+    //           );
    
-      }
+    //   }
       
       render() { 
-          if(this.state.isloading){
-              return(
-                  <View>
-                      <ActivityIndicator animating = {true} color = '#bc2b78' size = "large" />
-                  </View>
-              )
-          }
-          else{
+          
         return (  
             <View  style={styles.MainContainer}>
                 <MapView
@@ -82,8 +84,8 @@ export default class TrackOrder extends React.Component{
                 region={{
                     latitude: this.state.latitude,   
                     longitude: this.state.longitude,  
-                    latitudeDelta: 0.0922,  
-                    longitudeDelta: 0.0421,  
+                    latitudeDelta: 0.003922,  
+                    longitudeDelta: 0.003421,  
                 }}>    
                 <Marker  
                     DRAGGABLE
@@ -95,7 +97,7 @@ export default class TrackOrder extends React.Component{
             
           </View>  
         );
-        }  
+        
       }  
     }  
 const styles = StyleSheet.create({

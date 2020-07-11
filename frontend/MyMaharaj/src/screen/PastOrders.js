@@ -35,7 +35,8 @@ const style = StyleSheet.create({
         borderColor: 'black',
         margin: 10,
         borderWidth: 1 ,
-        borderRadius:10
+        borderRadius:10,
+        backgroundColor:'#fff'
     },
     boxText: {
         color: 'black',
