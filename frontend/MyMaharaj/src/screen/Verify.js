@@ -22,25 +22,27 @@ export default class LoginScreen extends React.Component{
         }
     }
     sendotp =async ()=>{                                                                //fetching the send sms api and handling with errors 
-        // if(this.state.mobile){
+        if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             this.setState({OTP:false})
              await fetch('http://localhost:5000/api/v1/auth/sms',
              {
                  method:"POST",
                  headers:{
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json"
                  },
                  body : JSON.stringify({
-                     mobile : "9833320648"
+                     mobile : this.state.mobile
                  })
                     
             })
-            .catch((error) => console.log(error))
-        // }
-        // else{
-            // Alert.alert("Please enter your mobile no")
-        // }
+            .catch((error) => {
+                Alert.alert(error)
+            })
+         }
+        else{
+            Alert.alert("Please enter your mobile no")
+         }
 
     }
     verifyotp = async () =>{                         //verifying your otp and handling errors 
@@ -54,14 +56,17 @@ export default class LoginScreen extends React.Component{
                 headers:{
                     "Content-Type":"application/json"
                 }
-            }).then((response) =>response.json())
+            })
+            .then((response) => response.json())
             .then((data) =>{
-                console.warn(data)
-                this.props.navigation.navigate('LoginScreen')
+                console.log(data.token)
+                this.setState({token:data.token})
+                AsyncStorage.setItem('token',this.state.token)
+                this.props.navigation.navigate('Main')
+                console.warn(this.state.token)
             })
             .catch((error) =>{
-                console.warn(error)
-                Alert.alert('Login Failed')
+                Alert.alert(error)
             });
 
         }

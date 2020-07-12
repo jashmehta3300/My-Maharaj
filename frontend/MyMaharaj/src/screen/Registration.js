@@ -33,7 +33,7 @@ constructor(){
             city:"",
             country_code:"",
             role:'user',
-            token:""
+            token:" "
         }
     }
 
@@ -55,7 +55,6 @@ constructor(){
       signup = async () => {
           if(this.state.username && this.state.email){
              if(this.state.password==this.state.confirm_password){
-
                  console.warn('authentication underway')
                    await  fetch('http://localhost:5000/api/v1/auth/register',{
                     method:"POST",
@@ -64,7 +63,7 @@ constructor(){
                         email:this.state.email,
                         password:this.state.password,
                         mobile:this.state.mobile,
-                        countryCode:(this.state.country_code),
+                        countryCode:"91",
                         city:this.state.city,
                         role:"user"                       
                     }),
@@ -74,9 +73,9 @@ constructor(){
                 })
                 .then((response) => response.json())
                 .then((data) =>{
+
                     if(data.success){
                         console.warn(data.token)
-
                         this.props.navigation.navigate('Verify')
                     }
                     else{
@@ -94,7 +93,6 @@ constructor(){
         else{
             Alert.alert('Username or Email missing')
         }
-
     }
     render(){
     return (
@@ -136,20 +134,6 @@ constructor(){
                     onChangeText={(val) => {this.setState({email:val})}}
                 />
             </View>
-            <Text style={[styles.text_footer,{marginTop:35}]}>Country Code</Text>
-            <View style={styles.action}>
-                <FontAwesome 
-                    name="phone"
-                    color="#05375a"
-                    size={20}
-                />
-                <TextInput 
-                    placeholder="Your Country_code"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    onChangeText={(val) => {this.setState({country_code:val})}}
-                />
-            </View>
             <Text style={[styles.text_footer,{marginTop:35}]}>Phone</Text>
             <View style={styles.action}>
                 <FontAwesome 
@@ -158,11 +142,19 @@ constructor(){
                     size={20}
                 />
                 <TextInput 
-                    placeholder="Your Mobile_No"
+                    placeholder="Code"
                     style={styles.textInput}
                     autoCapitalize="none"
+                    onChangeText={(val) => {this.setState({country_code:val})}}
+                    editable={false}
+                >+91</TextInput>
+                <Text>-</Text>
+                <TextInput 
+                    placeholder="Number"
+                    style={styles.textInput1}
+                    autoCapitalize="none"
                     onChangeText={(val) => {this.setState({mobile:val})}}
-                />
+                ></TextInput>
             </View>
             <Text style={[styles.text_footer,{marginTop:35}]}>City</Text>
             <View style={styles.action}>
@@ -332,13 +324,21 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
+        paddingBottom: 5,
+        marginRight:20
     },
     textInput: {
         flex: 1,
         marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
+    },
+    textInput1:{
+        flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : -12,
+        color: '#05375a',
+        width:100,
+        marginHorizontal:100
     },
     button: {
         alignItems: 'center',
