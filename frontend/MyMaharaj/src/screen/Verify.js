@@ -25,15 +25,16 @@ export default class LoginScreen extends React.Component{
         // if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             this.setState({OTP:false})
+        
              await fetch('http://localhost:5000/api/v1/auth/sms',
              {
                  method:"POST",
                  headers:{
                     'Content-Type': 'application/json'
                  },
-                 body : JSON.stringify({
-                     mobile : "9833320648"
-                 })
+                 body :{ 
+                     "mobile" : this.state.OTP_value
+                 }
                     
             })
             .catch((error) => console.log(error))
@@ -57,7 +58,9 @@ export default class LoginScreen extends React.Component{
             }).then((response) =>response.json())
             .then((data) =>{
                 console.warn(data)
-                this.props.navigation.navigate('LoginScreen')
+                if(data.message.success === "true"){
+                    this.props.navigation.navigate('Main')
+                }
             })
             .catch((error) =>{
                 console.warn(error)

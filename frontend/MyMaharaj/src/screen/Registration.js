@@ -133,6 +133,7 @@ constructor(){
                     placeholder="Your email"
                     style={styles.textInput}
                     autoCapitalize="none"
+                    keyboardType = {"email-address"}
                     onChangeText={(val) => {this.setState({email:val})}}
                 />
             </View>
@@ -147,6 +148,7 @@ constructor(){
                     placeholder="Your Country_code"
                     style={styles.textInput}
                     autoCapitalize="none"
+                    keyboardType={"phone-pad"}
                     onChangeText={(val) => {this.setState({country_code:val})}}
                 />
             </View>
@@ -160,6 +162,7 @@ constructor(){
                 <TextInput 
                     placeholder="Your Mobile_No"
                     style={styles.textInput}
+                    keyboardType={"phone-pad"}
                     autoCapitalize="none"
                     onChangeText={(val) => {this.setState({mobile:val})}}
                 />

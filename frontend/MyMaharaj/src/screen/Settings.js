@@ -8,7 +8,8 @@ export default class Settings extends React.Component{
     constructor(props){
         super(props);
     }
-     logout = async () => {
+    
+    logout = async () => {
         console.log(AsyncStorage.getItem('token'))
         await AsyncStorage.removeItem('token').then((data) =>{console.log(data)})
         this.props.navigation.navigate('LoginScreen')
@@ -16,7 +17,7 @@ export default class Settings extends React.Component{
 
     shareapp = () => {
         Share.share({
-            message:'my maharaj app',
+            message:'my maharaj app https://www.google.com/',
             url:'https://www.google.com/',
             title:'wow did you see that'
         },{
@@ -28,34 +29,25 @@ export default class Settings extends React.Component{
 render(){
     return(
         <View style = {style.container}>
-            <View > 
                 <TouchableOpacity style={style.tab} onPress={() =>{this.props.navigation.navigate('FAQ')}} >
                     <Text style={style.text}>FAQS</Text>
                     <Icon name="chevron-right" size={30}  color='#3e4547'/>
                 </TouchableOpacity>
                
-            </View>
-            <View>
-                <TouchableOpacity style={style.tab}>  
+                <TouchableOpacity style={style.tab} onPress={() => {this.props.navigation.navigate('FAQ')}}>  
                         <Text style={style.text}>ContactUs</Text>
-                        <Icon name="phone" size={30} color='#3e4547' onPress={() => {this.props.navigation.navigate('FAQ')}} />
-                
+                        <Icon name="phone" size={30} color='#3e4547'  />
                 </TouchableOpacity>
-            </View>
-            <View>
-                <TouchableOpacity style={style.tab}>  
+                <TouchableOpacity style={style.tab} onPress={() => {this.shareapp()}}>  
                         <Text style={style.text}>Share MyMaharaj</Text>
-                        <Icon name="share" size={30} color="#3e4547" onPress={() => {this.shareapp()}} />
+                        <Icon name="share" size={30} color="#3e4547"  />
                 
                 </TouchableOpacity>
-            </View>
-            <View>
-                <TouchableOpacity style={style.tab}>  
+                <TouchableOpacity style={style.tab}  onPress={() => this.logout()}>  
                         <Text style={style.text}>Logout</Text>
-                        <Icon name="sign-out-alt" size={30} color='#3e4547' onPress={() =>{this.logout()}} />
+                        <Icon name="sign-out-alt" size={30} color='#3e4547' />
                 
                 </TouchableOpacity>
-            </View>
             <Text style={style.Company}>
                 MyMaharaj Inc.
             </Text>

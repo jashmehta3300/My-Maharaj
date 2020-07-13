@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity , FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -8,10 +8,15 @@ export default class CurrentOrder extends React.Component{
     constructor(props){
         super(props)
         this.state ={
-            location : 'Helloo World'
+            location : '',
+            data:[]
         }
     }
     onFocusFunction = async() =>{
+        this.getloc() 
+        this.getOrder()     
+    }
+    getloc = async() =>{
         const location = await AsyncStorage.getItem('Location')
         const loc = JSON.parse(location)
         console.log(loc)
@@ -23,35 +28,66 @@ export default class CurrentOrder extends React.Component{
                 location : 'Please add your location'
             })
     }
-    componentDidMount() {
+    getOrder = async() =>{
+        let token = await AsyncStorage.getItem('token')
+            console.log(token)
+            fetch('http://localhost:5000/api/v1/req/ongoing',
+            {
+                method:'GET',
+                headers:{
+                    "Authorization":token,
+                    "Content-Type":"application/json"
+                }
+            }, ).then((response) => 
+                response.json()
+            
+        ).then((data) =>{
+            console.log(data.data)
+            this.setState({data : data.data})
+        })
+    }
+    componentDidMount= async() => {
+            
+            this.getloc()
+            this.getOrder()
             this.focusListner = this.props.navigation.addListener('didFocus' , () =>{
                 this.onFocusFunction()
             })
     }
-     componentWillUnmount() {
-         this.focusListener.remove()
-     }
+      componentWillUnmount() {
+          if(this.focusListner.remove()){
+              this.focusListener.remove()
+         }
+      }
 
 render(){
     return(
         <View style = {style.container}>
-            <TouchableOpacity style = {{ backgroundColor:'#000'  , justifyContent:'center' ,paddingTop:20}} onPress={() => this.props.navigation.navigate('Location')}>
+            <TouchableOpacity style = {{ backgroundColor:'#000'  , justifyContent:'center' ,paddingTop:18}} onPress={() => this.props.navigation.navigate('Location')}>
                 <Text style ={{fontSize:15 , color:'#fff' , paddingLeft:10 ,}}>Deliver to </Text>
                 <View style ={{flexDirection:'row' , }}>
-                    <Text style = {{fontSize : 20 ,color :'#fff' , fontWeight:'bold' , marginLeft:10 , marginVertical:10, borderBottomWidth:1 ,borderBottomColor:'#fff',marginTop:0}}>{this.state.location}</Text>
+                    <Text style = {{fontSize : 18 ,color :'#fff' , fontWeight:'bold' , marginLeft:10 , marginVertical:10, borderBottomWidth:1 ,borderBottomColor:'#fff',marginTop:0}}>{this.state.location}</Text>
                     <Icon name = "chevron-down" size = {15} color = {'#fff'} style={{paddingTop:5,paddingLeft:30 , marginRight:100}}/>
                 </View>
             </TouchableOpacity>
-            <Text style = {{margin:20,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Current Orders</Text>
+            <Text style = {{margin:18,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Current Orders</Text>
+            
+            <FlatList
+             data={this.state.data.reverse()}
+             renderItem ={ ({ item, index }) =>
             
             
-            <View style={style.box}>
+            <TouchableOpacity style={style.box}>
                 <View style={{ flexDirection: 'column' }}>
-                    <Text style={style.boxText2 }>REQUEST ID: 123456 </Text>
-                    <Text style={style.boxText2}>Date of Booking: 04/07/2020 6:00 pm </Text>
-                    <Text style={style.boxText}>Status : Pending</Text>
+                    <Text style={style.boxText2 }>REQUEST ID: {item._id} </Text>
+                    <Text style={style.boxText2}>Date of Booking: {item.bookingDate} </Text>
+                    <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>
+                    <Text style={style.boxText}>Status : {item.status}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
+            
+             }
+            />
             
             <TouchableOpacity
           activeOpacity={0.7}
@@ -95,14 +131,14 @@ const style = StyleSheet.create({
     boxText: {
         color: 'black',
         margin: 10,
-        fontSize:20,
+        fontSize:18,
         
 
     },
     boxText2: {
         color: 'black',
         margin: 10,
-        fontSize:20,
+        fontSize:18,
         marginBottom:0
 
     }

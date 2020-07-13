@@ -35,7 +35,8 @@ export default class LoginScreen extends React.Component{
         }
 
     }
-    loginotp= async () =>{                         //verifying your otp and handling errors 
+    loginotp= async () =>{    
+        console.log(this.state.OTP_value)                     //verifying your otp and handling errors 
         if(this.state.OTP_value){
          await fetch("http://localhost:5000/api/v1/auth/login",{
                 method:"POST",
