@@ -25,14 +25,24 @@ export default class LoginScreen extends React.Component{
         if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             this.setState({OTP:false})
-           await axios.post('http://localhost:5000/api/v1/auth/sms',{
-                    mobile:this.state.mobile,
+             await fetch('http://localhost:5000/api/v1/auth/sms',
+             {
+                 method:"POST",
+                 headers:{
+                    "Content-Type": "application/json"
+                 },
+                 body : JSON.stringify({
+                     mobile : this.state.mobile
+                 })
+                    
             })
-            .catch((error) => console.log(error)) 
-        }
+            .catch((error) => {
+                Alert.alert(error)
+            })
+         }
         else{
             Alert.alert("Please enter your mobile no")
-        }
+         }
 
     }
     loginotp= async () =>{                         //verifying your otp and handling errors 
@@ -57,12 +67,17 @@ export default class LoginScreen extends React.Component{
                     this.props.navigation.navigate('Main')
                 }
                 else{
-                    Alert.alert("Login failed.Enter the valid OTP")
+                    if(data == "Number Not Verified"){
+                        this.props.navigation.navigate('Verify')
+                    }
+                    else{
+                        Alert.alert("Login failed.Enter the valid OTP")
+                    }
                 }
             })
             .catch((error) =>{
             
-                Alert.alert('Login Failed')
+                Alert.alert(error)
             });
 
         }
@@ -80,7 +95,7 @@ render(){
             <View style = {{flexDirection:'row' ,  borderWidth:1 , marginLeft:50, marginRight:50 , borderColor:'grey' , borderRadius:10}}>
             <Text style={style.text}>+91</Text>
             <TextInput
-              keyboardType = {'numeric'}
+            keyboardType='numeric'
               placeholder = 'Phone Number'
               onChangeText={(text) => this.setState({mobile:text})}
               style={style.textinput}
