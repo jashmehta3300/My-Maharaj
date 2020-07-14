@@ -22,6 +22,7 @@ import MaharajLogin from './src/screen/MaharajLogin'
 import Analytics from './src/screen/Analytics'
 import RegisterAdmin from './src/screen/RegisterAdmin';
 import UploadPhoto from './src/screen/UploadPhoto'
+import Charts from './src/screen/charts'
 export default class App extends React.Component {
   
   render() {
@@ -94,6 +95,12 @@ const MainAdmin = createMaterialTopTabNavigator({
       <Icon name="user" size={25} color={tintColor} />
       )}
   },
+  Charts:{
+    screen:Charts ,
+    navigationOptions: {title: 'Charts', tabBarIcon: ({ tintColor }) => (
+      <Icon name="user" size={25} color={tintColor} />
+      )}
+  },
 },{
   tabBarPosition: 'bottom',
     tabBarOptions: {activeTintColor: 'white',
@@ -104,7 +111,7 @@ const MainAdmin = createMaterialTopTabNavigator({
     iconStyle: {inactiveColor:'grey', paddingTop:3, activeColor: 'white'},
     indicatorStyle: { backgroundColor: 'white', height: 4}
   },
-  order : ['RegisterAdmin','Analytics','SettingsNav'],
+  order : ['RegisterAdmin','Analytics','SettingsNav','Charts'],
 })
 
 const MainMaharaj = createMaterialTopTabNavigator({

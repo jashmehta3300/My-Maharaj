@@ -13,7 +13,7 @@ class Divider extends Component {
                 <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.props.navigation.navigate('AdminLogin')}>
                     <Text style = {style.button}>AdminLogin</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.props.navigation.navigate('MaharajLogin')}>
+                <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.props.navigation.navigate('MainAdmin')}>
                     <Text style = {style.button}>MaharajLogin</Text>
                 </TouchableOpacity>
             </View>
