@@ -21,6 +21,10 @@ export default class LoginScreen extends React.Component{
 
         }
     }
+    fakelogin = () =>{
+        AsyncStorage.setItem('token','123456')
+        this.props.navigation.navigate('MainMaharaj')
+    }
     sendotp =async ()=>{                                                                //fetching the send sms api and handling with errors 
         if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -100,6 +104,9 @@ render(){
                 </View>
             { this.state.OTP ? 
             <View>
+            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.fakelogin()}>
+                    <Text style = {style.button}>Send OTP</Text>
+                </TouchableOpacity>
             <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.sendotp()}>
                     <Text style = {style.button}>Send OTP</Text>
                 </TouchableOpacity>

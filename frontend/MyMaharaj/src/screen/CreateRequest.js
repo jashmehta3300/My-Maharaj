@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import AsyncStorage from '@react-native-community/async-storage'
+import * as Animatable from 'react-native-animatable'
 import { ThemeColors } from 'react-navigation';
 
 export default class CreateRequest extends React.Component {
@@ -135,6 +136,10 @@ export default class CreateRequest extends React.Component {
 
     render() {
         return (
+            <ScrollView style={style.container}>
+            <Animatable.View
+            animation='fadeInUpBig'
+            >
             <View style={style.container}>
             <ScrollView scrollEnabled={this.state.enable}>
                 <Text style={{ fontSize: 40, alignItems: 'center', alignSelf: 'center', fontWeight: 'bold', marginTop: 30, marginBottom: 50 }}>Create Request</Text>
@@ -277,6 +282,8 @@ export default class CreateRequest extends React.Component {
                 </TouchableOpacity>
             </ScrollView>
             </View>
+            </Animatable.View>
+            </ScrollView>
         )
     }
 }
