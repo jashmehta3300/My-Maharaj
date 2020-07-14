@@ -23,6 +23,8 @@ import Analytics from './src/screen/Analytics'
 import RegisterAdmin from './src/screen/RegisterAdmin';
 import UploadPhoto from './src/screen/UploadPhoto'
 import Charts from './src/screen/charts'
+import ShowRequest from './src/screen/ShowRequest'
+
 export default class App extends React.Component {
   
   render() {
@@ -52,6 +54,46 @@ const CurrentNav = createStackNavigator(
 }
 
 )
+const PostNav = createStackNavigator({
+  PastOrder:{
+    screen:PastOrder,
+    navigationOptions:{
+      tabBarVisible:true
+    },
+    Details:{
+      screen:Details,
+      navigationOptions:{
+        tabBarVisible:false
+      }
+    }
+  }
+},
+{
+  initialRouteName:'PastOrder',
+  headerMode:'none'
+}
+)
+
+const ShowNav = createStackNavigator({
+  ShowRequest:{
+    screen:ShowRequest,
+    navigationOptions:{
+      tabBarVisible:true
+    },
+    Details:{
+      screen:Details,
+      navigationOptions:{
+        tabBarVisible:false
+      }
+    }
+  }
+},
+{
+  initialRouteName:'ShowRequest',
+  headerMode:'none'
+}
+)
+
 
 const SettingsNav = createStackNavigator({
   FAQ:FAQ,
@@ -123,18 +165,18 @@ const MainMaharaj = createMaterialTopTabNavigator({
   },
   CurrentNav : {
     screen:CurrentNav ,
-    navigationOptions: {title: 'Home', tabBarIcon: ({ tintColor }) => (
+    navigationOptions: {title:'CurrentOrder', tabBarIcon: ({ tintColor }) => (
       <Icon name="home" size={25} color={tintColor} />
       )}
   },
-  Home:{
-    screen:Home ,
-    navigationOptions: {title: 'Home', tabBarIcon: ({ tintColor }) => (
+  ShowRequest:{
+    screen:ShowNav,
+    navigationOptions: {title: 'ShowRequest', tabBarIcon: ({ tintColor }) => (
       <Icon name="user" size={25} color={tintColor} />
       )}
   },
   PastOrder :{
-    screen:PastOrder ,
+    screen:PostNav ,
     navigationOptions: {title: 'Past Orders', tabBarIcon: ({ tintColor }) => (
       <Icon name="book" size={25} color={tintColor} />
       )}
@@ -149,7 +191,7 @@ const MainMaharaj = createMaterialTopTabNavigator({
     iconStyle: {inactiveColor:'grey', paddingTop:3, activeColor: 'white'},
     indicatorStyle: { backgroundColor: 'white', height: 4}
   },
-  order : ['CurrentNav','PastOrder','Home','SettingsNav'],
+  order : ['CurrentNav','ShowRequest','PastOrder','SettingsNav'],
 })
 
 

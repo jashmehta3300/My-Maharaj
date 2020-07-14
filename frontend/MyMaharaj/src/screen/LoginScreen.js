@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, ImageBackground , Image, View , TextInput , TouchableOpacity,LayoutAnimation,UIManager, Alert} from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage"
+import * as Animatable from 'react-native-animatable'
 import axios from "axios"
 
 if (Platform.OS === 'android') {
@@ -20,6 +21,10 @@ export default class LoginScreen extends React.Component{
 
 
         }
+    }
+    fakelogin = () =>{
+        AsyncStorage.setItem('token','123456')
+        this.props.navigation.navigate('Main')
     }
     sendotp =async ()=>{                                                                //fetching the send sms api and handling with errors 
         if(this.state.mobile){
@@ -96,6 +101,8 @@ export default class LoginScreen extends React.Component{
 render(){
     return(
         <View style = {style.container}>
+        <Animatable.View
+        animation='fadeInUpBig'>
             <Text style = {{fontSize:40 , alignItems:'center' , alignSelf:'center' , fontWeight:'bold' , marginTop:100 , marginBottom:100}}>User Login</Text>
             
             <View style = {{flexDirection:'row' ,  borderWidth:1 , marginLeft:50, marginRight:50 , borderColor:'grey' , borderRadius:10}}>
@@ -111,6 +118,9 @@ render(){
             </View>
         { this.state.OTP ? 
         <View>
+        <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.fakelogin()}>
+                <Text style = {style.button}>Fake Login</Text>
+            </TouchableOpacity>
            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.sendotp()}>
                 <Text style = {style.button}>Send OTP</Text>
             </TouchableOpacity>
@@ -140,6 +150,7 @@ render(){
             </TouchableOpacity>
             </View>
         }
+        </Animatable.View>
         </View>
 )}
 }
