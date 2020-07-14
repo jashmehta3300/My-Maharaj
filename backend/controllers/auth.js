@@ -73,10 +73,11 @@ exports.verify = async function (req, res , next) {
     if(!mobile || !token ) res.status(400).json("No mobile or token found")
     const user = await User.findOne({mobile})
     if (!user) res.status(404).json("No User");
+    const JWTtoken = user.getSignedJwtToken();
     const tokenRes= await OTPService.verifyOTP(user.authyId,token)   
     user.isVerified=true;
     await user.save()
-    res.status(200).json({message:tokenRes});
+    res.status(200).json({message:tokenRes, token:JWTtoken});
 }
 
 

@@ -1,30 +1,61 @@
 import React from 'react';
 import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import AsyncStorage from '@react-native-community/async-storage';
+import * as Animatable from 'react-native-animatable'
 
 export default class CurrentOrder extends React.Component{
     constructor(props){
         super(props)
+        this.state ={
+            location : 'Helloo World'
+        }
     }
+    onFocusFunction = async() =>{
+        const location = await AsyncStorage.getItem('Location')
+        const loc = JSON.parse(location)
+        console.log(loc)
+        location !== null ? 
+            this.setState({
+                location : loc.title
+            }) :
+            this.setState({
+                location : 'Please add your location'
+            })
+    }
+    componentDidMount() {
+            this.focusListner = this.props.navigation.addListener('didFocus' , () =>{
+                this.onFocusFunction()
+            })
+    }
+     componentWillUnmount() {
+         this.focusListener.remove()
+     }
 
 render(){
     return(
         <View style = {style.container}>
-            <Text style = {{margin:20 , fontWeight:'bold',marginBottom:10,fontSize:30}}>Current Orders</Text>
+            <TouchableOpacity style = {{ backgroundColor:'#000'  , justifyContent:'center' ,paddingTop:20}} onPress={() => this.props.navigation.navigate('Location')}>
+                <Text style ={{fontSize:15 , color:'#fff' , paddingLeft:10 ,}}>Deliver to </Text>
+                <View style ={{flexDirection:'row' , }}>
+                    <Text style = {{fontSize : 20 ,color :'#fff' , fontWeight:'bold' , marginLeft:10 , marginVertical:10, borderBottomWidth:1 ,borderBottomColor:'#fff',marginTop:0}}>{this.state.location}</Text>
+                    <Icon name = "chevron-down" size = {15} color = {'#fff'} style={{paddingTop:5,paddingLeft:30 , marginRight:100}}/>
+                </View>
+            </TouchableOpacity>
+            <Text style = {{margin:20,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Current Orders</Text>
+            
+            <Animatable.View
+            animation='fadeInUpBig'
+            >        
             <View style={style.box}>
-
-
-
-    <View style={{ flexDirection: 'column' }}>
-        <Text style={style.boxText2 }>REQUEST ID: 123456 </Text>
-        <Text style={style.boxText2}>Date of Booking: 04/07/2020 6:00 pm </Text>
-        <Text style={style.boxText}>Status : Pending</Text>
-    </View>
-    
-
-
-</View>
+                <View style={{ flexDirection: 'column' }}>
+                    <Text style={style.boxText2 }>REQUEST ID: 123456 </Text>
+                    <Text style={style.boxText2}>Date of Booking: 04/07/2020 6:00 pm </Text>
+                    <Text style={style.boxText}>Status : Pending</Text>
+                </View>
+            </View>
+            </Animatable.View>
+            
             <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => this.props.navigation.navigate('CreateRequest')}
@@ -38,7 +69,6 @@ render(){
 const style = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor:'#fff'
     },
 
     text:{
@@ -62,7 +92,8 @@ const style = StyleSheet.create({
         borderColor: 'black',
         margin: 10,
         borderWidth: 1 ,
-        borderRadius:10
+        borderRadius:10 , 
+        backgroundColor:'#fff',
     },
     boxText: {
         color: 'black',

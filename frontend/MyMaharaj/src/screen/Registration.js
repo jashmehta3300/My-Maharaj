@@ -20,20 +20,20 @@ import  AsyncStorage from "@react-native-community/async-storage"
 
 export default class Registration extends Component {
 
-constructor(props){
-    super(props)
+constructor(){
+    super();
         this.state={
             username: "",
-            email:"",
-            password: "",
+            email:" ",
+            password: " ",
             confirm_password: "",
             secureTextEntry: true,
             confirm_secureTextEntry: true,
-            mobile_no:"",
+            mobile:"",
             city:"",
             country_code:"",
             role:'user',
-            token:""
+            token:" "
         }
     }
 
@@ -55,37 +55,28 @@ constructor(props){
       signup = async () => {
           if(this.state.username && this.state.email){
              if(this.state.password==this.state.confirm_password){
-                 console.warn(this.state)
                  console.warn('authentication underway')
-                    fetch('http://localhost:5000/api/v1/auth/register',{
+                   await  fetch('http://localhost:5000/api/v1/auth/register',{
                     method:"POST",
-                    body:{
+                    body:JSON.stringify({
                         name:this.state.username,
                         email:this.state.email,
                         password:this.state.password,
-                        mobile:this.state.mobile_no,
-                        countryCode:(this.state.country_code),
+                        mobile:this.state.mobile,
+                        countryCode:"91",
                         city:this.state.city,
-                        role:"user"
-
-                        
-                    },
+                        role:"user"                       
+                    }),
                     headers:{
                         "Content-Type":"application/json"
                     }
                 })
-                .then((response) => {
-                    console.warn('wait')
-                    response=response.json()
-                    console.warn(response)
-                    if(response.message.success){
-                        this.state.token=response.token
-                        console.warn(this.state.token)
-                        AsyncStorage.setItem('token',this.state.token)
-                        AsyncStorage.getItem('token')
-                        .then((value) => {console.log(value)})
+                .then((response) => response.json())
+                .then((data) =>{
+
+                    if(data.success){
+                        console.warn(data.token)
                         this.props.navigation.navigate('Verify')
-                        console.log(resposne)
                     }
                     else{
                         Alert.alert('Login fail',response.message.success)
@@ -94,6 +85,9 @@ constructor(props){
             .catch((error) =>{
                 console.log(error)
             })
+            }
+            else{
+                Alert.alert("Passwords dont match")
             }
         }
         else{
@@ -137,21 +131,8 @@ constructor(props){
                     placeholder="Your email"
                     style={styles.textInput}
                     autoCapitalize="none"
+                    keyboardType = {"email-address"}
                     onChangeText={(val) => {this.setState({email:val})}}
-                />
-            </View>
-            <Text style={[styles.text_footer,{marginTop:35}]}>Country Code</Text>
-            <View style={styles.action}>
-                <FontAwesome 
-                    name="phone"
-                    color="#05375a"
-                    size={20}
-                />
-                <TextInput 
-                    placeholder="Your Country_code"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    onChangeText={(val) => {this.setState({country_code:val})}}
                 />
             </View>
             <Text style={[styles.text_footer,{marginTop:35}]}>Phone</Text>
@@ -162,11 +143,21 @@ constructor(props){
                     size={20}
                 />
                 <TextInput 
-                    placeholder="Your Mobile_No"
+                    placeholder="Code"
                     style={styles.textInput}
                     autoCapitalize="none"
-                    onChangeText={(val) => {this.setState({mobile_no:val})}}
-                />
+                    keyboardType={"phone-pad"}
+                    onChangeText={(val) => {this.setState({country_code:val})}}
+                    editable={false}
+                >+91</TextInput>
+                <Text>-</Text>
+                <TextInput 
+                    placeholder="Your Mobile_No"
+                    style={styles.textInput}
+                    keyboardType={"phone-pad"}
+                    autoCapitalize="none"
+                    onChangeText={(val) => {this.setState({mobile:val})}}
+                ></TextInput>
             </View>
             <Text style={[styles.text_footer,{marginTop:35}]}>City</Text>
             <View style={styles.action}>
@@ -282,6 +273,18 @@ constructor(props){
                         color: 'black'
                     }]}>Already have an account?</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('Verify')}
+                    style={[styles.signIn, {
+                        borderColor: 'black',
+                        borderWidth: 1,
+                        marginTop: 15
+                    }]}
+                >
+                    <Text style={[styles.textSign, {
+                        color: 'black'
+                    }]}>Verify if already Registered</Text>
+                </TouchableOpacity>
             </View>
             </ScrollView>
         </Animatable.View>
@@ -324,13 +327,21 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
+        paddingBottom: 5,
+        marginRight:20
     },
     textInput: {
         flex: 1,
         marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
+    },
+    textInput1:{
+        flex: 1,
+        marginTop: Platform.OS === 'ios' ? 0 : -12,
+        color: '#05375a',
+        width:100,
+        marginHorizontal:100
     },
     button: {
         alignItems: 'center',

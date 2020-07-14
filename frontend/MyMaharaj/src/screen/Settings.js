@@ -6,16 +6,38 @@ import Icon from "react-native-vector-icons/FontAwesome5"
 export default class Settings extends React.Component{
 
     constructor(props){
-        super(props)
+        super(props);
+        this.state ={
+            data : {},
+        }
     }
-    logout = async () =>{
-       await  AsyncStorage.removeItem('token')
-        this.props.navigation.navigate('SplashScreen')
+    componentDidMount= async() =>{
+        let token = await AsyncStorage.getItem('token')
+            console.log(token)
+            fetch('http://localhost:5000/api/v1/auth/me',
+            {
+                method:'PUT',
+                headers:{
+                    "Authorization":token,
+                    "Content-Type":"application/json"
+                }
+            }, ).then((response) => 
+                response.json()
+            
+        ).then((data) =>{
+            console.log(data)
+            this.setState({data : data})
+        })
+    }
+    logout = async () => {
+        console.log(AsyncStorage.getItem('token'))
+        await AsyncStorage.removeItem('token').then((data) =>{console.log(data)})
+        this.props.navigation.navigate('LoginScreen')
     }
 
     shareapp = () => {
         Share.share({
-            message:'my maharaj app',
+            message:'my maharaj app https://www.google.com/',
             url:'https://www.google.com/',
             title:'wow did you see that'
         },{
@@ -27,34 +49,30 @@ export default class Settings extends React.Component{
 render(){
     return(
         <View style = {style.container}>
-            <View > 
+                <View style={style.infoContainer}>
+                    <Text style={[style.text, { fontWeight: "200", fontSize: 36 }]}>{this.state.data.name}</Text>
+                    <Text style={[style.text3, { color: "#ababab", fontSize: 14 }]}>{this.state.data.email}</Text>
+                    <Text style={[style.text3, { color: "#ababab", fontSize: 14 }]}>{this.state.data.mobile}</Text>
+                </View>
                 <TouchableOpacity style={style.tab} onPress={() =>{this.props.navigation.navigate('FAQ')}} >
                     <Text style={style.text}>FAQS</Text>
-                    <Icon name="chevron-right" size={30}  color='#3e4547'/>
+                    <Icon name="chevron-right" size={20}  color='#aaaaaa'/>
                 </TouchableOpacity>
                
-            </View>
-            <View>
-                <TouchableOpacity style={style.tab}>  
+                <TouchableOpacity style={style.tab} onPress={() => {this.props.navigation.navigate('FAQ')}}>  
                         <Text style={style.text}>ContactUs</Text>
-                        <Icon name="phone" size={30} color='#3e4547' onPress={() => {this.props.navigation.navigate('FAQ')}} />
-                
+                        <Icon name="phone" size={20} color='#aaaaaa'  />
                 </TouchableOpacity>
-            </View>
-            <View>
-                <TouchableOpacity style={style.tab}>  
+                <TouchableOpacity style={style.tab} onPress={() => {this.shareapp()}}>  
                         <Text style={style.text}>Share MyMaharaj</Text>
-                        <Icon name="share" size={30} color="#3e4547" onPress={() => {this.shareapp()}} />
+                        <Icon name="share" size={20} color="#aaaaaa"  />
                 
                 </TouchableOpacity>
-            </View>
-            <View>
-                <TouchableOpacity style={style.tab}>  
+                <TouchableOpacity style={style.tab}  onPress={() => this.logout()}>  
                         <Text style={style.text}>Logout</Text>
-                        <Icon name="sign-out-alt" size={30} color='#3e4547' onPress={() => {this.logout()}} />
+                        <Icon name="sign-out-alt" size={20} color='#aaaaaa' />
                 
                 </TouchableOpacity>
-            </View>
             <Text style={style.Company}>
                 MyMaharaj Inc.
             </Text>
@@ -67,7 +85,7 @@ const style = StyleSheet.create({
         flex:1,
     },
 
-    text:{
+    text2:{
         color:'black',
         fontSize:20,
         fontWeight:"400"
@@ -80,7 +98,7 @@ const style = StyleSheet.create({
         flexDirection: "row",
         justifyContent:"space-between",
         alignItems:'center',
-        borderBottomWidth:2,
+        borderBottomWidth:1,
         borderBottomColor:"#ababab"
     },
     Company :{
@@ -89,5 +107,17 @@ const style = StyleSheet.create({
         marginBottom:20,
         fontWeight:"400",
         fontSize:25,
+    },
+    infoContainer: {
+        alignItems: "center",
+        marginTop: 10,
+        paddingBottom:10,
+        borderBottomWidth:1,
+        borderBottomColor:"#ababab"
+    },
+    text3: {
+        fontSize:16,
+        fontFamily: 'SpaceMono-Regular',
+        color: '#ababab'
     }
 })
