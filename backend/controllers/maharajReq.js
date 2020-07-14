@@ -27,7 +27,10 @@ exports.getAllUnaccepted = async(req, res, next) => {
 // @access    private
 exports.getAllAccepted = async(req, res, next) => {
 
-    await Request.find({ acceptedBy: req.user._id }, (err, result) => {
+  await Request.find({
+    acceptedBy: req.user._id,
+    status: 'accepted',
+  }, (err, result) => {
       if (err) {
         console.log(err);
       } else {
@@ -56,6 +59,7 @@ exports.acceptReq = async(req, res, next) => {
 
     const fieldsToUpdate = {
         accepted: true,
+        status: 'accepted',
         acceptedBy: req.user._id
     }
 
@@ -69,6 +73,23 @@ exports.acceptReq = async(req, res, next) => {
       data: request,
     });
 };
+
+// @desc      Return all past requests by user
+// @route     GET /api/v1/maharajReq/past
+// @access    private
+exports.getPastReq = async (req, res, next) => {
+
+  const request = await Request.find({
+    createdBy: req.user._id,
+    status: 'completed',
+  });
+
+  res.status(200).json({
+    success: true,
+    data: request,
+  });
+};
+
 
 // @desc      Admin can see all requests
 // @route     GET api/v1/maharajReq/admin

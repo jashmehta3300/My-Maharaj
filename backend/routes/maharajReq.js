@@ -7,6 +7,7 @@ const {
   getAllUnaccepted,
   getAllAccepted,
   acceptReq,
+  getPastReq,
   adminGetAll,
 } = require('../controllers/maharajReq');
 
@@ -26,6 +27,12 @@ router.put(
     '/:request_id', 
     authRequired('maharaj'), 
     asyncHandler(acceptReq)
+);
+
+router.get(
+  '/past',
+  authRequired('maharaj'),
+  asyncHandler(getPastReq)
 );
 
 router.get('/admin', asyncHandler(adminGetAll));
