@@ -5,6 +5,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import AsyncStorage from '@react-native-community/async-storage'
 import * as Animatable from 'react-native-animatable'
+import { ThemeColors } from 'react-navigation';
 
 export default class CreateRequest extends React.Component {
     constructor(props) {
@@ -15,11 +16,21 @@ export default class CreateRequest extends React.Component {
             isVisible : false,
             date : null ,
             location:'',
-            longLat:{}
+            longLat:{},
+            date:'',
+            time:'',
+            bookingQuantity:0,
+            enable:true,
+            type_of_meal:'',
+            priceLow:'',
+            priceMax:'',
+            Flat_no:'',
+            Wing:'',
         }
     }
     componentDidMount = async() => {
         const location = await AsyncStorage.getItem('Location')
+        
         const loc = JSON.parse(location)
         console.log(loc)
         location !== null ? 
@@ -33,38 +44,44 @@ export default class CreateRequest extends React.Component {
     }
 
     Input = () =>{
-        if(this.state.type_of_booking === 'hour'){
+        if(this.state.type_of_booking === 'Number of hours'){
             return (
                 <View style={{marginHorizontal:30 , marginTop:15 }}>
                     <TextInput
                         keyboardType={'numeric'}
                         placeholder='Enter Number of hours'
-                        onChangeText={(text) => console.log(text)}
+                        onChangeText={(text) => this.setState({
+                            bookingQuantity:text
+                        })}
                         style={style.textinput}
                     ></TextInput>
                 </View>
             )
         }
-        else if(this.state.type_of_booking === 'meal'){
+        else if(this.state.type_of_booking === 'Number of meals'){
             return (
                 <View style={{marginHorizontal:30 , marginTop:10 }}>
 
                 <TextInput
                 keyboardType={'numeric'}
                         placeholder='Enter Number of Meals'
-                        onChangeText={(text) => console.log(text)}
+                        onChangeText={(text) => this.setState({
+                            bookingQuantity:text
+                        })}
                         style={style.textinput}
                 ></TextInput>
                 </View>
             )
         }
-        else if(this.state.type_of_booking === 'day'){
+        else if(this.state.type_of_booking === 'Number of days'){
             return (
                 <View style={{marginHorizontal:30 , marginTop:10 }}>
                 <TextInput
                 keyboardType={'numeric'}
                         placeholder='Enter Number of days'
-                        onChangeText={(text) => console.log(text)}
+                        onChangeText={(text) => this.setState({
+                            bookingQuantity:text
+                        })}
                         style={style.textinput}
                 ></TextInput>
                 </View>
@@ -75,6 +92,47 @@ export default class CreateRequest extends React.Component {
         }
          
     }
+    sendRequest = async() =>{
+        let token = await AsyncStorage.getItem('token')
+        console.log(token)
+        fetch('http://localhost:5000/api/v1/req/create',
+        {
+            method:"POST",
+            headers:{
+                "Authorization":token,
+                "Content-Type":"application/json                "
+            },
+            body:JSON.stringify({
+                "bookingType": this.state.type_of_booking,
+                "bookingQuantity": this.state.bookingQuantity,
+                "foodType": this.state.type_of_meal,
+                "cuisine": this.state.Cuisine.toString(),
+                "priceLow": this.state.priceLow,
+                "priceMax": this.state.priceMax,
+                "address": this.state.Flat_no + this.state.Wing + " Wing " +  this.state.location,
+                "bookingDate": this.state.date,
+                "bookingTime": this.state.time,
+                "location": {
+                    "coordinates": {
+                    "latitude": this.state.longLat.lat,
+                    "longitude": this.state.longLat.lng
+                    }
+                }      
+            })
+        }).then((response) => response.json()).then((data) => {
+            console.log(data.data._id)
+            fetch('http://localhost:5000/api/v1/req/start/'+data.data._id , 
+                {
+                    method:"PUT",
+                    headers:{
+                        "Content-Type":"application/json"
+                    }
+                }            
+            ).then(response => response.json()).then((data) => 
+                this.props.navigation.navigate('CurrentOrder')
+            )
+        })
+    }
 
     render() {
         return (
@@ -82,19 +140,22 @@ export default class CreateRequest extends React.Component {
             <Animatable.View
             animation='fadeInUpBig'
             >
+            <View style={style.container}>
+            <ScrollView scrollEnabled={this.state.enable}>
                 <Text style={{ fontSize: 40, alignItems: 'center', alignSelf: 'center', fontWeight: 'bold', marginTop: 30, marginBottom: 50 }}>Create Request</Text>
                 <TouchableOpacity style={{marginHorizontal:30 , backgroundColor:'white' , marginBottom:20 , height:50 , justifyContent:'center' , borderColor:'#dcdcdc' , borderWidth:1 , borderRadius:5}}
                     onPress ={() => this.setState({isVisible:true})}
                 >
                     <Text style={{fontSize:20,paddingLeft:10}}>
-                        {this.state.date ? this.state.date :'Date And Time of Booking'}
+                        {this.state.date ? this.state.date + this.state.time  :'Date And Time of Booking'}
                     </Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
                     isVisible={this.state.isVisible}
                     mode="datetime"
                     onConfirm={(date) => this.setState({
-                        date:`${date.toDateString()}  ${date.getHours() % 12 || 12}:${date.getMinutes() <=9 ? '0'+date.getMinutes() : date.getMinutes()} ${date.getHours()/12 >= 1 ? 'PM' : 'AM'}`,
+                        date:`${date.toDateString()} `,
+                        time:`${date.getHours() % 12 || 12}:${date.getMinutes() <=9 ? '0'+date.getMinutes() : date.getMinutes()} ${date.getHours()/12 >= 1 ? 'PM' : 'AM'}`,
                         isVisible:false
                     })}
                     onCancel={() => console.log('cancel')}
@@ -102,9 +163,9 @@ export default class CreateRequest extends React.Component {
                 <View style={{marginBottom:20}}>
                 <DropDownPicker
                     items={[
-                        { label: 'Hourly Booking', value: 'hour' },
-                        { label: 'Meal wise booking', value: 'meal' },
-                        { label: 'Day wise booking' , value: 'day'}
+                        { label: 'Hourly Booking', value: 'Number of hours' },
+                        { label: 'Meal wise booking', value: 'Number of meals' },
+                        { label: 'Day wise booking' , value: 'Number of days'}
                     ]}
                     placeholder = 'Type of booking'
                     containerStyle={{ height: 50 }}
@@ -145,9 +206,12 @@ export default class CreateRequest extends React.Component {
                 <View style = {{marginTop:20}}>
                 <DropDownPicker
                     items={[
-                        { label: 'North Indian',value:'NI' },
-                        { label: 'South Indian', value:'SI'},
-                        { label: 'Italian' , value:'It'}
+                        { label: 'Punjabi',value:'Punjabi' },
+                        { label: 'South Indian', value:'South Indian'},
+                        { label: 'Italian' , value:'Italian'},
+                        { label: 'Rajasthani ' , value:'Rajasthani '},
+                        { label: 'Chinese' , value:'Chinese'},
+                        { label: 'Continental' , value:'Continental'},
                     ]}
                     placeholder = 'Cuisine'
                     containerStyle={{ height: 50 }}
@@ -167,6 +231,8 @@ export default class CreateRequest extends React.Component {
                     multipleText={this.state.Cuisine.toString()}
                     min={0}
                     max={3}
+                    onOpen={() => this.setState({enable:false})}
+                    onClose={() => this.setState({enable:true})}
                 />
                 </View>
                 <Text style = {style.text}>Price Range</Text>
@@ -174,13 +240,17 @@ export default class CreateRequest extends React.Component {
                 <TextInput
                 keyboardType={'numeric'}
                         placeholder='Min Price'
-                        onChangeText={(text) => console.log(text)}
+                        onChangeText={(text) => this.setState({
+                            priceLow:text
+                        })}
                         style={style.textinput2}
                 ></TextInput>
                  <TextInput
                 keyboardType={'numeric'}
                         placeholder='Max Price'
-                        onChangeText={(text) => console.log(text)}
+                        onChangeText={(text) => this.setState({
+                            priceMax:text
+                        })}
                         style={style.textinput2}
                 ></TextInput>
                 </View>
@@ -189,13 +259,17 @@ export default class CreateRequest extends React.Component {
                 <TextInput
                 keyboardType={'ascii-capable'}
                         placeholder='Flat No.'
-                        onChangeText={(text) => console.log(text)}
+                        onChangeText={(text) => this.setState({
+                            Flat_no:text
+                        })}
                         style={style.textinput2}
                 ></TextInput>
                  <TextInput
                 keyboardType={'ascii-capable'}
                         placeholder='Wing'
-                        onChangeText={(text) => console.log(text)}
+                        onChangeText={(text) => this.setState({
+                            Wing:text
+                        })}
                         style={style.textinput2}
                 ></TextInput>
                 </View>
@@ -203,9 +277,11 @@ export default class CreateRequest extends React.Component {
                 <Text style={style.textinput3}>{this.state.location}</Text>
                 </TouchableOpacity>
                 <Text style={{marginLeft:20,color:'red' , fontSize:15}}>*To change address please go to home screen</Text>
-                <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginVertical:30 , borderRadius:10}} >
+                <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginVertical:30 , borderRadius:10}} onPress={() => this.sendRequest()} >
                     <Text style = {style.button}>Confirm Request</Text>
                 </TouchableOpacity>
+            </ScrollView>
+            </View>
             </Animatable.View>
             </ScrollView>
         )

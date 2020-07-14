@@ -25,6 +25,7 @@ export default class LoginScreen extends React.Component{
         if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             this.setState({OTP:false})
+        
              await fetch('http://localhost:5000/api/v1/auth/sms',
              {
                  method:"POST",
@@ -59,20 +60,13 @@ export default class LoginScreen extends React.Component{
             })
             .then((response) => response.json())
             .then((data) =>{
-                console.log(data.token)
                 this.setState({token:data.token})
                 AsyncStorage.setItem('token',this.state.token)
                 this.props.navigation.navigate('Main')
                 console.warn(this.state.token)
-            })
-            .catch((error) =>{
-                Alert.alert(error)
-            });
-
-        }
-        else{
             Alert.alert("Please enter the OTP")
 
+        })
         }
     }
  

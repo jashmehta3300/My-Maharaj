@@ -50,7 +50,8 @@ export default class LoginScreen extends React.Component{
          }
 
     }
-    loginotp= async () =>{                         //verifying your otp and handling errors 
+    loginotp= async () =>{    
+        console.log(this.state.OTP_value)                     //verifying your otp and handling errors 
         if(this.state.OTP_value){
          await fetch("http://localhost:5000/api/v1/auth/login",{
                 method:"POST",
@@ -91,6 +92,11 @@ export default class LoginScreen extends React.Component{
 
         }
     }
+
+    loginWOotp = () =>{
+        AsyncStorage.setItem('token',"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMDk3MjhkNGMxNjIxNmExMGE4MzA2YSIsImlhdCI6MTU5NDQ2ODYxOSwiZXhwIjoxNTk3MDYwNjE5fQ.8oM0V_MHQ5UpXLgCgAsFUjs__dpm8UdRxenTeq6tpDQ")
+        this.props.navigation.navigate('Main')
+    }
  
 render(){
     return(
@@ -120,6 +126,9 @@ render(){
             </TouchableOpacity>
             <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => {this.props.navigation.navigate('Registration')}}>
             <Text style = {style.button}>Create an Account</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.loginWOotp()}>
+                <Text style = {style.button}>Login</Text>
             </TouchableOpacity>
         </View>
             :
