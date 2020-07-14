@@ -21,23 +21,12 @@ export default class LoginScreen extends React.Component{
 
         }
     }
-    fakelogin = () =>{
-        AsyncStorage.setItem('token','123456')
-        this.props.navigation.navigate('MainMaharaj')
-    }
     sendotp =async ()=>{                                                                //fetching the send sms api and handling with errors 
         if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             this.setState({OTP:false})
-               await fetch('http://localhost:5000/api/v1/maharajAuth/sms',{
-               method:'POST',
-                body:JSON.stringify({
-                    mobile:this.state.mobile,                 
-                }),
-                redirect:'follow',
-                headers:{
-                    "Content-Type":"application/json"
-                }
+           await axios.post('http://localhost:5000/api/v1/maharajAuth/sms',{
+                    mobile:this.state.mobile,
             })
             .catch((error) =>{
                 Alert.alert(error)
@@ -67,7 +56,7 @@ export default class LoginScreen extends React.Component{
                     this.setState({tokens:data.token})
                     AsyncStorage.setItem('token',this.state.tokens)
                     console.warn(this.state.tokens)
-                    this.props.navigation.navigate('MainMaharaj')
+                    this.props.navigation.navigate('Main')
                 }
                 else{
                     Alert.alert("Login failed.Enter the valid OTP")
@@ -104,9 +93,6 @@ render(){
                 </View>
             { this.state.OTP ? 
             <View>
-            <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.fakelogin()}>
-                    <Text style = {style.button}>Send OTP</Text>
-                </TouchableOpacity>
             <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.sendotp()}>
                     <Text style = {style.button}>Send OTP</Text>
                 </TouchableOpacity>

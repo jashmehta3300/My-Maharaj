@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import * as Animatable from 'react-native-animatable'
 
 export default class CurrentOrder extends React.Component{
     constructor(props){
@@ -44,7 +44,9 @@ render(){
             </TouchableOpacity>
             <Text style = {{margin:20,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Current Orders</Text>
             
-            
+            <Animatable.View
+            animation='fadeInUpBig'
+            >        
             <View style={style.box}>
                 <View style={{ flexDirection: 'column' }}>
                     <Text style={style.boxText2 }>REQUEST ID: 123456 </Text>
@@ -52,6 +54,7 @@ render(){
                     <Text style={style.boxText}>Status : Pending</Text>
                 </View>
             </View>
+            </Animatable.View>
             
             <TouchableOpacity
           activeOpacity={0.7}
