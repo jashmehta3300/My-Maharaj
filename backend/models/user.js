@@ -9,9 +9,9 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'Please add a name']
     },
     email: {
+        unique:true,
         type: String,
         required: [true, 'Please add an email'],
-        unique: true,
         match: [
             /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
             'Please add a valid email'
@@ -19,21 +19,44 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'publisher'],
+        enum: ['user',"admin"],
         default: 'user'
+    },
+    mobile:{
+        type:String,
+        unique:true,
+        required:[true,"Plase add your number"]
+    },
+    city:{
+        type:String
     },
     password: {
         type: String,
         required: [true, 'Please add a password'],
-        minlength: 6,
+        minlength: 4,
         select: false
     },
+    profileImage:{
+        contentType:String,
+        imageData:Buffer
+    },
+    authyId:String,
+    isVerified:{
+        type:Boolean,
+        default:false
+    },
+    signalId:String,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    orders:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref : "Request"
+    }]
+    
 });
 
 // Encrypt password using bcrypt
@@ -57,5 +80,17 @@ UserSchema.methods.getSignedJwtToken = function() {
 UserSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
+
+// Get only public profile
+UserSchema.methods.getPublicProfile = function(){
+    const userObj=this;
+    const user = userObj.toObject()
+    const userImageURL = `/api/v1/auth/${user._id}/profileimage`;
+    user.imageURL=userImageURL;
+    delete user.profileImage;
+    delete user.password;
+    return user;
+}
+
 
 module.exports = mongoose.model('User', UserSchema);
