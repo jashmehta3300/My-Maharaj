@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity , FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import * as Animatable from 'react-native-animatable'
 
 export default class CurrentOrder extends React.Component{
     constructor(props){
@@ -67,14 +67,14 @@ render(){
     return(
         <View style = {style.container}>
             <Text style = {{margin:18,fontSize:30 , fontWeight:'bold',marginBottom:10}}>All Request</Text>
-            
+            <Animatable.View>            
             <FlatList
              data={this.state.data.reverse()}
              keyExtractor={(item, index) => item._id}
              renderItem ={ ({ item, index }) =>
             
             
-            <TouchableOpacity style={style.box}>
+            <TouchableOpacity style={style.box} onPress={() => {this.props.navigation.navigate('Details',{'details':item})}}>
                 <View style={{ flexDirection: 'column' }}>
                     <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>
                     <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>
@@ -89,7 +89,7 @@ render(){
              }
              
             />
-            
+            </Animatable.View>
             <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => this.props.navigation.navigate('CreateRequest')}

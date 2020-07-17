@@ -39,7 +39,7 @@ constructor(){
 
 
 
-
+    
 
      updateSecureTextEntry = () => {
         this.setState({
@@ -55,6 +55,7 @@ constructor(){
       signup = async () => {
           if(this.state.username && this.state.email){
              if(this.state.password==this.state.confirm_password){
+                 if(this.state.mobile.length==10){
                  console.warn('authentication underway')
                    await  fetch('http://localhost:5000/api/v1/auth/register',{
                     method:"POST",
@@ -85,6 +86,10 @@ constructor(){
             .catch((error) =>{
                 console.log(error)
             })
+        }
+        else{
+            Alert.alert('Not a valid Number')
+        }
             }
             else{
                 Alert.alert("Passwords dont match")
