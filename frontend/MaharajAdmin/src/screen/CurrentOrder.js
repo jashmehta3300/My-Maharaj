@@ -34,26 +34,7 @@ export default class CurrentOrder extends React.Component{
         })
     }
 
-    onAccept = async(id) =>{
-        const token = await AsyncStorage.getItem('token')
-        console.log(token)
-        console.log(id)
-        fetch('http://localhost:5000/api/v1/maharajReq/'+id,
-            {
-                method:'PUT',
-                headers:{
-                    "Content-Type":"application/json",
-                    "Authorization":token
-                }
-            }, ).then((response) => 
-                response.json()
-            
-        ).then((data) =>{
-            console.log(data.data)
-            this.getOrder()
-        })
-        
-    }
+    
     componentDidMount= async() => {
             
             this.getOrder()
@@ -81,22 +62,13 @@ render(){
                     <Text style={style.boxText2}>Cuisine : {item.cuisine }</Text>
                     <Text style={style.boxText}>Location : {item.address }</Text>
                 </View>
-                <TouchableOpacity style={{justifyContent:"center" , flexDirection:'row' , flex:0}} onPress={() => this.onAccept(item._id)}>
-                    <Text style={[style.boxText , {color:'#fff' , backgroundColor:'#000' ,padding:15 , borderRadius:10,fontWeight:'bold'}]}>Accept</Text>
-                </TouchableOpacity>
+                
             </TouchableOpacity>
             
              }
              
             />
             </Animatable.View>
-            <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => this.props.navigation.navigate('CreateRequest')}
-          style={style.TouchableOpacityStyle}>
-          {/* <Icon name = 'plus' size = {40} color = '#fff'/> */}
-            <Text style ={{color:'#fff' , fontSize:60 , paddingBottom:10}}>+</Text>
-        </TouchableOpacity>
         </View>
 )}
 }
