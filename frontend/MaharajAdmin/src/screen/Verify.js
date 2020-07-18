@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, ImageBackground , Image, View , TextInput , TouchableOpacity,LayoutAnimation,UIManager, Alert} from 'react-native';
+import { Text, StyleSheet, ImageBackground , Image, View , TextInput , TouchableOpacity,LayoutAnimation,UIManager, Alert,ToastAndroid} from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage"
 
 if (Platform.OS === 'android') {
@@ -61,9 +61,16 @@ export default class LoginScreen extends React.Component{
                 if(data.message=='Token is valid.'){
                 console.log(data.token)
                 this.setState({token:data.token})
-                AsyncStorage.setItem('token',this.state.token)
-                this.props.navigation.navigate('MainMaharaj')
-                console.warn(this.state.token)
+                x=this.props.navigation.getParam('admin')
+                if(x=='admin'){
+                    ToastAndroid.showWithGravity('Registered Successfully',2000,ToastAndroid.CENTER)
+                    this.props.navigation.navigate('RegisterAdmin')
+                }
+                else{
+                    AsyncStorage.setItem('token',this.state.token)
+                    this.props.navigation.navigate('MainMaharaj')
+                    console.warn(this.state.token)
+                }
                 }
                 else{
                     Alert.alert('Wrong OTP')

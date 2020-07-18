@@ -88,7 +88,10 @@ constructor(){
                 .then((data) =>{
                     if(data.success){
                         console.warn(data.token)
-                        this.props.navigation.navigate('Verify')
+                        x=''
+                        x=this.props.navigation.getParam('admin')
+                        this.props.navigation.navigate('Verify',{'admin':x})
+                        console.warn('verify page')
                     }
                     else{
                         Alert.alert('Login fail',response.message.success)

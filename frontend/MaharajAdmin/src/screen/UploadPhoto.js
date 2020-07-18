@@ -4,22 +4,31 @@ import {
     Text,
     StyleSheet,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    ToastAndroid
 } from "react-native";
 import ImagePicker from 'react-native-image-picker'
+import AsyncStorage from "@react-native-community/async-storage";
+
 
 class UploadPhoto extends Component {
-    constructor(props){
+      constructor(props){
         super(props);
         this.state={
             filePath:{},
             fileData: '',
             fileUri: '',
-            file:''
+            file:'',
+            token:''
         }
     }
+       async UNSAFE_componentWillMount(){
+      const token = await AsyncStorage.getItem('token')
+      this.setState({token})
+      console.log(this.state.token)
+    }
 
-    chooseImage = () => {
+    chooseImage = async () => {
         let options = {
           title: 'Select Image',
           storageOptions: {
@@ -31,11 +40,11 @@ class UploadPhoto extends Component {
           console.log('Response = ', response);
     
           if (response.didCancel) {
-            console.log('User cancelled image picker');
+//            console.log('User cancelled image picker');
           } else if (response.error) {
-            console.log('ImagePicker Error: ', response.error);
+//            console.log('ImagePicker Error: ', response.error);
           } else if (response.customButton) {
-            console.log('User tapped custom button: ', response.customButton);
+ //           console.log('User tapped custom button: ', response.customButton);
             alert(response.customButton);
           } else {
             const source = { uri: response.uri };
@@ -51,8 +60,26 @@ class UploadPhoto extends Component {
             });
             const blob = this.uriToBlob(response.uri)
             this.setState({file:blob})
-            console.log(`blob create ${blob}`)
+            if(blob){
+              fetch("http://localhost:5000/api/v1/maharajAuth/upload/profile",{
+                method:"POST",
+                body:{
+                  file:this.state.filePath
+                },
+                headers:{
+                  "Authorization":this.state.token
+                }
+              })
+              .then((data) => {
+                console.log(data)
+              ToastAndroid.showWithGravity('Uploaded Successfully',2000,ToastAndroid.CENTER)
+              this.props.navigation.navigate('Home')               
+              })
+              .catch((error) => console.warn(error))
+            }
+            
             // const img = this.uploadToFirebase(blob)
+            console.log(this.state.token)
           }
         });
       }
