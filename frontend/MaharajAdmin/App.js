@@ -23,6 +23,7 @@ import Analytics from './src/screen/Analytics'
 import RegisterAdmin from './src/screen/RegisterAdmin';
 import UploadPhoto from './src/screen/UploadPhoto'
 import Charts from './src/screen/charts'
+import LoginScreen from './src/screen/Verify';
 export default class App extends React.Component {
   
   render() {
@@ -33,6 +34,22 @@ export default class App extends React.Component {
     );
   }
 }
+
+const RegisterAdmins = createSwitchNavigator(
+  {
+  Registration:Registration,
+  RegisterAdmin : {
+    screen : RegisterAdmin,
+    navigationOptions :{
+      tabBarVisible : false
+    }
+  },
+  Verify : Verify,
+  LoginScreen : LoginScreen
+},{
+  initialRouteName : 'RegisterAdmin',
+  headerMode:'none'
+});
 
 
 const CurrentNav = createStackNavigator(
@@ -83,8 +100,8 @@ const MainAdmin = createMaterialTopTabNavigator({
       <Icon name="gear" size={25} color={tintColor} />
       )}
   },
-  RegisterAdmin : {
-    screen:RegisterAdmin ,
+  RegisterAdmins : {
+    screen:RegisterAdmins ,
     navigationOptions: {title: 'Register', tabBarIcon: ({ tintColor }) => (
       <Icon name="home" size={25} color={tintColor} />
       )}
@@ -111,7 +128,7 @@ const MainAdmin = createMaterialTopTabNavigator({
     iconStyle: {inactiveColor:'#aaaaaa', paddingTop:3, activeColor: 'white'},
     indicatorStyle: { backgroundColor: 'white', height: 4}
   },
-  order : ['RegisterAdmin','Analytics','Charts','SettingsNav'],
+  order : ['RegisterAdmins','Analytics','Charts','SettingsNav'],
 })
 
 const MainMaharaj = createMaterialTopTabNavigator({
@@ -139,6 +156,12 @@ const MainMaharaj = createMaterialTopTabNavigator({
       <Icon name="book" size={25} color={tintColor} />
       )}
   },
+/*  Profile :{
+    screen:UploadPhoto ,
+    navigationOptions: {title: 'Profile', tabBarIcon: ({ tintColor }) => (
+      <Icon name="user" size={25} color={tintColor} />
+      )}
+  }*/
 },{
   tabBarPosition: 'bottom',
     tabBarOptions: {activeTintColor: 'white',
