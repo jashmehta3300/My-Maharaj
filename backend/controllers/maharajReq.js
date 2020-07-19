@@ -74,13 +74,13 @@ exports.acceptReq = async(req, res, next) => {
     });
 };
 
-// @desc      Return all past requests by user
+// @desc      Return all past requests by maharaj
 // @route     GET /api/v1/maharajReq/past
 // @access    private
 exports.getPastReq = async (req, res, next) => {
 
   const request = await Request.find({
-    createdBy: req.user._id,
+    acceptedBy: req.user._id,
     status: 'completed',
   });
 

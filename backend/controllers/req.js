@@ -105,6 +105,7 @@ exports.getOngoingReq = async(req, res, next) => {
 // @route     PUT /api/v1/req/complete/:request_id
 // @access    private
 exports.completeReq = async(req, res, next) => {
+
     const fieldsToUpdate = {
       status: 'completed',
     };
@@ -115,8 +116,10 @@ exports.completeReq = async(req, res, next) => {
       {
         new: true,
         runValidators: true,
-      }
+      } 
     );
+
+    console.log(request)
 
     res.status(200).json({
       success: true,
