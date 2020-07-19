@@ -23,6 +23,10 @@ const authRequired =(role="user")=>async (req, res, next) => {
             });
         }
         const user = role=='user'?await User.findOne({ _id: decoded.id }).select({password:0}):await Maharaj.findOne({ _id: decoded.id }).select({password:0})
+        
+        if(!user){
+            return res.status(404).json(`${role} not found!!`)
+        }
         req.token = token;
         req.user = user;
         next();
