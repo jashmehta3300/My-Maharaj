@@ -19,12 +19,23 @@ class UploadPhoto extends Component {
             fileData: '',
             fileUri: '',
             file:'',
-            token:''
+            token:'',
+            isimage:0
         }
     }
        async UNSAFE_componentWillMount(){
       const token = await AsyncStorage.getItem('token')
       this.setState({token})
+      fetch("http://localhost:5000/api/v1/maharajAuth/5f01b441eba4126824cfd706/profileimage",{
+        method:'GET',
+        headers:{
+          'Authorization':"Bearer "+token
+        }
+      })
+      .then((response) => {
+
+      })
+      .catch((error) => console.warn(error))
       console.log(this.state.token)
     }
 
@@ -61,13 +72,17 @@ class UploadPhoto extends Component {
             const blob = this.uriToBlob(response.uri)
             this.setState({file:blob})
             if(blob){
+              let form = new FormData();
+              form.append("image",{
+                uri:response.uri,
+                type:response.type,
+                name:response.fileName
+              })
               fetch("http://localhost:5000/api/v1/maharajAuth/upload/profile",{
                 method:"POST",
-                body:{
-                  file:this.state.filePath
-                },
+                body:form,
                 headers:{
-                  "Authorization":this.state.token
+                  "Authorization":"Bearer "+this.state.token,
                 }
               })
               .then((data) => {

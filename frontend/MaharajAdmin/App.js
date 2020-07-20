@@ -156,12 +156,12 @@ const MainMaharaj = createMaterialTopTabNavigator({
       <Icon name="book" size={25} color={tintColor} />
       )}
   },
-/*  Profile :{
+  Profile :{
     screen:UploadPhoto ,
     navigationOptions: {title: 'Profile', tabBarIcon: ({ tintColor }) => (
       <Icon name="user" size={25} color={tintColor} />
       )}
-  }*/
+  }
 },{
   tabBarPosition: 'bottom',
     tabBarOptions: {activeTintColor: 'white',
@@ -172,7 +172,7 @@ const MainMaharaj = createMaterialTopTabNavigator({
     iconStyle: {inactiveColor:'#aaaaaa', paddingTop:3, activeColor: 'white'},
     indicatorStyle: { backgroundColor: 'white', height: 4}
   },
-  order : ['CurrentNav','Home','PastOrder','SettingsNav'],
+  order : ['CurrentNav','Home','PastOrder','SettingsNav','Profile'],
 })
 
 
