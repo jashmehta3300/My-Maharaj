@@ -72,7 +72,7 @@ const RequestSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['unaccepted', 'accepted', 'ongoing', 'completed'],
+    enum: ['unaccepted', 'accepted', 'ongoing', 'completed', 'rejected'],
     required: true,
     default: 'unaccepted',
   },

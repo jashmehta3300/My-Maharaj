@@ -142,3 +142,27 @@ exports.getPastReq = async(req, res, next) => {
       data: request,
     });
 };
+
+
+// @desc      User can modify the request
+// @route     PUT /api/v1/req/modify/:request_id
+// @access    private
+exports.modifyReq = async (req, res, next) => {
+
+  const fieldsToUpdate = {
+    ...req.body,
+    status: 'unaccepted'
+  };
+
+  const request = await Request.findByIdAndUpdate(req.params.request_id, fieldsToUpdate, {
+    new: true,
+    runValidators: true,
+  });
+
+  const maharaj = request.acceptedBy;
+
+  res.status(200).json({
+    success: true,
+    data: request,
+  });
+};
