@@ -151,15 +151,13 @@ exports.modifyReq = async (req, res, next) => {
 
   const fieldsToUpdate = {
     ...req.body,
-    status: 'unaccepted'
+    modified: true
   };
 
   const request = await Request.findByIdAndUpdate(req.params.request_id, fieldsToUpdate, {
     new: true,
     runValidators: true,
   });
-
-  const maharaj = request.acceptedBy;
 
   res.status(200).json({
     success: true,
