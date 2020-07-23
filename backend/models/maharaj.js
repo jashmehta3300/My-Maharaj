@@ -64,7 +64,7 @@ const MaharajSchema = new mongoose.Schema({
         per:{
             type:String,
             enum:["hour","day","month","meals","people"],
-            default:"hr"
+            default:"hour"
         }
     },
     cooking:{

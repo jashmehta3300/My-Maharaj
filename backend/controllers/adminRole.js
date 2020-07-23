@@ -1,4 +1,4 @@
-const Maharaj = require("../models/maharaj");
+const Maharaj = require("../models/Maharaj")
 
 
 /**
@@ -18,7 +18,7 @@ exports.approveMaharaj= async (req,res)=>{
  * @DESC  Set Base price of maharaj(default:hourly basis) 
  */
 exports.setPrice= async (req,res)=>{
-    const {id} = req.params.id;
+    const {id} = req.params;
     const maharaj = await Maharaj.findById(id);
     if(!maharaj){
         return res.status(404).json({success:false,msg:"Maharaj Not Found"})

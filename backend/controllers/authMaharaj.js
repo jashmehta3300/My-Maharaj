@@ -77,7 +77,7 @@ exports.login = async (req,res)=>{
     const maharaj = await Maharaj.findOne({ mobile })
     if (!maharaj) return res.status(401).json({ success: false, error: 'Invalid Credentials'});
     if(!maharaj.isVerified) return res.status(401).json({success:false,msg:"Number Not Verified"});
-    if(!maharaj.isApproved) return res.status(401).json({success:false,msg:"You are not aprroved yet..."})
+    if(maharaj.role!=="admin" && !maharaj.isApproved) return res.status(401).json({success:false,msg:"You are not aprroved yet..."})
     const tokenRes = await OTPService.verifyOTP(maharaj.authyId,token)
     // Check if password matches
     // const isMatch = await user.matchPassword(password);
