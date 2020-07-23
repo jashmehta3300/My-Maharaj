@@ -72,11 +72,12 @@ exports.uploadDoc = async (req,res)=>{
 exports.login = async (req,res)=>{
     const { mobile, token } = req.body;
     // Validate emil & password
-    if (!mobile || !token) return res.status(400).json({success: false,error: 'Please provide number and otp'})
+    if (!mobile || !token) return res.status(400).json({success: false,error: 'Please provide number and otp'});
     // Check for user
     const maharaj = await Maharaj.findOne({ mobile })
-    if (!maharaj) return res.status(401).json({ success: false, error: 'Invalid Credentials'})
-    if(!maharaj.isVerified) return res.status(401).json("Number Not Verified")
+    if (!maharaj) return res.status(401).json({ success: false, error: 'Invalid Credentials'});
+    if(!maharaj.isVerified) return res.status(401).json({success:false,msg:"Number Not Verified"});
+    if(!maharaj.isApproved) return res.status(401).json({success:false,msg:"You are not aprroved yet..."})
     const tokenRes = await OTPService.verifyOTP(maharaj.authyId,token)
     // Check if password matches
     // const isMatch = await user.matchPassword(password);
