@@ -10,6 +10,7 @@ const {
   getOngoingReq,
   completeReq,
   getPastReq,
+  modifyReq
 } = require('../controllers/req');
 
 const { authRequired } = require('../middleware/auth');
@@ -48,5 +49,11 @@ router.get(
     authRequired('user'), 
     asyncHandler(getPastReq)
 );
+
+router.put(
+    '/modify/:request_id',
+    authRequired('user'),
+    asyncHandler(modifyReq)
+)
 
 module.exports = router;
