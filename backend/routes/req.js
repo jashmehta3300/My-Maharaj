@@ -8,12 +8,14 @@ const {
   getStatus,
   startReq,
   getOngoingReq,
+  getAllAcceptedUser,
   completeReq,
   getPastReq,
   modifyReq
 } = require('../controllers/req');
 
 const { authRequired } = require('../middleware/auth');
+const { getAllAccepted } = require('../controllers/maharajReq');
 
 // @@@ ALL ROUTES FOR USER APP @@@ //
 
@@ -54,6 +56,12 @@ router.put(
     '/modify/:request_id',
     authRequired('user'),
     asyncHandler(modifyReq)
+)
+
+router.get(
+    '/myreq',
+    authRequired('user'),
+    asyncHandler(getAllAcceptedUser)
 )
 
 module.exports = router;
