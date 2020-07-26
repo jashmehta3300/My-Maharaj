@@ -160,11 +160,7 @@ const MainAdmin = createMaterialTopTabNavigator({
     iconStyle: {inactiveColor:'#aaaaaa', paddingTop:3, activeColor: 'white'},
     indicatorStyle: { backgroundColor: 'white', height: 4}
   },
-<<<<<<< HEAD
-  order : ['RegisterAdmin','AnalyticsNav','Charts','SettingsNav'],
-=======
-  order : ['RegisterAdmins','Analytics','Charts','SettingsNav'],
->>>>>>> aa4799d592d5bdfc519b415dab65bca45494d763
+  order : ['RegisterAdmins','AnalyticsNav','Charts','SettingsNav'],
 })
 
 const MainMaharaj = createMaterialTopTabNavigator({
@@ -192,12 +188,12 @@ const MainMaharaj = createMaterialTopTabNavigator({
       <Icon name="book" size={25} color={tintColor} />
       )}
   },
-/*  Profile :{
+  Profile :{
     screen:UploadPhoto ,
     navigationOptions: {title: 'Profile', tabBarIcon: ({ tintColor }) => (
       <Icon name="user" size={25} color={tintColor} />
       )}
-  }*/
+  }
 },{
   tabBarPosition: 'bottom',
     tabBarOptions: {activeTintColor: 'white',
@@ -208,7 +204,7 @@ const MainMaharaj = createMaterialTopTabNavigator({
     iconStyle: {inactiveColor:'#aaaaaa', paddingTop:3, activeColor: 'white'},
     indicatorStyle: { backgroundColor: 'white', height: 4}
   },
-  order : ['CurrentNav','Home','PastOrder','SettingsNav'],
+  order : ['CurrentNav','Home','PastOrder','SettingsNav','Profile'],
 })
 
 

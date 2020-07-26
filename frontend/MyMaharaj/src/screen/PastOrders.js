@@ -77,7 +77,7 @@ render(){
              renderItem ={ ({ item, index }) =>
             
             
-            <TouchableOpacity style={style.box}>
+            <TouchableOpacity style={style.box} onPress={() => {this.props.navigation.navigate('Details',{'details':item})}}>
                 <View style={{ flexDirection: 'column' }}>
                     <Text style={style.boxText2 }>REQUEST ID: {item._id} </Text>
                     <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>

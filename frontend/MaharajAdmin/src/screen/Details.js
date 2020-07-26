@@ -108,18 +108,19 @@ class Details extends Component {
                                         <Text style={style.boxText2}>Low price : {item.priceLow} </Text>
                                         <Text style={style.boxText2}>Max price : {item.priceMax} </Text>
                                         {
-                                            item.status === "unaccepted" ?
+                                            item.acceptedBy  ?
 
-                                                <TouchableOpacity style={{ justifyContent: "center", flexDirection: 'row', flex: 1 }} onPress={() => this.onAccept(item._id)}>
-                                                    <Text style={[style.boxText, { color: '#fff', backgroundColor: '#000', padding: 15, borderRadius: 10, fontWeight: 'bold', paddingHorizontal: 40, marginTop: 50 }]}>Accept</Text>
-                                                </TouchableOpacity>
-                                                :
+                                                
                                                 item.status === "accepted" ?
                                                     <TouchableOpacity style={{ justifyContent: "center", flexDirection: 'row', flex: 0 }} onPress={() => this.onComplete(item._id)}>
                                                         <Text style={[style.boxText, { color: '#fff', backgroundColor: '#000', padding: 15, borderRadius: 10, fontWeight: 'bold' }]}>Complete</Text>
                                                     </TouchableOpacity> 
                                                     : 
                                                     null
+                                                :
+                                                <TouchableOpacity style={{ justifyContent: "center", flexDirection: 'row', flex: 1 }} onPress={() => this.onAccept(item._id)}>
+                                                <Text style={[style.boxText, { color: '#fff', backgroundColor: '#000', padding: 15, borderRadius: 10, fontWeight: 'bold', paddingHorizontal: 40, marginTop: 50 }]}>Accept</Text>
+                                            </TouchableOpacity> 
                 
                                       }
                                     </View>
