@@ -11,7 +11,6 @@ const MaharajSchema = new mongoose.Schema({
     email: {
         unique:true,
         type: String,
-        required: [true, 'Please add an email'],
         match: [
             /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
             'Please add a valid email'
@@ -24,7 +23,6 @@ const MaharajSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, 'Please add a password'],
         minlength: 4,
         select: false
     },
@@ -54,6 +52,20 @@ const MaharajSchema = new mongoose.Schema({
     isVerified:{
         type:Boolean,
         default:false
+    },
+    isApproved:{
+        type:Boolean,
+        default:false
+    },
+    basePrice:{
+        amount:{
+            type:Number
+        },
+        per:{
+            type:String,
+            enum:["hour","day","month","meals","people"],
+            default:"hour"
+        }
     },
     cooking:{
         cuisine : [String],

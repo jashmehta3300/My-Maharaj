@@ -29,6 +29,7 @@ const authRequired =(role="user")=>async (req, res, next) => {
         }
         req.token = token;
         req.user = user;
+        res.locals.user=user
         next();
     } catch (e) {
         return res.status(401).json({
@@ -37,4 +38,14 @@ const authRequired =(role="user")=>async (req, res, next) => {
     }
 };
 
-module.exports={authRequired}
+const hasRoles=(roles)=>async (req, res, next) =>{
+    const role = req.user.role;
+    console.log(role)
+    console.log(roles)
+    if(!roles.includes(role)){
+        return res.status(403).json({success:false,msg:"Not allowed"})
+    }
+    next();
+}
+
+module.exports={authRequired,hasRoles}
