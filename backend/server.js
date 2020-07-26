@@ -27,7 +27,8 @@ const auth = require('./routes/auth');
 const maharajAuth = require("./routes/maharajAuth");
 const req = require('./routes/req');
 const maharajReq = require('./routes/maharajReq');
-const { upload } = require('./middleware/multer');
+const adminRole = require("./routes/adminRole")
+
 
 //Dev middleware Morgan
 if (process.env.NODE_ENV === 'development') {
@@ -38,18 +39,11 @@ if (process.env.NODE_ENV === 'development') {
 
 //Mount routers
 
-// app.post("/upload",upload.single('file'),(req,res)=>{
-
-//     console.log(req.body.data)
-    
-//     console.log(req.file);
-//     res.send(req.body.data)
-// })
-
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/maharajAuth', maharajAuth);
 app.use('/api/v1/req', req);
 app.use('/api/v1/maharajReq',maharajReq);
+app.use('/api/v1/admin',adminRole);
 
 
 

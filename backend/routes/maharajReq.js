@@ -9,6 +9,7 @@ const {
   acceptReq,
   getPastReq,
   adminGetAll,
+  acceptModifiedReq
 } = require('../controllers/maharajReq');
 
 const { authRequired } = require('../middleware/auth');
@@ -36,5 +37,11 @@ router.get(
 );
 
 router.get('/admin', asyncHandler(adminGetAll));
+
+router.put(
+  '/modify/:request_id',
+  authRequired('maharaj'),
+  asyncHandler(acceptModifiedReq)
+);
 
 module.exports = router;
