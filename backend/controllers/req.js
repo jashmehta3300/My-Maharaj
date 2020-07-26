@@ -142,3 +142,47 @@ exports.getPastReq = async(req, res, next) => {
       data: request,
     });
 };
+
+
+// @desc      User can modify the request
+// @route     PUT /api/v1/req/modify/:request_id
+// @access    private
+exports.modifyReq = async (req, res, next) => {
+
+  const fieldsToUpdate = {
+    ...req.body,
+    modified: true
+  };
+
+  const request = await Request.findByIdAndUpdate(req.params.request_id, fieldsToUpdate, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    data: request,
+  });
+};
+
+// @desc      All accepted requests of user
+// @route     GET /api/v1/req/myreq
+// @access    private
+exports.getAllAcceptedUser = async (req, res, next) => {
+  console.log("Hello")
+  console.log(req.user._id)
+
+  await Request.find({
+    createdBy: req.user._id,
+    status: 'accepted',
+  }, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    }
+  });
+};

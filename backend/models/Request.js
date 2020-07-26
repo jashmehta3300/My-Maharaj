@@ -76,6 +76,10 @@ const RequestSchema = new mongoose.Schema({
     required: true,
     default: 'unaccepted',
   },
+  modified: {
+    type: Boolean, 
+    default: false
+  }
 });
 
 

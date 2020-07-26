@@ -98,6 +98,7 @@ render(){
             
              
             <TouchableOpacity style={style.box}
+            onPress={() => {this.props.navigation.navigate('DetailsAdmins',{'details':item})}}
             >
                     <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>
                     <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>

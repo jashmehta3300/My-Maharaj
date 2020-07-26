@@ -23,6 +23,8 @@ import Analytics from './src/screen/Analytics'
 import RegisterAdmin from './src/screen/RegisterAdmin';
 import UploadPhoto from './src/screen/UploadPhoto'
 import Charts from './src/screen/charts'
+import DetailsAdmin from './src/screen/DetailsAdmin'
+
 import LoginScreen from './src/screen/Verify';
 export default class App extends React.Component {
   
@@ -69,6 +71,36 @@ const CurrentNav = createStackNavigator(
 }
 
 )
+const PastNav = createStackNavigator(
+  {
+  Details:Details,
+  PastOrder : PastOrder,
+},{
+  initialRouteName : 'PastOrder',
+  headerMode:'none'
+}
+)
+const AcceptNav = createStackNavigator(
+  {
+  Details:Details,
+  Home : Home,
+},{
+  initialRouteName : 'Home',
+  headerMode:'none'
+}
+)
+
+const AnalyticsNav = createStackNavigator(
+  {
+  DetailsAdmin:DetailsAdmin,
+  Analytics : Analytics,
+},{
+  initialRouteName : 'Analytics',
+  headerMode:'none'
+}
+)
+
+
 
 const SettingsNav = createStackNavigator({
   FAQ:FAQ,
@@ -106,8 +138,8 @@ const MainAdmin = createMaterialTopTabNavigator({
       <Icon name="home" size={25} color={tintColor} />
       )}
   },
-  Analytics:{
-    screen:Analytics ,
+  AnalyticsNav:{
+    screen:AnalyticsNav ,
     navigationOptions: {title: 'Analytics', tabBarIcon: ({ tintColor }) => (
       <Icon name="line-chart" size={23} color={tintColor} />
       )}
@@ -128,7 +160,7 @@ const MainAdmin = createMaterialTopTabNavigator({
     iconStyle: {inactiveColor:'#aaaaaa', paddingTop:3, activeColor: 'white'},
     indicatorStyle: { backgroundColor: 'white', height: 4}
   },
-  order : ['RegisterAdmins','Analytics','Charts','SettingsNav'],
+  order : ['RegisterAdmins','AnalyticsNav','Charts','SettingsNav'],
 })
 
 const MainMaharaj = createMaterialTopTabNavigator({
@@ -145,13 +177,13 @@ const MainMaharaj = createMaterialTopTabNavigator({
       )}
   },
   Home:{
-    screen:Home ,
+    screen:AcceptNav ,
     navigationOptions: {title: 'Accepted Orders', tabBarIcon: ({ tintColor }) => (
       <Icon name="check" size={25} color={tintColor} />
       )}
   },
   PastOrder :{
-    screen:PastOrder ,
+    screen:PastNav ,
     navigationOptions: {title: 'Past Orders', tabBarIcon: ({ tintColor }) => (
       <Icon name="book" size={25} color={tintColor} />
       )}

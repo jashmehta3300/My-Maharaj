@@ -39,23 +39,7 @@ export default class Home extends React.Component{
                 this.onFocusFunction()
             })
     }
-    onComplete = async(id) =>{
-        console.log(id)
-        fetch('http://localhost:5000/api/v1/req/complete/'+id,
-            {
-                method:'PUT',
-                headers:{
-                    "Content-Type":"application/json",
-                }
-            }, ).then((response) => 
-                response.json()
-            
-        ).then((data) =>{
-            console.log(data.data)
-            this.getOrder()
-        })
-        
-    }
+    
       
 
 render(){
@@ -64,20 +48,17 @@ render(){
             <Text style = {{margin:18,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Accepted Orders</Text>
             
             <FlatList
-             data={this.state.data.reverse()}
+             data={this.state.data}
              keyExtractor={(item, index) => item._id}
              renderItem ={ ({ item, index }) =>            
-            <TouchableOpacity style={style.box}>
-                <View style={{ flexDirection: 'column' }}>
+            <TouchableOpacity style={style.box} onPress = {() => {this.props.navigation.navigate('Details',{'details':item})}}>
+                <View style={{ flexDirection: 'column' }} >
                     <Text style={style.boxText2 }>REQUEST ID: {item._id} </Text>
                     <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>
                     <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>
                     <Text style={style.boxText2}>Cuisine : {item.cuisine }</Text>
                     <Text style={style.boxText}>Location : {item.address }</Text>
                 </View>
-                <TouchableOpacity style={{justifyContent:"center" , flexDirection:'row' , flex:0}} onPress={() => this.onComplete(item._id)}>
-                    <Text style={[style.boxText , {color:'#fff' , backgroundColor:'#000' ,padding:15 , borderRadius:10,fontWeight:'bold'}]}>Complete</Text>
-                </TouchableOpacity>
                 
             </TouchableOpacity>
             

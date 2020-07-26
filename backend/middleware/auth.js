@@ -23,8 +23,13 @@ const authRequired =(role="user")=>async (req, res, next) => {
             });
         }
         const user = role=='user'?await User.findOne({ _id: decoded.id }).select({password:0}):await Maharaj.findOne({ _id: decoded.id }).select({password:0})
+        
+        if(!user){
+            return res.status(404).json(`${role} not found!!`)
+        }
         req.token = token;
         req.user = user;
+        res.locals.user=user
         next();
     } catch (e) {
         return res.status(401).json({
@@ -33,4 +38,14 @@ const authRequired =(role="user")=>async (req, res, next) => {
     }
 };
 
-module.exports={authRequired}
+const hasRoles=(roles)=>async (req, res, next) =>{
+    const role = req.user.role;
+    console.log(role)
+    console.log(roles)
+    if(!roles.includes(role)){
+        return res.status(403).json({success:false,msg:"Not allowed"})
+    }
+    next();
+}
+
+module.exports={authRequired,hasRoles}

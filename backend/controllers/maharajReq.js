@@ -106,3 +106,63 @@ exports.adminGetAll = async(req, res, next) => {
       }
     });
 };
+
+// @desc      Accept/Reject a modified request
+// @route     PUT /api/v1/maharajReq/modify/:request_id
+// @access    private
+exports.acceptModifiedReq = async (req, res, next) => {
+  const request_id = req.params.request_id;
+
+  console.log(req.body.acceptChanges)
+
+  console.log("Hi")
+
+  if (req.body.acceptChanges === true){
+    const fieldsToUpdate = {
+      modified: false
+    }
+    console.log("Hello")
+
+    const request = await Request.findByIdAndUpdate(request_id, fieldsToUpdate, {
+      new: true,
+      runValidators: true,
+    });
+
+    console.log("Bye")
+
+    res.status(200).json({
+      success: true,
+      data: request,
+    });
+  }
+
+  if (req.body.acceptChanges === false){
+    console.log("here")
+    await User.findByIdAndUpdate(
+      { _id: req.user._id },
+      req.user.orders.remove(request_id),
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    const fieldsToUpdate1 = {
+      modified: false,
+      accepted: false,
+      acceptedBy: null
+    }
+
+    const request1 = await Request.findByIdAndUpdate(request_id, fieldsToUpdate1, {
+      new: true,
+      runValidators: true,
+    });
+    console.log("not here")
+
+
+    res.status(200).json({
+      success: true,
+      data: request1,
+    });
+  }
+};
