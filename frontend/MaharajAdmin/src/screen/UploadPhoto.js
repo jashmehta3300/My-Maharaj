@@ -12,14 +12,33 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 
 class UploadPhoto extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filePath: {},
-      fileData: '',
-      fileUri: '',
-      file: '',
-      token: ''
+
+      constructor(props){
+        super(props);
+        this.state={
+            filePath:{},
+            fileData: '',
+            fileUri: '',
+            file:'',
+            token:'',
+            isimage:0
+        }
+    }
+       async UNSAFE_componentWillMount(){
+      const token = await AsyncStorage.getItem('token')
+      this.setState({token})
+      fetch("http://localhost:5000/api/v1/maharajAuth/5f01b441eba4126824cfd706/profileimage",{
+        method:'GET',
+        headers:{
+          'Authorization':"Bearer "+token
+        }
+      })
+      .then((response) => {
+
+      })
+      .catch((error) => console.warn(error))
+      console.log(this.state.token)
+
     }
   }
   async UNSAFE_componentWillMount() {
@@ -28,16 +47,67 @@ class UploadPhoto extends Component {
     console.log(this.state.token)
   }
 
-  chooseImage = async () => {
-    let options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
+
+    chooseImage = async () => {
+        let options = {
+          title: 'Select Image',
+          storageOptions: {
+            skipBackup: true,
+            path: 'images',
+          },
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+          console.log('Response = ', response);
+    
+          if (response.didCancel) {
+//            console.log('User cancelled image picker');
+          } else if (response.error) {
+//            console.log('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+ //           console.log('User tapped custom button: ', response.customButton);
+            alert(response.customButton);
+          } else {
+            const source = { uri: response.uri };
+    
+            // You can also display the image using data:
+            // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+            // alert(JSON.stringify(response));s
+            // console.log('response', JSON.stringify(response));
+            this.setState({
+              filePath: response,
+              fileData: response.data,
+              fileUri: response.uri
+            });
+            const blob = this.uriToBlob(response.uri)
+            this.setState({file:blob})
+            if(blob){
+              let form = new FormData();
+              form.append("image",{
+                uri:response.uri,
+                type:response.type,
+                name:response.fileName
+              })
+              fetch("http://localhost:5000/api/v1/maharajAuth/upload/profile",{
+                method:"POST",
+                body:form,
+                headers:{
+                  "Authorization":"Bearer "+this.state.token,
+                }
+              })
+              .then((data) => {
+                console.log(data)
+              ToastAndroid.showWithGravity('Uploaded Successfully',2000,ToastAndroid.CENTER)
+              this.props.navigation.navigate('Home')               
+              })
+              .catch((error) => console.warn(error))
+            }
+            
+            // const img = this.uploadToFirebase(blob)
+            console.log(this.state.token)
+          }
+        });
+      }
+
 
       if (response.didCancel) {
         //            console.log('User cancelled image picker');
