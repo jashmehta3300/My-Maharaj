@@ -103,9 +103,6 @@ render(){
             <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.sendotp()}>
                     <Text style = {style.button}>Send OTP</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => {this.props.navigation.navigate('Registration')}}>
-                <Text style = {style.button}>Create an Account</Text>
-                </TouchableOpacity>
             </View>
                 :
                 <View>

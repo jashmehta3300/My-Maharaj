@@ -125,4 +125,5 @@ const styles = StyleSheet.create({
                         <Text style={styles.boxText2}>Address : {this.state.item.registeredAddress.address }</Text>
                         <Text style={styles.boxText2}>Zipcode : {this.state.item.registeredAddress.zipcode}</Text>
                         <Text style={styles.boxText2}>CreatedAt : {this.state.item.createdAt} </Text>
+                        
                         */
