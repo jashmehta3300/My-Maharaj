@@ -38,7 +38,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 //Mount routers
-
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/maharajAuth', maharajAuth);
 app.use('/api/v1/req', req);
