@@ -57,9 +57,9 @@ render(){
                     <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>
                     <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>
                     <Text style={style.boxText2}>Cuisine : {item.cuisine }</Text>
-                    <Text style={style.boxText}>Location : {item.address }</Text>
-                </View>
-                
+                    <Text style={style.boxText2}>Location : {item.address }</Text>
+                    <Text style={style.boxText}>Modified : {item.modified.toString()}</Text>
+                </View>            
             </TouchableOpacity>
             
              }

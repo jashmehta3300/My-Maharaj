@@ -26,14 +26,15 @@ export default class ModifyRequest extends React.Component {
             Flat_no:'',
             Wing:'',
             item:'',
-            id:''
+            id:'',
+            picked:false
         }
     }
     componentDidMount() {
         const item = this.props.navigation.getParam('item')
         console.log(item)
         this.setState({
-            date : `${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}   `,
+            date : item.bookingDate,
             time: item.bookingTime,
             type_of_booking : item.bookingType,
             bookingQuantity : item.bookingQuantity,
@@ -118,6 +119,7 @@ export default class ModifyRequest extends React.Component {
             })
         }).then((response) => response.json())
         .then((data) => 
+            console.log(data),
             this.props.navigation.navigate('CurrentOrder')
         )
     }
@@ -130,8 +132,10 @@ export default class ModifyRequest extends React.Component {
                 <TouchableOpacity style={{marginHorizontal:30 , backgroundColor:'white' , marginBottom:20 , height:50 , justifyContent:'center' , borderColor:'#dcdcdc' , borderWidth:1 , borderRadius:5}}
                     onPress ={() => this.setState({isVisible:true})}
                 >
+             
+
                     <Text style={{fontSize:20,paddingLeft:10}}>
-                        {this.state.date ? this.state.date + this.state.time  :'Date And Time of Booking'}
+                        {this.state.picked ? this.state.date + this.state.time  :`${[this.state.date].toLocaleString().slice(8, 10)}/${[this.state.date].toLocaleString().slice(5, 7)}/${[this.state.date].toLocaleString().slice(0, 4)}\t\t`+this.state.time}
                     </Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
@@ -140,7 +144,8 @@ export default class ModifyRequest extends React.Component {
                     onConfirm={(date) => this.setState({
                         date:`${date.toDateString()} `,
                         time:`${date.getHours() % 12 || 12}:${date.getMinutes() <=9 ? '0'+date.getMinutes() : date.getMinutes()} ${date.getHours()/12 >= 1 ? 'PM' : 'AM'}`,
-                        isVisible:false
+                        isVisible:false,
+                        picked:true
                     })}
                     onCancel={() => console.log('Bhenchod')}
                 />

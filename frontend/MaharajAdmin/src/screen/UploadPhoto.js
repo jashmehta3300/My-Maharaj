@@ -73,7 +73,6 @@ class UploadPhoto extends Component {
     const data = new FormData();
 
   data.append("image", {
-   
     uri:uri.uri 
   });
     return new Promise(async (res, rej) => {

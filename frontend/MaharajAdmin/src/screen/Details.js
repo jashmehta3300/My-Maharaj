@@ -73,7 +73,28 @@ class Details extends Component {
         console.log(lat , lng)
         Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`);
       }
-   
+      onModified = async(accepted,id) =>{
+        console.log(id)
+        const token = await AsyncStorage.getItem('token')
+        fetch('http://localhost:5000/api/v1/req/modify/'+id,
+            {
+                method:'PUT',
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization": token
+                },
+                body : JSON.stringify({
+                    "acceptChanges":accepted
+                })
+            }, ).then((response) => 
+                response.json()
+            
+        ).then((data) =>{
+            console.log(data.data)
+            this.props.navigation.navigate("Home")
+        })
+        
+    }
     render() {
         if (this.state.isloading) {
             return (
@@ -109,7 +130,20 @@ class Details extends Component {
                                         <Text style={style.boxText2}>Max price : {item.priceMax} </Text>
                                         {
                                             item.acceptedBy  ?
-
+                                                item.modified ? 
+                                                <View>
+                                                    <Text style = {[style.boxText,{paddingLeft:10}]}>Order details has been modified</Text>
+                                                <View style = {{flexDirection:'row' , justifyContent:'center'}}>
+                                                    
+                                                <TouchableOpacity style={{ justifyContent: "center", flexDirection: 'row', flex: 0 }} onPress={() => this.onModified(true,item._id)}>
+                                                <Text style={[style.boxText, { color: '#fff', backgroundColor: 'green', padding: 15, borderRadius: 10, fontWeight: 'bold' }]}>Accept</Text>
+                                                </TouchableOpacity> 
+                                                <TouchableOpacity style={{ justifyContent: "center", flexDirection: 'row', flex: 0 }} onPress={() => this.onModified(false,item._id)}>
+                                                <Text style={[style.boxText, { color: '#fff', backgroundColor: 'red', padding: 15, borderRadius: 10, fontWeight: 'bold' }]}>Reject</Text>
+                                            </TouchableOpacity> 
+                                                </View>
+                                                </View>
+                                            :
                                                 
                                                 item.status === "accepted" ?
                                                     <TouchableOpacity style={{ justifyContent: "center", flexDirection: 'row', flex: 0 }} onPress={() => this.onComplete(item._id)}>
