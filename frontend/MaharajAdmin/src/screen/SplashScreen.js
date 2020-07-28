@@ -13,11 +13,17 @@ export default class SplashScreen extends React.Component{
 
     async componentDidMount(){
         let token = await AsyncStorage.getItem('token')
+        let Admintoken = await AsyncStorage.getItem('Admintoken')
         console.log(token)
-        if(token){
-
+        if(token || Admintoken){
+            if(token){
             this.setState({is_authenticated:true})
             this.props.navigation.navigate('MainMaharaj')
+            }
+            else{
+                this.setState({is_authenticated:true})
+                this.props.navigation.navigate('MainAdmin')
+            }
         }
         else{
             this.props.navigation.navigate('Divider')

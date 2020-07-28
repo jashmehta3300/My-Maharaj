@@ -10,6 +10,7 @@ import {
     Platform,
     StyleSheet,
     ScrollView,
+
     StatusBar,
     Alert,
 } from 'react-native';
@@ -88,6 +89,7 @@ constructor(){
                 .then((data) =>{
                     if(data.success){
                         console.warn(data.token)
+                        this.setState({token:data.token})
                         x=''
                         x=this.props.navigation.getParam('admin')
                         this.props.navigation.navigate('Verify',{'admin':x})
