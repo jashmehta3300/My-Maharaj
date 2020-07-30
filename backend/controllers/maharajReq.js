@@ -1,5 +1,5 @@
-const Request = require('../models/Request');
-const User = require('../models/User');
+const Request = require("../models/requestModel");
+const User = require("../models/userModel");
 
 
 // @@@ ALL CONTROLLERS FOR REQUESTS FROM MAHARAJ APP @@@ //
