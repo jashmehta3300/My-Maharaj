@@ -25,6 +25,7 @@ export default class CreateRequest extends React.Component {
             priceMax:'',
             Flat_no:'',
             Wing:'',
+            Multiplier:0
         }
     }
     componentDidMount = async() => {
@@ -50,7 +51,9 @@ export default class CreateRequest extends React.Component {
                         keyboardType={'numeric'}
                         placeholder='Enter Number of hours'
                         onChangeText={(text) => this.setState({
-                            bookingQuantity:text
+                            bookingQuantity:text,
+                            priceLow:350*parseFloat(text) - 50,
+                            priceMax:350*parseFloat(text),
                         })}
                         style={style.textinput}
                     ></TextInput>
@@ -65,7 +68,10 @@ export default class CreateRequest extends React.Component {
                 keyboardType={'numeric'}
                         placeholder='Enter Number of Meals'
                         onChangeText={(text) => this.setState({
-                            bookingQuantity:text
+                            bookingQuantity:text,
+                            priceLow:350*parseFloat(text) - 50,
+                            priceMax:350*parseFloat(text),
+                            
                         })}
                         style={style.textinput}
                 ></TextInput>
@@ -79,7 +85,9 @@ export default class CreateRequest extends React.Component {
                 keyboardType={'numeric'}
                         placeholder='Enter Number of days'
                         onChangeText={(text) => this.setState({
-                            bookingQuantity:text
+                            bookingQuantity:text,
+                            priceLow:700*parseFloat(text) - 50,
+                            priceMax:700*parseFloat(text),
                         })}
                         style={style.textinput}
                 ></TextInput>
@@ -106,8 +114,8 @@ export default class CreateRequest extends React.Component {
                 "bookingQuantity": this.state.bookingQuantity,
                 "foodType": this.state.type_of_meal,
                 "cuisine": this.state.Cuisine.toString(),
-                "priceLow": this.state.priceLow,
-                "priceMax": this.state.priceMax,
+                "priceLow": this.state.priceLow.toString(),
+                "priceMax": this.state.priceMax.toString(),
                 "address": this.state.Flat_no + this.state.Wing + " Wing " +  this.state.location,
                 "bookingDate": this.state.date,
                 "bookingTime": this.state.time,
@@ -167,7 +175,7 @@ export default class CreateRequest extends React.Component {
                     style={{ backgroundColor: '#fafafa' , marginHorizontal:30, }}
                     dropDownStyle={{ backgroundColor: '#fafafa' }}
                     onChangeItem={item => this.setState({
-                        type_of_booking: item.value
+                        type_of_booking: item.value,
                     })}
                     labelStyle={{
                         fontSize:20,
@@ -232,22 +240,12 @@ export default class CreateRequest extends React.Component {
                 </View>
                 <Text style = {style.text}>Price Range</Text>
                 <View style={{flexDirection:'row' , justifyContent:'center' , marginTop:20}}>
-                <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Min Price'
-                        onChangeText={(text) => this.setState({
-                            priceLow:text
-                        })}
-                        style={style.textinput2}
-                ></TextInput>
-                 <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Max Price'
-                        onChangeText={(text) => this.setState({
-                            priceMax:text
-                        })}
-                        style={style.textinput2}
-                ></TextInput>
+                <Text style={{fontSize:20, paddingTop:5}}>Rs.</Text>
+                <Text style={style.text2}>{this.state.priceLow.toString()}</Text>
+                <Text style={{fontSize:20, paddingTop:5,paddingRight:10}}>to</Text>
+                <Text style={{fontSize:20, paddingTop:5}}>Rs.</Text>
+                <Text style={style.text2}>{this.state.priceMax.toString()}</Text>
+                
                 </View>
                 <Text style = {style.text}>Address Details</Text>
                 <View style={{flexDirection:'row' , justifyContent:'center' ,marginTop:15}}>
@@ -268,9 +266,9 @@ export default class CreateRequest extends React.Component {
                         style={style.textinput2}
                 ></TextInput>
                 </View>
-                <TouchableOpacity onPress ={() => this.props.navigation.navigate('TrackOrder' , { longlat : this.state.longLat} )}>
+                <View >
                 <Text style={style.textinput3}>{this.state.location}</Text>
-                </TouchableOpacity>
+                </View>
                 <Text style={{marginLeft:20,color:'red' , fontSize:15}}>*To change address please go to home screen</Text>
                 <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginVertical:30 , borderRadius:10}} onPress={() => this.sendRequest()} >
                     <Text style = {style.button}>Confirm Request</Text>
@@ -320,9 +318,10 @@ const style = StyleSheet.create({
         borderColor:'grey' , 
         borderWidth:1,
         borderRadius:10,
-        backgroundColor:'#fff',
         marginHorizontal:20,
-        width:120
+        alignSelf:'center',
+        width:120,
+        backgroundColor:"#fff"
     },
     textinput3: {
         fontSize: 20,
@@ -330,8 +329,16 @@ const style = StyleSheet.create({
         borderColor:'grey' , 
         borderWidth:1,
         borderRadius:10,
-        backgroundColor:'#fff',
         marginHorizontal:20,
         marginTop:15,
+    },
+    text2: {
+        fontSize: 20,
+        borderColor:'grey' , 
+        borderRadius:10,
+        marginHorizontal:20,
+        fontWeight:'bold',
+        paddingTop:5
+        
     },
 })

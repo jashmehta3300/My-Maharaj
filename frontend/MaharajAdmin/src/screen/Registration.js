@@ -10,6 +10,7 @@ import {
     Platform,
     StyleSheet,
     ScrollView,
+
     StatusBar,
     Alert,
 } from 'react-native';
@@ -88,13 +89,14 @@ constructor(){
                 .then((data) =>{
                     if(data.success){
                         console.warn(data.token)
-                        x=''
+                        this.setState({token:data.token})
+                        let x=''
                         x=this.props.navigation.getParam('admin')
                         this.props.navigation.navigate('Verify',{'admin':x})
                         console.warn('verify page')
                     }
                     else{
-                        Alert.alert('Login fail',response.message.success)
+                        Alert.alert('Login fail',data.message.success)
                     }
             })
             .catch((error) =>{
@@ -164,6 +166,7 @@ constructor(){
                 <TextInput 
                     placeholder="Your Mobile_No"
                     style={styles.textInput}
+                    keyboardType = {"number-pad"}
                     autoCapitalize="none"
                     onChangeText={(val) => {this.setState({mobile:val})}}
                 />
@@ -177,10 +180,12 @@ constructor(){
                 />        
             <DropDownPicker
                     items={[
-                        { label: 'North Indian',value:'North Indian' },
+                        { label: 'Punjabi',value:'Punjabi' },
                         { label: 'South Indian', value:'South Indian'},
                         { label: 'Italian' , value:'Italian'},
-                        {label:'Chinese', value:'Chinese'}
+                        { label: 'Rajasthani ' , value:'Rajasthani '},
+                        { label: 'Chinese' , value:'Chinese'},
+                        { label: 'Continental' , value:'Continental'},
                     ]}
                     placeholder = 'Cuisine'
                     containerStyle={{ height: 50 }}

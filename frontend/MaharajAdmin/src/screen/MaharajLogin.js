@@ -66,7 +66,10 @@ export default class LoginScreen extends React.Component{
                     this.props.navigation.navigate('MainMaharaj')
                 }
                 else{
-                    Alert.alert("Login failed.Enter the valid OTP")
+                    if(data.msg === "You are not aprroved yet...")
+                        Alert.alert("You are not aprroved yet...")
+                    else
+                        Alert.alert("Invalid OTP")
                 }
             })
             .catch((error) =>{

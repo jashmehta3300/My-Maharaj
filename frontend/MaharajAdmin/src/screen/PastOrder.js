@@ -48,7 +48,7 @@ render(){
             <Text style = {{margin:18,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Past Orders</Text>
             
             <FlatList
-             data={this.state.data.reverse()}
+             data={this.state.data}
              keyExtractor={(item, index) => item._id}
              renderItem ={ ({ item, index }) =>            
             <TouchableOpacity style={style.box} onPress = {() => {this.props.navigation.navigate('Details',{'details':item})}}>
