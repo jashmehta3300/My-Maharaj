@@ -55,27 +55,12 @@ export default class ModifyRequest extends React.Component {
                         keyboardType={'numeric'}
                         placeholder='Enter Number of hours'
                         onChangeText={(text) => this.setState({
-                            bookingQuantity:text
+                            bookingQuantity:text,
+                            priceLow:350*parseFloat(text) - 50,
+                            priceMax:350*parseFloat(text),
                         })}
                         style={style.textinput}
-                        defaultValue ={this.state.bookingQuantity.toString()}
                     ></TextInput>
-                </View>
-            )
-        }
-        else if(this.state.type_of_booking === 'Number of meals'){
-            return (
-                <View style={{marginHorizontal:30 , marginTop:10 }}>
-
-                <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Enter Number of Meals'
-                        onChangeText={(text) => this.setState({
-                            bookingQuantity:text
-                        })}
-                        style={style.textinput}
-                        defaultValue ={this.state.bookingQuantity.toString()}
-                ></TextInput>
                 </View>
             )
         }
@@ -86,10 +71,11 @@ export default class ModifyRequest extends React.Component {
                 keyboardType={'numeric'}
                         placeholder='Enter Number of days'
                         onChangeText={(text) => this.setState({
-                            bookingQuantity:text
+                            bookingQuantity:text,
+                            priceLow:700*parseFloat(text) - 50,
+                            priceMax:700*parseFloat(text),
                         })}
                         style={style.textinput}
-                        defaultValue ={this.state.bookingQuantity.toString()}
                 ></TextInput>
                 </View>
             )
@@ -147,7 +133,7 @@ export default class ModifyRequest extends React.Component {
                         isVisible:false,
                         picked:true
                     })}
-                    onCancel={() => console.log('Bhenchod')}
+                    onCancel={() => console.log('')}
                 />
                 <View style={{marginBottom:20}}>
                 <DropDownPicker
@@ -186,25 +172,14 @@ export default class ModifyRequest extends React.Component {
                 >{this.state.Cuisine}</Text>
                 <Text style = {style.text}>Price Range</Text>
                 <View style={{flexDirection:'row' , justifyContent:'center' , marginTop:20}}>
-                <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Min Price'
-                        onChangeText={(text) => this.setState({
-                            priceLow:text
-                        })}
+                <Text
                         style={style.textinput2}
-                        value = {this.state.priceLow.toString()}
-                ></TextInput>
-                 <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Max Price'
-                        onChangeText={(text) => this.setState({
-                            priceMax:text
-                        })}
+                    >{this.state.priceLow}</Text>
+                 <Text
+                    
                         style={style.textinput2}
-                        value = {this.state.priceMax.toString()}
 
-                ></TextInput>
+                >{this.state.priceMax}</Text>
                 </View>
                 <Text style = {style.text}>Address Details</Text>
                 <Text style={style.textinput3}>{this.state.location}</Text>

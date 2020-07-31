@@ -76,7 +76,7 @@ class Details extends Component {
       onModified = async(accepted,id) =>{
         console.log(id)
         const token = await AsyncStorage.getItem('token')
-        fetch('http://localhost:5000/api/v1/req/modify/'+id,
+        fetch('http://localhost:5000/api/v1/maharajReq/modify/'+id,
             {
                 method:'PUT',
                 headers:{

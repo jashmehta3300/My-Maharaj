@@ -60,24 +60,6 @@ export default class CreateRequest extends React.Component {
                 </View>
             )
         }
-        else if(this.state.type_of_booking === 'Number of meals'){
-            return (
-                <View style={{marginHorizontal:30 , marginTop:10 }}>
-
-                <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Enter Number of Meals'
-                        onChangeText={(text) => this.setState({
-                            bookingQuantity:text,
-                            priceLow:350*parseFloat(text) - 50,
-                            priceMax:350*parseFloat(text),
-                            
-                        })}
-                        style={style.textinput}
-                ></TextInput>
-                </View>
-            )
-        }
         else if(this.state.type_of_booking === 'Number of days'){
             return (
                 <View style={{marginHorizontal:30 , marginTop:10 }}>

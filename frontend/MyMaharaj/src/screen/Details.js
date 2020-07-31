@@ -80,6 +80,9 @@ class Details extends Component {
                                         <Image source ={{uri : "http://localhost:5000"+this.state.maharaj.imageURL}} style={{height:100,width:100}} />
                                         </View>
                                         :
+                                        item.modified ?
+                                        <Text style={[style.boxText2,{fontWeight:'bold' , fontSize:25}]}>Awaiting Maharaj Response</Text>
+                                        :
                                         <TouchableOpacity style={{ justifyContent: "center", flexDirection: 'row', flex: 1 }} onPress={() => this.props.navigation.navigate("ModifyRequest", { "item": item })}>
                                             <Text style={[style.boxText, { color: '#fff', backgroundColor: '#000', padding: 15, borderRadius: 10, fontWeight: 'bold', paddingHorizontal: 40, marginTop: 50 }]}>Edit</Text>
                                         </TouchableOpacity>

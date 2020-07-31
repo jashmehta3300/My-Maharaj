@@ -83,7 +83,7 @@ render(){
                     <Text style={style.boxText2 }>REQUEST ID: {item._id} </Text>
                     <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>
                     <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>
-                    <Text style={style.boxText}>Status : {item.acceptedBy ? "Accepted" : "Pending" }</Text>
+                    <Text style={style.boxText}>Status : {item.modified ? "Changes to be approved by the maharaj" : "Accepted" }</Text>
                 </View>
             </TouchableOpacity>
             

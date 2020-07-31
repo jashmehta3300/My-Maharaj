@@ -25,9 +25,10 @@ class Approve extends Component {
         .then((data) => {
             console.warn(data)
             data = data.filter((approved) =>{
-                 return approved.isApproved==false
+                 return approved.isApproved !== true
 
             })
+            console.log(data)
             this.setState({
                 isloading:false,
                 Data:data
@@ -56,10 +57,12 @@ class Approve extends Component {
                     data={this.state.Data}
                     keyExtractor={(item, index) => item._id}
                     renderItem={({item}) =>
-                    <TouchableOpacity onPress={() => {this.props.navigation.navigate('ApproveUser',{'item':item})}}>
-                        <View style={styles.box}>
-                            <Text style={styles.text}>{item.name}</Text>
-                            <Text style={styles.text}>Approve</Text>
+                    <TouchableOpacity style={style.box} onPress={() => {this.props.navigation.navigate('ApproveUser',{'item':item})}}>
+                        <View style={{ flexDirection: 'column' }}>
+                                <Text style={style.boxText2}>Name: {item.name} </Text>
+                                <Text style={style.boxText2}>Number : {item.mobile}</Text>
+                                <Text style={style.boxText2}>Cuisine : {item.cooking.cuisine.toString() }</Text>
+                                <Text style={style.boxText}>Location : {item.registeredAddress.address }</Text>
                         </View>
                     </TouchableOpacity>}
                     />
@@ -70,7 +73,7 @@ class Approve extends Component {
 }
 export default Approve;
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
@@ -78,12 +81,26 @@ const styles = StyleSheet.create({
     },
     box:{
         borderBottomColor:'grey',
-        borderBottomWidth:2,
+        borderWidth:1,
         fontSize:30,
         flexDirection:'row',
-        justifyContent:'space-between'
+        justifyContent:'space-between',
+        margin:10
     },
     text:{
         fontSize:20
+    }, boxText: {
+        color: 'black',
+        margin: 10,
+        fontSize:18,
+        
+
+    },
+    boxText2: {
+        color: 'black',
+        margin: 10,
+        fontSize:18,
+        marginBottom:0
+
     }
 });
