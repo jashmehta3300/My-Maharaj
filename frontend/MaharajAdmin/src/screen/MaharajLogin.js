@@ -66,7 +66,7 @@ export default class LoginScreen extends React.Component{
                     this.props.navigation.navigate('MainMaharaj')
                 }
                 else{
-                    Alert.alert("Login failed.Enter the valid OTP")
+                        Alert.alert(data.msg)
                 }
             })
             .catch((error) =>{

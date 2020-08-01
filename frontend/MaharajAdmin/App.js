@@ -26,6 +26,8 @@ import Charts from './src/screen/charts'
 import DetailsAdmin from './src/screen/DetailsAdmin'
 
 import LoginScreen from './src/screen/Verify';
+import ApproveUser from './src/screen/ApproveUser'
+import Approve from './src/screen/Approve';
 export default class App extends React.Component {
   
   render() {
@@ -124,6 +126,21 @@ const SettingsNav = createStackNavigator({
 {
   initialRouteName : 'Settings'
 })
+const ApproveAdmin = createStackNavigator(
+  {
+  Approve:Approve,
+  ApproveUser : {
+    screen : ApproveUser,
+    navigationOptions :{
+      tabBarVisible : false
+    }
+  },
+},{
+  initialRouteName : 'Approve',
+  headerMode:'none'
+}
+
+)
 
 const MainAdmin = createMaterialTopTabNavigator({
   SettingsNav :{
@@ -144,10 +161,10 @@ const MainAdmin = createMaterialTopTabNavigator({
       <Icon name="line-chart" size={23} color={tintColor} />
       )}
   },
-  Charts:{
-    screen:Charts ,
-    navigationOptions: {title: 'Charts', tabBarIcon: ({ tintColor }) => (
-      <Icon name="bar-chart" size={25} color={tintColor} />
+  Approve:{
+    screen:ApproveAdmin,
+    navigationOptions: {title: 'Approve', tabBarIcon: ({ tintColor }) => (
+      <Icon name="user" size={25} color={tintColor} />
       )}
   },
 },{
@@ -160,7 +177,7 @@ const MainAdmin = createMaterialTopTabNavigator({
     iconStyle: {inactiveColor:'#aaaaaa', paddingTop:3, activeColor: 'white'},
     indicatorStyle: { backgroundColor: 'white', height: 4}
   },
-  order : ['RegisterAdmins','AnalyticsNav','Charts','SettingsNav'],
+  order : ['RegisterAdmins','AnalyticsNav','Approve','SettingsNav'],
 })
 
 const MainMaharaj = createMaterialTopTabNavigator({

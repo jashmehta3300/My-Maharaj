@@ -9,7 +9,8 @@ class ContactUs extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>ContactUs</Text>
+            <Text style={{fontSize:30 , paddingTop:10}}>Contact Us </Text>
+            <Text style={{fontSize:30}}>random123@gmail.com</Text>
             </View>
         );
     }

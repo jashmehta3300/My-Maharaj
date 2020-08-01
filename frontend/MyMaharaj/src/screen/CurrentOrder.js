@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity , FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import moment from 'moment'
 
 export default class CurrentOrder extends React.Component{
     constructor(props){
@@ -82,7 +82,7 @@ render(){
                 <View style={{ flexDirection: 'column' }}>
                     <Text style={style.boxText2 }>REQUEST ID: {item._id} </Text>
                     <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>
-                    <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>
+                    <Text style={style.boxText2}>Time of Booking : {moment(item.bookingTime,"hh:mm").format("h:mm A")}</Text>
                     <Text style={style.boxText}>Status : {item.acceptedBy ? "Accepted" : "Pending" }</Text>
                 </View>
             </TouchableOpacity>
@@ -126,7 +126,6 @@ const style = StyleSheet.create({
         borderColor: 'black',
         margin: 10,
         borderWidth: 1 ,
-        borderRadius:10 , 
         backgroundColor:'#fff',
     },
     boxText: {

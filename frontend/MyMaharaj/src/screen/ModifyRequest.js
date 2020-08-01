@@ -26,14 +26,15 @@ export default class ModifyRequest extends React.Component {
             Flat_no:'',
             Wing:'',
             item:'',
-            id:''
+            id:'',
+            picked:false
         }
     }
     componentDidMount() {
         const item = this.props.navigation.getParam('item')
         console.log(item)
         this.setState({
-            date : `${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}   `,
+            date : item.bookingDate,
             time: item.bookingTime,
             type_of_booking : item.bookingType,
             bookingQuantity : item.bookingQuantity,
@@ -54,27 +55,12 @@ export default class ModifyRequest extends React.Component {
                         keyboardType={'numeric'}
                         placeholder='Enter Number of hours'
                         onChangeText={(text) => this.setState({
-                            bookingQuantity:text
+                            bookingQuantity:text,
+                            priceLow:350*parseFloat(text) - 50,
+                            priceMax:350*parseFloat(text),
                         })}
                         style={style.textinput}
-                        defaultValue ={this.state.bookingQuantity.toString()}
                     ></TextInput>
-                </View>
-            )
-        }
-        else if(this.state.type_of_booking === 'Number of meals'){
-            return (
-                <View style={{marginHorizontal:30 , marginTop:10 }}>
-
-                <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Enter Number of Meals'
-                        onChangeText={(text) => this.setState({
-                            bookingQuantity:text
-                        })}
-                        style={style.textinput}
-                        defaultValue ={this.state.bookingQuantity.toString()}
-                ></TextInput>
                 </View>
             )
         }
@@ -85,10 +71,11 @@ export default class ModifyRequest extends React.Component {
                 keyboardType={'numeric'}
                         placeholder='Enter Number of days'
                         onChangeText={(text) => this.setState({
-                            bookingQuantity:text
+                            bookingQuantity:text,
+                            priceLow:700*parseFloat(text) - 50,
+                            priceMax:700*parseFloat(text),
                         })}
                         style={style.textinput}
-                        defaultValue ={this.state.bookingQuantity.toString()}
                 ></TextInput>
                 </View>
             )
@@ -118,6 +105,7 @@ export default class ModifyRequest extends React.Component {
             })
         }).then((response) => response.json())
         .then((data) => 
+            console.log(data),
             this.props.navigation.navigate('CurrentOrder')
         )
     }
@@ -130,8 +118,10 @@ export default class ModifyRequest extends React.Component {
                 <TouchableOpacity style={{marginHorizontal:30 , backgroundColor:'white' , marginBottom:20 , height:50 , justifyContent:'center' , borderColor:'#dcdcdc' , borderWidth:1 , borderRadius:5}}
                     onPress ={() => this.setState({isVisible:true})}
                 >
+             
+
                     <Text style={{fontSize:20,paddingLeft:10}}>
-                        {this.state.date ? this.state.date + this.state.time  :'Date And Time of Booking'}
+                        {this.state.picked ? this.state.date + this.state.time  :`${[this.state.date].toLocaleString().slice(8, 10)}/${[this.state.date].toLocaleString().slice(5, 7)}/${[this.state.date].toLocaleString().slice(0, 4)}\t\t`+this.state.time}
                     </Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
@@ -140,15 +130,15 @@ export default class ModifyRequest extends React.Component {
                     onConfirm={(date) => this.setState({
                         date:`${date.toDateString()} `,
                         time:`${date.getHours() % 12 || 12}:${date.getMinutes() <=9 ? '0'+date.getMinutes() : date.getMinutes()} ${date.getHours()/12 >= 1 ? 'PM' : 'AM'}`,
-                        isVisible:false
+                        isVisible:false,
+                        picked:true
                     })}
-                    onCancel={() => console.log('Bhenchod')}
+                    onCancel={() => console.log('')}
                 />
                 <View style={{marginBottom:20}}>
                 <DropDownPicker
                     items={[
                         { label: 'Hourly Booking', value: 'Hourly' },
-                        { label: 'Meal wise booking', value: 'Number of meals' },
                         { label: 'Day wise booking' , value: 'Number of days'}
                     ]}
                     placeholder = {this.state.type_of_booking}
@@ -181,25 +171,14 @@ export default class ModifyRequest extends React.Component {
                 >{this.state.Cuisine}</Text>
                 <Text style = {style.text}>Price Range</Text>
                 <View style={{flexDirection:'row' , justifyContent:'center' , marginTop:20}}>
-                <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Min Price'
-                        onChangeText={(text) => this.setState({
-                            priceLow:text
-                        })}
+                <Text
                         style={style.textinput2}
-                        value = {this.state.priceLow.toString()}
-                ></TextInput>
-                 <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Max Price'
-                        onChangeText={(text) => this.setState({
-                            priceMax:text
-                        })}
+                    >{this.state.priceLow}</Text>
+                 <Text
+                    
                         style={style.textinput2}
-                        value = {this.state.priceMax.toString()}
 
-                ></TextInput>
+                >{this.state.priceMax}</Text>
                 </View>
                 <Text style = {style.text}>Address Details</Text>
                 <Text style={style.textinput3}>{this.state.location}</Text>
