@@ -59,7 +59,7 @@ render(){
                     <Icon name="chevron-right" size={20}  color='#aaaaaa'/>
                 </TouchableOpacity>
                
-                <TouchableOpacity style={style.tab} onPress={() => {this.props.navigation.navigate('FAQ')}}>  
+                <TouchableOpacity style={style.tab} onPress={() => {this.props.navigation.navigate('ContactUs')}}>  
                         <Text style={style.text}>ContactUs</Text>
                         <Icon name="phone" size={20} color='#aaaaaa'  />
                 </TouchableOpacity>

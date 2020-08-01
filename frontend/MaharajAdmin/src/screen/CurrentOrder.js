@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity , FlatList } from 'react-native';
+import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity , FlatList, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Animatable from 'react-native-animatable'
+import moment from 'moment'
 
 export default class CurrentOrder extends React.Component{
     constructor(props){
@@ -47,8 +48,9 @@ export default class CurrentOrder extends React.Component{
 render(){
     return(
         <View style = {style.container}>
-            <Text style = {{margin:18,fontSize:30 , fontWeight:'bold',marginBottom:10}}>All Request</Text>
-            <Animatable.View>            
+            <View style ={{flexDirection:'row' ,backgroundColor:'#000',  }}>
+                    <Text style = {{fontSize : 30 ,color :'#fff' , fontWeight:'bold' , marginLeft:10 , marginVertical:10, borderBottomWidth:1 ,marginTop:10}}>All Requests</Text>
+            </View>
             <FlatList
              data={this.state.data.reverse()}
              keyExtractor={(item, index) => item._id}
@@ -56,9 +58,9 @@ render(){
             
             
             <TouchableOpacity style={style.box} onPress={() => {this.props.navigation.navigate('Details',{'details':item})}}>
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: 'column' , flex:1 }}>
                     <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>
-                    <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>
+                    <Text style={style.boxText2}>Time of Booking : {moment(item.bookingTime,"hh:mm").format("h:mm A")}</Text>
                     <Text style={style.boxText2}>Cuisine : {item.cuisine }</Text>
                     <Text style={style.boxText}>Location : {item.address }</Text>
                 </View>
@@ -68,7 +70,6 @@ render(){
              }
              
             />
-            </Animatable.View>
         </View>
 )}
 }
@@ -98,8 +99,8 @@ const style = StyleSheet.create({
         borderColor: 'black',
         margin: 10,
         borderWidth: 1 ,
-        borderRadius:10 , 
         backgroundColor:'#fff',
+        flex:1
     },
     boxText: {
         color: 'black',

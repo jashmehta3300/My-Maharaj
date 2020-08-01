@@ -5,6 +5,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import AsyncStorage from '@react-native-community/async-storage'
 import { ThemeColors } from 'react-navigation';
+import moment from 'moment'
 
 export default class CreateRequest extends React.Component {
     constructor(props) {
@@ -44,7 +45,7 @@ export default class CreateRequest extends React.Component {
     }
 
     Input = () =>{
-        if(this.state.type_of_booking === 'Number of hours'){
+        if(this.state.type_of_booking === 'Hourly'){
             return (
                 <View style={{marginHorizontal:30 , marginTop:15 }}>
                     <TextInput
@@ -98,7 +99,7 @@ export default class CreateRequest extends React.Component {
                 "cuisine": this.state.Cuisine.toString(),
                 "priceLow": this.state.priceLow.toString(),
                 "priceMax": this.state.priceMax.toString(),
-                "address": this.state.Flat_no + this.state.Wing + " Wing " +  this.state.location,
+                "address": this.state.Flat_no + " " + this.state.Wing + " Wing " +  this.state.location,
                 "bookingDate": this.state.date,
                 "bookingTime": this.state.time,
                 "location": {
@@ -132,24 +133,25 @@ export default class CreateRequest extends React.Component {
                     onPress ={() => this.setState({isVisible:true})}
                 >
                     <Text style={{fontSize:20,paddingLeft:10}}>
-                        {this.state.date ? this.state.date + this.state.time  :'Date And Time of Booking'}
+                        {this.state.date ? this.state.date.toString().slice(0,16) + moment(this.state.time,"hh:mm").format("h:mm A")  :'Date And Time of Booking'}
                     </Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
                     isVisible={this.state.isVisible}
                     mode="datetime"
-                    onConfirm={(date) => this.setState({
-                        date:`${date.toDateString()} `,
-                        time:`${date.getHours() % 12 || 12}:${date.getMinutes() <=9 ? '0'+date.getMinutes() : date.getMinutes()} ${date.getHours()/12 >= 1 ? 'PM' : 'AM'}`,
+                    onConfirm={(date) => {
+                        console.log(date.toLocaleDateString())
+                        this.setState({
+                        date:`${date} `,
+                        time:`${date.getHours()}:${date.getMinutes() <=9 ? '0'+date.getMinutes() : date.getMinutes()}`,
                         isVisible:false
-                    })}
-                    onCancel={() => console.log('Bhenchod')}
+                    })}}
+                    onCancel={() => console.log('Hello')}
                 />
                 <View style={{marginBottom:20}}>
                 <DropDownPicker
                     items={[
                         { label: 'Hourly Booking', value: 'Hourly' },
-                        { label: 'Meal wise booking', value: 'Number of meals' },
                         { label: 'Day wise booking' , value: 'Number of days'}
                     ]}
                     placeholder = 'Type of booking'
@@ -173,7 +175,7 @@ export default class CreateRequest extends React.Component {
                     items={[
                         { label: 'Jain', value: 'Jain' },
                         { label: 'Veg', value: 'Veg' },
-                        { label: 'Non Veg' , value: 'Non Veg'}
+                        { label: 'Non-Veg' , value: 'Non-Veg'}
                     ]}
                     placeholder = 'Food Type'
                     containerStyle={{ height: 50 }}

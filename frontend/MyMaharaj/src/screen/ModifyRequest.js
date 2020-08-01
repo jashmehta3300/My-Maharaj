@@ -139,7 +139,6 @@ export default class ModifyRequest extends React.Component {
                 <DropDownPicker
                     items={[
                         { label: 'Hourly Booking', value: 'Hourly' },
-                        { label: 'Meal wise booking', value: 'Number of meals' },
                         { label: 'Day wise booking' , value: 'Number of days'}
                     ]}
                     placeholder = {this.state.type_of_booking}
