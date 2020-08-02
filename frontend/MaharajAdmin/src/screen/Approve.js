@@ -25,7 +25,7 @@ class Approve extends Component {
         .then((data) => {
             console.warn(data)
             data = data.filter((approved) =>{
-                 return approved.isApproved==false
+                 return approved.isApproved==false || approved.isApproved==null
 
             })
             this.setState({

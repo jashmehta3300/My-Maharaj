@@ -1,187 +1,139 @@
 import React from 'react';
-import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity , SafeAreaView , ScrollView} from 'react-native';
+import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity , FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 export default class Profile extends React.Component{
     constructor(props){
         super(props)
+        this.state ={
+            location : '',
+            data:[]
+        }
     }
+    onFocusFunction = async() =>{
+        this.getloc() 
+        this.getOrder()     
+    }
+    getloc = async() =>{
+        const location = await AsyncStorage.getItem('Location')
+        const loc = JSON.parse(location)
+        console.log(loc)
+        location !== null ? 
+            this.setState({
+                location : loc.title
+            }) :
+            this.setState({
+                location : 'Please add your location'
+            })
+    }
+    getOrder = async() =>{
+        let token = await AsyncStorage.getItem('token')
+            
+            console.log(token)
+            fetch('http://localhost:5000/api/v1/req/myreq',
+            {
+                method:'GET',
+                headers:{
+                    "Authorization":token,
+                    "Content-Type":"application/json"
+                }
+            }, ).then((response) => 
+                response.json()
+            
+        ).then((data) =>{
+            console.log(data.data)
+            this.setState({data : data.data})
+        })
+    }
+    componentDidMount= async() => {
+            
+            this.getloc()
+            this.getOrder()
+            this.focusListner = this.props.navigation.addListener('didFocus' , () =>{
+                this.onFocusFunction()
+            })
+    }
+      componentWillUnmount() {
+          if(this.focusListner.remove()){
+              this.focusListener.remove()
+         }
+      }
 
 render(){
     return(
-        <SafeAreaView style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-
-            <View style={{ alignSelf: "center", marginTop:80}}>
-                <TouchableOpacity style={styles.profileImage}
-                    onPress={() => this.chooseImage()}>
-                </TouchableOpacity>
-                
-            </View>
-
-            <View style={styles.infoContainer}>
-                <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>Manav Jain</Text>
-                <Text style={[styles.text3, { color: "#ababab", fontSize: 14 }]}>manavjain709@gmail.com</Text>
-                <Text style={[styles.text3, { color: "#ababab", fontSize: 14 }]}>+91 9833320648</Text>
-                <Text style={[styles.text3, { color: "#ababab", fontSize: 14 }]}>Mumbai</Text>
-            </View>
-            <TouchableOpacity style = {styles.button}
-                onPress={() => this.signout()} >
-                    <Icon style={{alignSelf: 'flex-end',}}
-                name = "sign-out"
-                size = {20}
-                color = "#ababab"
+        <View style = {style.container}>
+            <TouchableOpacity style = {{ backgroundColor:'#000'  , justifyContent:'center' ,paddingTop:18}} onPress={() => this.props.navigation.navigate('Location')}>
+                <Text style ={{fontSize:15 , color:'#fff' , paddingLeft:10 ,}}>Deliver to </Text>
+                <View style ={{flexDirection:'row' , }}>
+                    <Text style = {{fontSize : 18 ,color :'#fff' , fontWeight:'bold' , marginLeft:10 , marginVertical:10, borderBottomWidth:1 ,borderBottomColor:'#fff',marginTop:0}}>{this.state.location}</Text>
+                    <Icon name = "chevron-down" size = {15} color = {'#fff'} style={{paddingTop:5,paddingLeft:30 , marginRight:100}}/>
+                </View>
+            </TouchableOpacity>
+            <Text style = {{margin:18,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Accepted Orders</Text>
+            
+            <FlatList
+             data={this.state.data.reverse()}
+             renderItem ={ ({ item, index }) =>
+            
+            
+            <TouchableOpacity style={style.box} onPress={() => {this.props.navigation.navigate('Details',{'details':item})}}>
+                <View style={{ flexDirection: 'column' }}>
+                    <Text style={style.boxText2 }>REQUEST ID: {item._id} </Text>
+                    <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>
+                    <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>
+                    <Text style={style.boxText}>Status : {item.acceptedBy ? "Accepted" : "Pending" }</Text>
+                </View>
+            </TouchableOpacity>
+            
+             }
             />
-                    <Text style = {{color: '#ababab', textAlign:'center'}}> SIGN OUT</Text>
-                </TouchableOpacity>
-        </ScrollView>
-    </SafeAreaView>
-
+        </View>
 )}
 }
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#fff"
+        flex:1,
     },
-    text: {
-        fontFamily: "Roboto-Regular",
-        color: "#000",
-        fontSize: 20
-    },
-    image: {
-        flex: 1,
-        height: undefined,
-        width: undefined
-    },
-    titleBar: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 24,
-        marginHorizontal: 16
-    },
-    subText: {
-        fontSize: 25,
-        color: "#AEB5BC",
-        textTransform: "uppercase",
-        fontWeight: "500"
-    },
-    profileImage: {
-        width: 200,
-        height: 200,
-        borderRadius: 100,
-        overflow: "hidden",
-        backgroundColor:'yellow'
-    },
-    dm: {
-        backgroundColor: "#41444B",
-        position: "absolute",
-        top: 20,
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    active: {
-        backgroundColor: "#34FFB9",
-        position: "absolute",
-        bottom: 28,
-        left: 10,
-        padding: 4,
-        height: 20,
-        width: 20,
-        borderRadius: 10
-    },
-    add: {
-        backgroundColor: "#41444B",
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    infoContainer: {
-        alignSelf: "center",
-        alignItems: "center",
-        marginTop: 16
-    },
-    statsContainer: {
-        flexDirection: "row",
-        alignSelf: "center",
-        marginTop: 32
-    },
-    statsBox: {
-        alignItems: "center",
-        flex: 1
-    },
-    mediaImageContainer: {
-        width: 180,
-        height: 200,
-        borderRadius: 12,
-        overflow: "hidden",
-        marginHorizontal: 10
-    },
-    mediaCount: {
-        backgroundColor: "#41444B",
-        position: "absolute",
-        top: "50%",
-        marginTop: -50,
-        marginLeft: 30,
-        width: 100,
-        height: 100,
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: 12,
-        shadowColor: "rgba(0, 0, 0, 0.38)",
-        shadowOffset: { width: 0, height: 10 },
-        shadowRadius: 20,
-        shadowOpacity: 1
-    },
-    recent: {
-        marginLeft: 78,
-        marginTop: 32,
-        marginBottom: 6,
-        fontSize: 10
-    },
-    recentItem: {
-        flexDirection: "row",
-        alignItems: "flex-start",
-        marginBottom: 16,
-        paddingTop: 20
-    },
-    activityIndicator: {
-        backgroundColor: "#CABFAB",
-        padding: 4,
-        height: 12,
-        width: 12,
-        borderRadius: 6,
-        marginTop: 3,
-        marginRight: 20
-    },
-    button: {
-        borderRadius: 10,
-        //width: 100,
-       // backgroundColor: 'red',
-      paddingTop:200,
-      paddingLeft: 280,
-      flexDirection: 'row'
 
+    text:{
+        color:'white',
+        fontSize:50,
+        textAlign:'center'
+    } ,
+    TouchableOpacityStyle: {
+        position: 'absolute',
+        width: 70,
+        height: 70,
+        alignItems: 'center',
+        justifyContent: 'center',
+        right: 30,
+        bottom: 30,
+        backgroundColor:'#000',
+        borderRadius:70
+      },
     
+      box: {
+        borderColor: 'black',
+        margin: 10,
+        borderWidth: 1 ,
+        borderRadius:10 , 
+        backgroundColor:'#fff',
     },
-    text2: {
-        fontSize: 22,
-        fontFamily: 'FiraSansCondensed-Regular',
-        color: 'white'
-    },
-    text3: {
-        fontSize:16,
-        fontFamily: 'SpaceMono-Regular',
-        color: '#ababab'
-    }
-});
+    boxText: {
+        color: 'black',
+        margin: 10,
+        fontSize:18,
+        
 
+    },
+    boxText2: {
+        color: 'black',
+        margin: 10,
+        fontSize:18,
+        marginBottom:0
+
+    }
+
+})

@@ -17,6 +17,7 @@ import SplashScreen from './src/screen/SplashScreen'
 import TrackOrder from './src/screen/TrackOrder'
 import Location from './src/screen/Location'
 import Verify from './src/screen/Verify'
+import ModifyRequest from './src/screen/ModifyRequest';
 
 
 export default class App extends React.Component {
@@ -34,6 +35,7 @@ export default class App extends React.Component {
 const CurrentNav = createStackNavigator(
   {
   CreateRequest : CreateRequest,
+  ModifyRequest : ModifyRequest,
   Details:Details,
   TrackOrder : {
     screen : TrackOrder,
@@ -87,8 +89,8 @@ const Main = createMaterialTopTabNavigator({
   },
   Profile:{
     screen:Profile ,
-    navigationOptions: {title: 'Profile', tabBarIcon: ({ tintColor }) => (
-      <Icon name="user" size={25} color={tintColor} />
+    navigationOptions: {title: 'Accepted Orders', tabBarIcon: ({ tintColor }) => (
+      <Icon name="check" size={25} color={tintColor} />
       )}
   },
   PastOrders :{

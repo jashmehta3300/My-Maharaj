@@ -38,16 +38,18 @@ class ApproveUser extends Component {
                     "per":"hour"
                 },
                 headers:{
+                    "Content-Type":"application/json",
                     "Authorization":"Bearer "+this.state.Admintoken
                 }
             })
             .catch((error) => Alert.alert(error))
             fetch('http://localhost:5000/api/v1/admin/approveMaharaj/'+this.state.item._id,{
                 method:"POST",
-                body:{
+                body:JSON.stringify({
                     "isApproved":true
-                },
+                }),
                 headers:{
+                    "Content-Type":"application/json",
                     "Authorization":"Bearer "+this.state.Admintoken
                 }
             })
@@ -70,7 +72,6 @@ class ApproveUser extends Component {
                        <Text style={styles.boxText2}>Name :{this.state.item.name} </Text>
                        <Text style={styles.boxText2}>Email : {this.state.item.email}</Text>
                        <Text style={styles.boxText2}>Mobile : {this.state.item.mobile}</Text>
-                       <Text style={styles.boxText2}>Address : {this.state.item.registeredAddress.address}</Text>
                    </View>
                     <TextInput
                     style={styles.input}
