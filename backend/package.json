@@ -4,8 +4,10 @@
     "description": "HackIt backend API",
     "main": "server.js",
     "scripts": {
+
         "start": "NODE_ENV=production node server",
         "dev": "nodemon server.js"
+
     },
     "author": "Jash Mehta",
     "license": "MIT",

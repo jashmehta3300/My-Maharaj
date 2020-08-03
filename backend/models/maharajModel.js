@@ -122,4 +122,5 @@ MaharajSchema.methods.getPublicProfile = function(){
     return maharaj;
 }
 
-module.exports = mongoose.model("Maharaj" , MaharajSchema)
+
+module.exports = mongoose.model("Maharaj" , MaharajSchema);

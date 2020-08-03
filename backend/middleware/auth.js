@@ -1,5 +1,5 @@
-const User = require("../models/User");
-const Maharaj = require("../models/Maharaj")
+const User = require("../models/userModel");
+const Maharaj = require("../models/maharajModel")
 const jwt = require("jsonwebtoken");
 
 /**
@@ -40,8 +40,6 @@ const authRequired =(role="user")=>async (req, res, next) => {
 
 const hasRoles=(roles)=>async (req, res, next) =>{
     const role = req.user.role;
-    console.log(role)
-    console.log(roles)
     if(!roles.includes(role)){
         return res.status(403).json({success:false,msg:"Not allowed"})
     }
