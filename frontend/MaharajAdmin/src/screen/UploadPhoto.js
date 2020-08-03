@@ -28,7 +28,7 @@ class UploadPhoto extends Component {
       async UNSAFE_componentWillMount(){
       const token = await AsyncStorage.getItem('token')
       this.setState({token})
-      fetch("http://localhost:5000/api/v1/maharajAuth/5f01b441eba4126824cfd706/profileimage",{
+      fetch("http://maharaj-3.herokuapp.com/api/v1/maharajAuth/5f01b441eba4126824cfd706/profileimage",{
         method:'GET',
         headers:{
           'Authorization':"Bearer "+token
@@ -90,7 +90,7 @@ class UploadPhoto extends Component {
             const blob = this.uriToBlob(response.uri)
             this.setState({file:blob})
             if(blob){
-              fetch("http://localhost:5000/api/v1/maharajAuth/upload/profile", {
+              fetch("http://maharaj-3.herokuapp.com/api/v1/maharajAuth/upload/profile", {
                 method: "POST",
                 body: {
                   image:this.createFormData(this.state.photo)
@@ -125,11 +125,10 @@ class UploadPhoto extends Component {
     const data = new FormData();
 
   data.append("image", {
-   
     uri:uri.uri 
   });
     return new Promise(async (res, rej) => {
-      fetch("http://localhost:5000/api/v1/maharajAuth/upload/profile", {
+      fetch("http://maharaj-3.herokuapp.com/api/v1/maharajAuth/upload/profile", {
           method: "POST",
           body: data,
           headers: {

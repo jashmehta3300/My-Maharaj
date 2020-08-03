@@ -20,7 +20,7 @@ export default class Analytics extends React.Component{
     }
     
     getOrder = async() =>{
-            fetch('http://localhost:5000/api/v1/maharajReq/admin',
+            fetch('http://maharaj-3.herokuapp.com/api/v1/maharajReq/admin',
             {
                 method:'GET',
                 headers:{

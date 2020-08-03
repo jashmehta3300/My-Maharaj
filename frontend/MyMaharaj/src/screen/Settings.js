@@ -14,7 +14,7 @@ export default class Settings extends React.Component{
     componentDidMount= async() =>{
         let token = await AsyncStorage.getItem('token')
             console.log(token)
-            fetch('http://localhost:5000/api/v1/auth/me',
+            fetch('http://maharaj-3.herokuapp.com/api/v1/auth/me',
             {
                 method:'PUT',
                 headers:{

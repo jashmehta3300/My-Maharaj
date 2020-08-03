@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, ImageBackground , Image, View , TouchableOpacity , FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import moment from 'moment'
 
 export default class Profile extends React.Component{
     constructor(props){
@@ -32,7 +32,7 @@ export default class Profile extends React.Component{
         let token = await AsyncStorage.getItem('token')
             
             console.log(token)
-            fetch('http://localhost:5000/api/v1/req/myreq',
+            fetch('http://maharaj-3.herokuapp.com/api/v1/req/myreq',
             {
                 method:'GET',
                 headers:{
@@ -64,13 +64,7 @@ export default class Profile extends React.Component{
 render(){
     return(
         <View style = {style.container}>
-            <TouchableOpacity style = {{ backgroundColor:'#000'  , justifyContent:'center' ,paddingTop:18}} onPress={() => this.props.navigation.navigate('Location')}>
-                <Text style ={{fontSize:15 , color:'#fff' , paddingLeft:10 ,}}>Deliver to </Text>
-                <View style ={{flexDirection:'row' , }}>
-                    <Text style = {{fontSize : 18 ,color :'#fff' , fontWeight:'bold' , marginLeft:10 , marginVertical:10, borderBottomWidth:1 ,borderBottomColor:'#fff',marginTop:0}}>{this.state.location}</Text>
-                    <Icon name = "chevron-down" size = {15} color = {'#fff'} style={{paddingTop:5,paddingLeft:30 , marginRight:100}}/>
-                </View>
-            </TouchableOpacity>
+            
             <Text style = {{margin:18,fontSize:30 , fontWeight:'bold',marginBottom:10}}>Accepted Orders</Text>
             
             <FlatList
@@ -82,8 +76,8 @@ render(){
                 <View style={{ flexDirection: 'column' }}>
                     <Text style={style.boxText2 }>REQUEST ID: {item._id} </Text>
                     <Text style={style.boxText2}>Date of Booking: {`${[item.bookingDate].toLocaleString().slice(8,10)}/${[item.bookingDate].toLocaleString().slice(5,7)}/${[item.bookingDate].toLocaleString().slice(0,4)}`} </Text>
-                    <Text style={style.boxText2}>Time of Booking : {item.bookingTime}</Text>
-                    <Text style={style.boxText}>Status : {item.acceptedBy ? "Accepted" : "Pending" }</Text>
+                    <Text style={style.boxText2}>Time of Booking : {moment(item.bookingTime,"hh:mm").format("h:mm A")}</Text>
+                    <Text style={style.boxText}>Status : {item.modified ? "Changes to be approved by the maharaj" : "Accepted" }</Text>
                 </View>
             </TouchableOpacity>
             
@@ -118,7 +112,6 @@ const style = StyleSheet.create({
         borderColor: 'black',
         margin: 10,
         borderWidth: 1 ,
-        borderRadius:10 , 
         backgroundColor:'#fff',
     },
     boxText: {

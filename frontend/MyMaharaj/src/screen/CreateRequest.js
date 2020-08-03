@@ -5,6 +5,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import AsyncStorage from '@react-native-community/async-storage'
 import { ThemeColors } from 'react-navigation';
+import moment from 'moment'
 
 export default class CreateRequest extends React.Component {
     constructor(props) {
@@ -25,6 +26,7 @@ export default class CreateRequest extends React.Component {
             priceMax:'',
             Flat_no:'',
             Wing:'',
+            Multiplier:0
         }
     }
     componentDidMount = async() => {
@@ -43,32 +45,19 @@ export default class CreateRequest extends React.Component {
     }
 
     Input = () =>{
-        if(this.state.type_of_booking === 'Number of hours'){
+        if(this.state.type_of_booking === 'Hourly'){
             return (
                 <View style={{marginHorizontal:30 , marginTop:15 }}>
                     <TextInput
                         keyboardType={'numeric'}
                         placeholder='Enter Number of hours'
                         onChangeText={(text) => this.setState({
-                            bookingQuantity:text
+                            bookingQuantity:text,
+                            priceLow:350*parseFloat(text) - 50,
+                            priceMax:350*parseFloat(text),
                         })}
                         style={style.textinput}
                     ></TextInput>
-                </View>
-            )
-        }
-        else if(this.state.type_of_booking === 'Number of meals'){
-            return (
-                <View style={{marginHorizontal:30 , marginTop:10 }}>
-
-                <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Enter Number of Meals'
-                        onChangeText={(text) => this.setState({
-                            bookingQuantity:text
-                        })}
-                        style={style.textinput}
-                ></TextInput>
                 </View>
             )
         }
@@ -79,7 +68,9 @@ export default class CreateRequest extends React.Component {
                 keyboardType={'numeric'}
                         placeholder='Enter Number of days'
                         onChangeText={(text) => this.setState({
-                            bookingQuantity:text
+                            bookingQuantity:text,
+                            priceLow:700*parseFloat(text) - 50,
+                            priceMax:700*parseFloat(text),
                         })}
                         style={style.textinput}
                 ></TextInput>
@@ -94,7 +85,7 @@ export default class CreateRequest extends React.Component {
     sendRequest = async() =>{
         let token = await AsyncStorage.getItem('token')
         console.log(token)
-        fetch('http://localhost:5000/api/v1/req/create',
+        fetch('http://maharaj-3.herokuapp.com/api/v1/req/create',
         {
             method:"POST",
             headers:{
@@ -106,9 +97,9 @@ export default class CreateRequest extends React.Component {
                 "bookingQuantity": this.state.bookingQuantity,
                 "foodType": this.state.type_of_meal,
                 "cuisine": this.state.Cuisine.toString(),
-                "priceLow": this.state.priceLow,
-                "priceMax": this.state.priceMax,
-                "address": this.state.Flat_no + this.state.Wing + " Wing " +  this.state.location,
+                "priceLow": this.state.priceLow.toString(),
+                "priceMax": this.state.priceMax.toString(),
+                "address": this.state.Flat_no + " " + this.state.Wing + " Wing " +  this.state.location,
                 "bookingDate": this.state.date,
                 "bookingTime": this.state.time,
                 "location": {
@@ -120,7 +111,7 @@ export default class CreateRequest extends React.Component {
             })
         }).then((response) => response.json()).then((data) => {
             console.log(data.data._id)
-            fetch('http://localhost:5000/api/v1/req/start/'+data.data._id , 
+            fetch('http://maharaj-3.herokuapp.com/api/v1/req/start/'+data.data._id , 
                 {
                     method:"PUT",
                     headers:{
@@ -142,24 +133,25 @@ export default class CreateRequest extends React.Component {
                     onPress ={() => this.setState({isVisible:true})}
                 >
                     <Text style={{fontSize:20,paddingLeft:10}}>
-                        {this.state.date ? this.state.date + this.state.time  :'Date And Time of Booking'}
+                        {this.state.date ? this.state.date.toString().slice(0,16) + moment(this.state.time,"hh:mm").format("h:mm A")  :'Date And Time of Booking'}
                     </Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
                     isVisible={this.state.isVisible}
                     mode="datetime"
-                    onConfirm={(date) => this.setState({
-                        date:`${date.toDateString()} `,
-                        time:`${date.getHours() % 12 || 12}:${date.getMinutes() <=9 ? '0'+date.getMinutes() : date.getMinutes()} ${date.getHours()/12 >= 1 ? 'PM' : 'AM'}`,
+                    onConfirm={(date) => {
+                        console.log(date.toLocaleDateString())
+                        this.setState({
+                        date:`${date} `,
+                        time:`${date.getHours()}:${date.getMinutes() <=9 ? '0'+date.getMinutes() : date.getMinutes()}`,
                         isVisible:false
-                    })}
-                    onCancel={() => console.log('Bhenchod')}
+                    })}}
+                    onCancel={() => console.log('Hello')}
                 />
                 <View style={{marginBottom:20}}>
                 <DropDownPicker
                     items={[
                         { label: 'Hourly Booking', value: 'Hourly' },
-                        { label: 'Meal wise booking', value: 'Number of meals' },
                         { label: 'Day wise booking' , value: 'Number of days'}
                     ]}
                     placeholder = 'Type of booking'
@@ -167,7 +159,7 @@ export default class CreateRequest extends React.Component {
                     style={{ backgroundColor: '#fafafa' , marginHorizontal:30, }}
                     dropDownStyle={{ backgroundColor: '#fafafa' }}
                     onChangeItem={item => this.setState({
-                        type_of_booking: item.value
+                        type_of_booking: item.value,
                     })}
                     labelStyle={{
                         fontSize:20,
@@ -183,7 +175,7 @@ export default class CreateRequest extends React.Component {
                     items={[
                         { label: 'Jain', value: 'Jain' },
                         { label: 'Veg', value: 'Veg' },
-                        { label: 'Non Veg' , value: 'Non Veg'}
+                        { label: 'Non-Veg' , value: 'Non-Veg'}
                     ]}
                     placeholder = 'Food Type'
                     containerStyle={{ height: 50 }}
@@ -232,22 +224,12 @@ export default class CreateRequest extends React.Component {
                 </View>
                 <Text style = {style.text}>Price Range</Text>
                 <View style={{flexDirection:'row' , justifyContent:'center' , marginTop:20}}>
-                <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Min Price'
-                        onChangeText={(text) => this.setState({
-                            priceLow:text
-                        })}
-                        style={style.textinput2}
-                ></TextInput>
-                 <TextInput
-                keyboardType={'numeric'}
-                        placeholder='Max Price'
-                        onChangeText={(text) => this.setState({
-                            priceMax:text
-                        })}
-                        style={style.textinput2}
-                ></TextInput>
+                <Text style={{fontSize:20, paddingTop:5}}>Rs.</Text>
+                <Text style={style.text2}>{this.state.priceLow.toString()}</Text>
+                <Text style={{fontSize:20, paddingTop:5,paddingRight:10}}>to</Text>
+                <Text style={{fontSize:20, paddingTop:5}}>Rs.</Text>
+                <Text style={style.text2}>{this.state.priceMax.toString()}</Text>
+                
                 </View>
                 <Text style = {style.text}>Address Details</Text>
                 <View style={{flexDirection:'row' , justifyContent:'center' ,marginTop:15}}>
@@ -268,9 +250,9 @@ export default class CreateRequest extends React.Component {
                         style={style.textinput2}
                 ></TextInput>
                 </View>
-                <TouchableOpacity onPress ={() => this.props.navigation.navigate('TrackOrder' , { longlat : this.state.longLat} )}>
+                <View >
                 <Text style={style.textinput3}>{this.state.location}</Text>
-                </TouchableOpacity>
+                </View>
                 <Text style={{marginLeft:20,color:'red' , fontSize:15}}>*To change address please go to home screen</Text>
                 <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginVertical:30 , borderRadius:10}} onPress={() => this.sendRequest()} >
                     <Text style = {style.button}>Confirm Request</Text>
@@ -320,9 +302,10 @@ const style = StyleSheet.create({
         borderColor:'grey' , 
         borderWidth:1,
         borderRadius:10,
-        backgroundColor:'#fff',
         marginHorizontal:20,
-        width:120
+        alignSelf:'center',
+        width:120,
+        backgroundColor:"#fff"
     },
     textinput3: {
         fontSize: 20,
@@ -330,8 +313,16 @@ const style = StyleSheet.create({
         borderColor:'grey' , 
         borderWidth:1,
         borderRadius:10,
-        backgroundColor:'#fff',
         marginHorizontal:20,
         marginTop:15,
+    },
+    text2: {
+        fontSize: 20,
+        borderColor:'grey' , 
+        borderRadius:10,
+        marginHorizontal:20,
+        fontWeight:'bold',
+        paddingTop:5
+        
     },
 })

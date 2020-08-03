@@ -16,7 +16,7 @@ export default class Settings extends React.Component{
         let token = await AsyncStorage.getItem('token')
             console.log(token)
             if(token){
-            fetch('http://localhost:5000/api/v1/maharajAuth/me',
+            fetch('http://maharaj-3.herokuapp.com/api/v1/maharajAuth/me',
             {
                 method:'PUT',
                 headers:{
@@ -32,7 +32,7 @@ export default class Settings extends React.Component{
         })
     }
     else{
-        fetch('http://localhost:5000/api/v1/maharajAuth/me',
+        fetch('http://maharaj-3.herokuapp.com/api/v1/maharajAuth/me',
         {
             method:'PUT',
             headers:{
@@ -80,7 +80,7 @@ render(){
                     <Icon name="chevron-right" size={20}  color='#aaaaaa'/>
                 </TouchableOpacity>
                
-                <TouchableOpacity style={style.tab} onPress={() => {this.props.navigation.navigate('FAQ')}}>  
+                <TouchableOpacity style={style.tab} onPress={() => {this.props.navigation.navigate('ContactUs')}}>  
                         <Text style={style.text}>ContactUs</Text>
                         <Icon name="phone" size={20} color='#aaaaaa'  />
                 </TouchableOpacity>
