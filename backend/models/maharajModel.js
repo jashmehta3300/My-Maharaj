@@ -6,7 +6,6 @@ const crypto = require('crypto');
 const MaharajSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Please add a name']
     },
     email: {
         unique:true,
