@@ -7,7 +7,7 @@ const OTPService = require("../services/otp");
 // @access    public
 exports.register = async(req, res, next) => {
     const { name, email, mobile ,password, role , city  } = req.body;
-    const file = req.file;
+    if(!email || !mobile) return res.status(400).json({success:false,msg:"Please provide mobile and email"})
     //Create user
     let user = new User({
         name: name,
@@ -32,6 +32,7 @@ exports.register = async(req, res, next) => {
 // @access    Public
 exports.login = async(req, res, next) => {
     const { mobile, token } = req.body;
+
     // Validate emil & password
     if (!mobile || !token) return res.status(400).json({success: false,error: 'Please provide number and otp'})
     // Check for user

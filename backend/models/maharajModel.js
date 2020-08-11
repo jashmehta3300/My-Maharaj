@@ -8,16 +8,11 @@ const MaharajSchema = new mongoose.Schema({
         type: String,
     },
     email: {
-        unique:true,
         type: String,
-        match: [
-            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            'Please add a valid email'
-        ]
     },
     mobile:{
         type:String,
-        unique:false,
+        unique:true,
         required:[true,"Plase add your number"]
     },
     password: {

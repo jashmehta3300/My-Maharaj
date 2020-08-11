@@ -5,6 +5,7 @@ const OTPService = require("../services/otp");
 
 exports.register = async(req,res)=>{
     const {name, email, mobile ,password, role ,address , city , zipcode  , kin ,yearsOfExp ,cuisine} =req.body
+    if(!email || !mobile)return res.status(400).json({success:false,msg:"Please provide email and mobile number"})
     let maharajDoc = new Maharaj({
         name:name,
         email:email,
