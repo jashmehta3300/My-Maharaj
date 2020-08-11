@@ -32,7 +32,6 @@ exports.register = async(req, res, next) => {
 // @access    Public
 exports.login = async(req, res, next) => {
     const { mobile, token } = req.body;
-
     // Validate emil & password
     if (!mobile || !token) return res.status(400).json({success: false,error: 'Please provide number and otp'})
     // Check for user
