@@ -41,6 +41,7 @@ const UserSchema = new mongoose.Schema({
         default:false
     },
     signalId:String,
+    signal:String,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     createdAt: {

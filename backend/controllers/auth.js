@@ -150,3 +150,15 @@ exports.updateProfile = async (req, res) => {
     return res.status(200).json(user.getPublicProfile());
   };
   
+
+/**
+ * @ROUTE : /api/v1/auth/updateSignal/:id
+ * @DESC  : Update signal
+ */
+exports.updateUserSignal = async (req , res) => {
+    const {id} = req.params;
+    const {signal} = req.body;
+    if(!signal)return res.status(400).json({success:false,msg:"No Signal provided"})
+    const user = await User.findByIdAndUpdate(id,{signal:signal},{new:true})
+    return res.status(200).json({success:true,data:user.getPublicProfile()});
+}

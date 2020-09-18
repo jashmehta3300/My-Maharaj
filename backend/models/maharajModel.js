@@ -66,6 +66,7 @@ const MaharajSchema = new mongoose.Schema({
         yearsOfExp: Number
     },
     signalId:String,
+    signal:String,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     orders:[{
