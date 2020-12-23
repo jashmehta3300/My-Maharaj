@@ -12,62 +12,114 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 
 class UploadPhoto extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filePath: {},
-      fileData: '',
-      fileUri: '',
-      file: '',
-      token: ''
+
+      constructor(props){
+        super(props);
+        this.state={
+            photo:'',
+            filePath:{},
+            fileData: '',
+            fileUri: '',
+            file:'',
+            token:'',
+            isimage:0
+        }
     }
-  }
-  async UNSAFE_componentWillMount() {
-    const token = await AsyncStorage.getItem('token')
-    this.setState({ token })
-    console.log(this.state.token)
-  }
+      async UNSAFE_componentWillMount(){
+      const token = await AsyncStorage.getItem('token')
+      this.setState({token})
+      fetch("http://maharaj-3.herokuapp.com/api/v1/maharajAuth/5f01b441eba4126824cfd706/profileimage",{
+        method:'GET',
+        headers:{
+          'Authorization':"Bearer "+token
+        }
+      })
+      .then((response) => {
 
-  chooseImage = async () => {
-    let options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
+      })
+      .catch((error) => console.warn(error))
+      console.log(this.state.token)
+
+    }
+    createFormData = (photo, body) => {
+      const data = new FormData();
+    
+      data.append("image", {
+        name: photo.fileName,
+        type: photo.type,
+        uri:
+          Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+      });
+    
+    
+      return data;
     };
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response);
 
-      if (response.didCancel) {
-        //            console.log('User cancelled image picker');
-      } else if (response.error) {
-        //            console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        //           console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
-        const source = { uri: response.uri };
 
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-        // alert(JSON.stringify(response));s
-        // console.log('response', JSON.stringify(response));
-        this.setState({
-          filePath: response,
-          fileData: response.data,
-          fileUri: response.uri
+
+    chooseImage = async () => {
+        let options = {
+          title: 'Select Image',
+          storageOptions: {
+            skipBackup: true,
+            path: 'images',
+          },
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+          console.log('Response = ', response);
+    
+          if (response.didCancel) {
+//            console.log('User cancelled image picker');
+          } else if (response.error) {
+//            console.log('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+ //           console.log('User tapped custom button: ', response.customButton);
+            alert(response.customButton);
+          } else {
+            const source = { uri: response.uri };
+            this.setState({photo:response})
+            // You can also display the image using data:
+            // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+            // alert(JSON.stringify(response));s
+            // console.log('response', JSON.stringify(response));
+            this.setState({
+              filePath: response,
+              fileData: response.data,
+              fileUri: response.uri
+            });
+            const blob = this.uriToBlob(response.uri)
+            this.setState({file:blob})
+            if(blob){
+              fetch("http://maharaj-3.herokuapp.com/api/v1/maharajAuth/upload/profile", {
+                method: "POST",
+                body: {
+                  image:this.createFormData(this.state.photo)
+                },
+                headers:{
+                  "Authorization":"Bearer "+this.state.token
+                }
+              })
+                .then(response => response.json())
+                .then(response => {
+                  console.warn(response)
+                  console.log("upload succes", response);
+                  alert("Upload success!");
+                  this.setState({ photo: null });
+                })
+                .catch(error => {
+                  console.log("upload error", error);
+                  alert("Upload failed!");
+                });
+            }
+            
+            // const img = this.uploadToFirebase(blob)
+            console.log(this.state.token)
+          }
         });
-        
-        const img = this.uploadPhotoAsync(response)
-                // const img = this.uploadToFirebase(blob)
-          console.log('image uploaded...' + JSON.stringify(img))
-
-        // const img = this.uploadToFirebase(blob)
-        console.log(this.state.token)
       }
-    });
-  }
+
+
+
   uploadPhotoAsync = async uri => {
     const path = `photos/${this.uid}/${Date.now()}.jpg`;
     const data = new FormData();
@@ -76,7 +128,7 @@ class UploadPhoto extends Component {
     uri:uri.uri 
   });
     return new Promise(async (res, rej) => {
-      fetch("http://localhost:5000/api/v1/maharajAuth/upload/profile", {
+      fetch("http://maharaj-3.herokuapp.com/api/v1/maharajAuth/upload/profile", {
           method: "POST",
           body: data,
           headers: {

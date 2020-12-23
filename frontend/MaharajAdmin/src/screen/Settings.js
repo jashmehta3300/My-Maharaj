@@ -12,9 +12,11 @@ export default class Settings extends React.Component{
         }
     }
     componentDidMount= async() =>{
+        let Admintoken = await AsyncStorage.getItem('Admintoken')
         let token = await AsyncStorage.getItem('token')
             console.log(token)
-            fetch('http://localhost:5000/api/v1/maharajAuth/me',
+            if(token){
+            fetch('http://maharaj-3.herokuapp.com/api/v1/maharajAuth/me',
             {
                 method:'PUT',
                 headers:{
@@ -29,9 +31,28 @@ export default class Settings extends React.Component{
             this.setState({data : data})
         })
     }
+    else{
+        fetch('http://maharaj-3.herokuapp.com/api/v1/maharajAuth/me',
+        {
+            method:'PUT',
+            headers:{
+                "Authorization":Admintoken,
+                "Content-Type":"application/json"
+            }
+        }, ).then((response) => 
+            response.json()
+        
+    ).then((data) =>{
+        console.log(data)
+        this.setState({data : data})
+    })
+
+    }
+    }
      logout = async () => {
         console.log(AsyncStorage.getItem('token'))
         await AsyncStorage.removeItem('token').then((data) =>{console.log(data)})
+        await AsyncStorage.removeItem('Admintoken')
         this.props.navigation.navigate('SplashScreen')
     }
 

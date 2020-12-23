@@ -25,7 +25,7 @@ export default class LoginScreen extends React.Component{
         if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             this.setState({OTP:false})
-               await fetch('http://localhost:5000/api/v1/maharajAuth/sms',{
+               await fetch('http://maharaj-3.herokuapp.com/api/v1/maharajAuth/sms',{
                method:'POST',
                 body:JSON.stringify({
                     mobile:this.state.mobile,                 
@@ -46,7 +46,7 @@ export default class LoginScreen extends React.Component{
     }
     loginotp= async () =>{                         //verifying your otp and handling errors 
         if(this.state.OTP_value){
-         await fetch("http://localhost:5000/api/v1/maharajAuth/login",{
+         await fetch("http://maharaj-3.herokuapp.com/api/v1/maharajAuth/login",{
                 method:"POST",
                 body:JSON.stringify({
                     mobile:this.state.mobile,
@@ -84,7 +84,7 @@ export default class LoginScreen extends React.Component{
 render(){
     return(
             <View style = {style.container}>
-                <Text style = {{fontSize:40 , alignItems:'center' , alignSelf:'center' , fontWeight:'bold' , marginTop:100 , marginBottom:100}}>Admin Login</Text>
+                <Text style = {{fontSize:40 , alignItems:'center' , alignSelf:'center' , fontWeight:'bold' , marginTop:100 , marginBottom:100}}>User Login</Text>
                 <Animatable.View
                 animation='fadeInUpBig'>
                 <View style = {{flexDirection:'row' ,  borderWidth:1 , marginLeft:50, marginRight:50 , borderColor:'grey' , borderRadius:10}}>
@@ -102,9 +102,6 @@ render(){
             <View>
             <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => this.sendotp()}>
                     <Text style = {style.button}>Send OTP</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{alignSelf:'center' , backgroundColor:'#000' , marginTop:30 , borderRadius:10}} onPress = {() => {this.props.navigation.navigate('Registration')}}>
-                <Text style = {style.button}>Create an Account</Text>
                 </TouchableOpacity>
             </View>
                 :

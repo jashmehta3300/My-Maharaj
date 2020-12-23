@@ -88,7 +88,7 @@ export default class ModifyRequest extends React.Component {
     sendRequest = async() =>{
         let token = await AsyncStorage.getItem('token')
         console.log(token)
-        fetch('http://localhost:5000/api/v1/req/modify/'+this.state.id,
+        fetch('http://maharaj-3.herokuapp.com/api/v1/req/modify/'+this.state.id,
         {
             method:"PUT",
             headers:{

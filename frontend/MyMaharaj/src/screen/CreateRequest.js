@@ -85,7 +85,7 @@ export default class CreateRequest extends React.Component {
     sendRequest = async() =>{
         let token = await AsyncStorage.getItem('token')
         console.log(token)
-        fetch('http://localhost:5000/api/v1/req/create',
+        fetch('http://maharaj-3.herokuapp.com/api/v1/req/create',
         {
             method:"POST",
             headers:{
@@ -111,7 +111,7 @@ export default class CreateRequest extends React.Component {
             })
         }).then((response) => response.json()).then((data) => {
             console.log(data.data._id)
-            fetch('http://localhost:5000/api/v1/req/start/'+data.data._id , 
+            fetch('http://maharaj-3.herokuapp.com/api/v1/req/start/'+data.data._id , 
                 {
                     method:"PUT",
                     headers:{

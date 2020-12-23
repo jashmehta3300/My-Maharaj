@@ -32,7 +32,7 @@ export default class Profile extends React.Component{
         let token = await AsyncStorage.getItem('token')
             
             console.log(token)
-            fetch('http://localhost:5000/api/v1/req/myreq',
+            fetch('http://maharaj-3.herokuapp.com/api/v1/req/myreq',
             {
                 method:'GET',
                 headers:{

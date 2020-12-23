@@ -32,7 +32,7 @@ export default class CurrentOrder extends React.Component{
         let token = await AsyncStorage.getItem('token')
             
             console.log(token)
-            fetch('http://localhost:5000/api/v1/req/ongoing',
+            fetch('http://maharaj-3.herokuapp.com/api/v1/req/ongoing',
             {
                 method:'GET',
                 headers:{

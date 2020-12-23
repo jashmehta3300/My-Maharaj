@@ -1,4 +1,4 @@
-const Maharaj = require("../models/Maharaj")
+const Maharaj = require("../models/maharajModel");
 
 
 /**

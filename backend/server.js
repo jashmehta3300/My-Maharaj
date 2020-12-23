@@ -37,8 +37,11 @@ if (process.env.NODE_ENV === 'development') {
     console.log(`${process.env.NODE_ENV} mode running.`);
 }
 
+// Home
+app.get("/",(req,res)=>{
+    res.send(`<h1>Welcome To My Maharaj</h1>`)
+})
 //Mount routers
-
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/maharajAuth', maharajAuth);
 app.use('/api/v1/req', req);

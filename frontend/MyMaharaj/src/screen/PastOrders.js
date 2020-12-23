@@ -31,7 +31,7 @@ export default class PastOrders extends React.Component{
     getOrder = async() =>{
         let token = await AsyncStorage.getItem('token')
             console.log(token)
-            fetch('http://localhost:5000/api/v1/req/past',
+            fetch('http://maharaj-3.herokuapp.com/api/v1/req/past',
             {
                 method:'GET',
                 headers:{

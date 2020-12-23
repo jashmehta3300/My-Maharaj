@@ -26,25 +26,26 @@ class ApproveUser extends Component {
      approve = async () => {
         if(this.state.price.length>2){
             let token= await AsyncStorage.getItem('Admintoken')
-            // fetch('http://localhost:5000/api/v1/admin/setPrice/'+this.state.item._id,{
-            //     method:"POST",
-            //     body:{
-            //         amount:Number(this.state.price),
-            //         "per":"hour"
-            //     },
-            //     headers:{
-            //         "Authorization":"Bearer  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMWZlOWM2ZTRkMTU1NTAxOGQzMDVmZCIsImlhdCI6MTU5NTkyNjk4MywiZXhwIjoxNTk4NTE4OTgzfQ.NIYaApzj_eqfumdumAdQnWDv_eHsWjAQxmQfxULT9vA"
-            //     }
-            // })
-            // .catch((error) => Alert.alert(error))
-            fetch('http://localhost:5000/api/v1/admin/approveMaharaj/'+this.state.item._id,{
+            fetch('http://maharaj-3.herokuapp.com/api/v1/admin/setPrice/'+this.state.item._id,{
+                method:"POST",
+                body:{
+                    amount:Number(this.state.price),
+                    "per":"hour"
+                },
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization":"Bearer "+this.state.Admintoken
+                }
+            })
+            .catch((error) => Alert.alert(error))
+            fetch('http://maharaj-3.herokuapp.com/api/v1/admin/approveMaharaj/'+this.state.item._id,{
                 method:"POST",
                 body:JSON.stringify({
                     "isApproved":true
                 }),
                 headers:{
-                    "Authorization":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMWZlOWM2ZTRkMTU1NTAxOGQzMDVmZCIsImlhdCI6MTU5NTkyNjk4MywiZXhwIjoxNTk4NTE4OTgzfQ.NIYaApzj_eqfumdumAdQnWDv_eHsWjAQxmQfxULT9vA",
-                    "Content-Type":"application/json"
+                    "Content-Type":"application/json",
+                    "Authorization":"Bearer "+this.state.Admintoken
                 }
             })
             .then((response) => response.json())
@@ -131,4 +132,5 @@ const styles = StyleSheet.create({
                         <Text style={styles.boxText2}>Address : {this.state.item.registeredAddress.address }</Text>
                         <Text style={styles.boxText2}>Zipcode : {this.state.item.registeredAddress.zipcode}</Text>
                         <Text style={styles.boxText2}>CreatedAt : {this.state.item.createdAt} </Text>
+                        
                         */

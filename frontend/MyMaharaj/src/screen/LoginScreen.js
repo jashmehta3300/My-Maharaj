@@ -25,7 +25,7 @@ export default class LoginScreen extends React.Component{
         if(this.state.mobile){
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             this.setState({OTP:false})
-             await fetch('http://localhost:5000/api/v1/auth/sms',
+             await fetch('http://maharaj-3.herokuapp.com/api/v1/auth/sms',
              {
                  method:"POST",
                  headers:{
@@ -48,7 +48,7 @@ export default class LoginScreen extends React.Component{
     loginotp= async () =>{    
         console.log(this.state.OTP_value)                     //verifying your otp and handling errors 
         if(this.state.OTP_value){
-         await fetch("http://localhost:5000/api/v1/auth/login",{
+         await fetch("http://maharaj-3.herokuapp.com/api/v1/auth/login",{
                 method:"POST",
                 body:JSON.stringify({
                     mobile:this.state.mobile,

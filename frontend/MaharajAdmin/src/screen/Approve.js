@@ -18,7 +18,7 @@ class Approve extends Component {
         }
     }
     componentDidMount(){
-        fetch("http://localhost:5000/api/v1/maharajAuth/maharajs",{
+        fetch("http://maharaj-3.herokuapp.com/api/v1/maharajAuth/maharajs",{
             method:"GET"
         })
         .then((response) => response.json())

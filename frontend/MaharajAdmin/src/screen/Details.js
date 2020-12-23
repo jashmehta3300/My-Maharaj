@@ -55,7 +55,7 @@ class Details extends Component {
         const token = await AsyncStorage.getItem('token')
         console.log(token)
         console.log(id)
-        fetch('http://localhost:5000/api/v1/maharajReq/' + id,
+        fetch('http://maharaj-3.herokuapp.com/api/v1/maharajReq/' + id,
             {
                 method: 'PUT',
                 headers: {
@@ -74,7 +74,7 @@ class Details extends Component {
     }
     onComplete = async(id) =>{
         console.log(id)
-        fetch('http://localhost:5000/api/v1/req/complete/'+id,
+        fetch('http://maharaj-3.herokuapp.com/api/v1/req/complete/'+id,
             {
                 method:'PUT',
                 headers:{
@@ -96,7 +96,7 @@ class Details extends Component {
       onModified = async(accepted,id) =>{
         console.log(id)
         const token = await AsyncStorage.getItem('token')
-        fetch('http://localhost:5000/api/v1/maharajReq/modify/'+id,
+        fetch('http://maharaj-3.herokuapp.com/api/v1/maharajReq/modify/'+id,
             {
                 method:'PUT',
                 headers:{
@@ -116,7 +116,7 @@ class Details extends Component {
         
     }
     CreatedBy = (id) => {
-        fetch("http://localhost:5000/api/v1/auth/users/" + id)
+        fetch("http://maharaj-3.herokuapp.com/api/v1/auth/users/" + id)
             .then(response => response.json()).then((result) => {
                 console.log(result)
                 this.setState({ user: result })

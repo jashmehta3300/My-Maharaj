@@ -57,7 +57,7 @@ constructor(){
              if(this.state.password==this.state.confirm_password){
                  if(this.state.mobile.length==10){
                  console.warn('authentication underway')
-                   await  fetch('http://localhost:5000/api/v1/auth/register',{
+                   await  fetch('http://maharaj-3.herokuapp.com/api/v1/auth/register',{
                     method:"POST",
                     body:JSON.stringify({
                         name:this.state.username,
